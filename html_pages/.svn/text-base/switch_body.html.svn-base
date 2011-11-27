@@ -1,0 +1,10 @@
+<span><button id="edit_switch_1"></button></span>
+		<span><button id="delete_switch_1"></button></span>
+		<div id="switch_information"> 
+		<b> Ports </b> <br />
+		<label for="mac_address">MAC Address</label> <span id="mac_address">00:00:00:00:00:05</span>
+		<label for="datapath_id">Datapath ID</label> <span id="datapath_id">01234ABCDE</span>
+		<label for="switch_ip">IP Address</label> <span id="switch_ip">156.56.5.41</span>
+		<div id ="port_table"></div>
+		<b>X-Connect Ports</b>
+		<div id="x-connect_ports"></div>

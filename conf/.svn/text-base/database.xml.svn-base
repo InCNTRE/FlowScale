@@ -1,0 +1,3 @@
+<config>
+  <credentials username="root" password="password" database_name="webui" hostname="of-lab2.grnoc.iu.edu" port="3306" />
+</config>

@@ -1,0 +1,23 @@
+This is a test 
+
+
+<form method="GET" action="index.cgi" />
+<input type="hidden" id="action" name="action" value="switch_graph" />
+	
+	<select id="switch_selection" >
+
+
+[% FOREACH switch IN content %] 
+
+<option value="[% switch.datapath_id %]">[% switch.switch_name %]</option>
+
+
+
+[% END %]
+
+		
+		
+	</select>
+	
+<input type="submit" value="GO" />
+</form>

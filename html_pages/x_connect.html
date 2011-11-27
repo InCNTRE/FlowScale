@@ -1,0 +1,52 @@
+
+[% INCLUDE js_pages/x_connect.js %]
+
+
+
+
+
+
+
+
+<div id="x-connect_ports"></div>
+
+
+<div id="mycontainer" ></div>
+<button id="add_xconnect">Add X-Connect</button> </b>
+
+
+<div id="add_panel">
+	<div class="hd">
+		Add X-Connect Panel
+	</div>
+	<div class="bd">
+	
+		<br />
+		Switch 1 :
+		<select id="switch_1_choice" onchange="populate_ports(1,null)">
+			[% FOREACH switch IN content %]
+			<option value="[% switch.datapath_id %]">[% switch.switch_name %]</option>
+						[% END %]
+			</select>
+	<div id="ports_1_table"></div>
+		
+		Switch 2:
+		<select id="switch_2_choice" onchange="populate_ports(2,null)">
+	[% FOREACH switch IN content %]
+			<option value="[% switch.datapath_id %]">[% switch.switch_name %]</option>
+			
+			[% END %]
+	</select>
+	<div id="ports_2_table"></div>
+		
+		
+
+		<button id="submit_new_xconnect">
+			Add
+		</button>
+		<button id="clear_new_xconnect">
+			clear
+		</button>
+	</div>
+	<div class="ft"></div>
+</div>

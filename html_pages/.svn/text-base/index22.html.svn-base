@@ -1,0 +1,28 @@
+[% INCLUDE js_templates/index.js %]
+
+<div class="main_page">
+
+  <center>  
+
+    <div id="instructions">
+      <p class="title">Existing Switches</p>
+      <p class="subtitle">Click to Edit or View Details</p>
+    </div> 
+
+    <div style="width: 880px; text-align: left;">
+        <label for="circuit_search">Search:</label>
+	<input id="circuit_search" type="text" size="35"->
+
+	<div style="float: right;">
+	  <div id="new_circuit"></div>
+	</div>
+    </div>
+
+    <br>
+
+    <div id="circuit_table_nav"></div>
+    <div id="circuit_table"></div>
+
+  </center>  
+
+</div>
