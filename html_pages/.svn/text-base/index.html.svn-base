@@ -1,8 +1,0 @@
-
-
-
-<H1>Welcome to this page </H1>
-
-
-[% content.balance %] <br />
-[% content.num %]
