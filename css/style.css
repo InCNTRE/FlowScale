@@ -43,8 +43,17 @@ div#next_button_container {
 	font-size:90%;
 }
 
-div#details_tabs #traffic_graph {
-    height: 258px;
+div#traffic_graph {
+    width: 500px;
+    height: 500px;
+    margin-bottom:20px;
+    margin-right:20px;
+    margin-left:20px;
+
+}
+
+div#details_tabs {
+    height: 256px;
     margin-bottom:20px;
 }
 
@@ -54,10 +63,9 @@ div.box {
         box-shadow: 5px 5px 5px #888;
 	-moz-box-shadow: 5px 5px 5px #888;
 	-webkit-box-shadow: 5px 5px 5px #888;
-	margin-right:40px;
-        margin-left:40px;
+	margin-right:20px;
+        margin-left:20px;
         background-color:f0f0f0;
-	margin-top:20px;
         min-height:400px;
 }
 
@@ -207,3 +215,14 @@ fieldset label {
 	opacity:0.8 !important;
 	filter:alpha(opacity=80) !important;
 }
+
+#cytoscapeweb { 
+	width: 100%; 
+	height: 90%;
+}
+
+#note { width: 100%; text-align: center; padding-top: 0.5em; padding-bottom:10px;}
+.link { text-decoration: underline; color: #0b94b1; cursor: pointer; }
+.yui-skin-sam .yui-navset .yui-nav .selected a,
+.yui-skin-sam .yui-navset .yui-nav .selected a:focus, /* no focus effect for selected */
+.yui-skin-sam .yui-navset .yui-nav .selected a:hover { /* no hover effect for selected */
