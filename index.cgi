@@ -26,7 +26,7 @@ my $ctrl = new Flowscale::Controller();
 my $graph = new Flowscale::Graph();
 
 my $ADD_BREADCRUMBS = [
-	{ title => "Home",         url => "?action=index" },
+	{ title => "FlowScale",         url => "?action=index" },
 	{ title => "Add Group",    url => "?action=add_group" },
 	{ title => "Edit Group",   url => "?action=edit_group" },
 	{ title => "Add Switch",   url => "?action=add_switch" },
@@ -37,7 +37,7 @@ my $ADD_BREADCRUMBS = [
 ];
 
 my $REMOVE_BREADCRUMBS = [
-	{ title => "Home",         url => "?action=index" },
+	{ title => "FlowScale",         url => "?action=index" },
 	{ title => "Scheduling",   url => "?action=remove_scheduling" },
 	{ title => "Provisioning", url => "?action=provisioning" },
 ];
@@ -82,9 +82,9 @@ sub main {
 		case "index" {
 
 			$filename           = "html_pages/flowscale2.html";
-			$title              = "Home";
+			$title              = "FlowScale";
 			$breadcrumbs        = $HOME_BREADCRUMBS;
-			$current_breadcrumb = "Home";
+			$current_breadcrumb = "FlowScale";
 		}
 		case "rest" {
 

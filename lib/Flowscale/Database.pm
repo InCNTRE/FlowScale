@@ -601,6 +601,7 @@ sub get_switches {
 	return $results;
 }
 
+
 sub get_groups {
 	my $self        = shift;
 	my %args        = @_;
@@ -744,6 +745,8 @@ sub get_group_input_ports {
 	return $ports;
 
 }
+
+
 
 sub get_group_output_ports {
 
