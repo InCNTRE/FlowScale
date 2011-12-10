@@ -1,3 +1,9 @@
+FlowScale is a Load Balancer as a service application. It uses OpenFlow to provide a way to load balance traffic
+easily and inexpensivly on Layer 2 switches. 
+
+Licences
+========
+
 FlowScale is released under the Apache 2.0 licence except for component libraries (Cytoscape and YUI)
 http://www.apache.org/licenses/LICENSE-2.0
 
@@ -15,7 +21,8 @@ Cytoscape Web
 	Cytoscape Web can be downloaded at http://cytoscapeweb.cytoscape.org/download
 
 YUI Library
-     configuation set for remote access, can be downloaded for reliability and speed improvements or to support deployments where the Yahoo servers can not be accessed
+     configuation set for remote access, can be downloaded for reliability and speed improvements or to 
+     support deployments where the Yahoo servers can not be accessed
 
 
 
