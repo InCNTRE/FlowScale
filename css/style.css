@@ -1,10 +1,12 @@
 html {
 	background: -webkit-gradient(linear, left top, left bottom, from(#0092bf), to(#ffffff));
+	background: -moz-gradient(linear, left top, left bottom, from(#0092bf), to(#ffffff));
 }
 
 body {
 	font-family:Arial,Helvetica,sans-serif !important;
 	background: -webkit-gradient(linear, left top, left bottom, from(#0092bf), to(#ffffff));
+	background-image: -moz-linear-gradient(bottom, #0092bf 100%, #FFFFFF 50%);
 }
 p.title {
 	font-family:Arial Black,Helvetica,sans-serif !important;
@@ -66,7 +68,7 @@ div.box {
 	margin-right:20px;
         margin-left:20px;
         background-color:f0f0f0;
-        min-height:400px;
+        min-height:80%;
 }
 
 	
@@ -90,6 +92,10 @@ td.graph {
 	border-radius:10px;
 }
 
+.yui-nav { 
+	border: #ffffff;
+}
+
 .selected a {
  	background-color: #ff0000;
 }
@@ -102,16 +108,14 @@ td.graph {
 
 
 div.main_page {
-	width:1024px;
 	clear:both;
-	min-height:700px;
+	min-height:80%;
 	margin-left:26px;
 }
 div.admin {
 	margin-left:0px;
 }
 div#footer {
-	width:1024px;
 	text-align:center;
 }
 div.ma
