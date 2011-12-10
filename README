@@ -4,7 +4,7 @@ easily and inexpensivly on Layer 2 switches.
 Licences
 ========
 
-FlowScale is released under the Apache 2.0 licence except for component libraries (Cytoscape and YUI)
+FlowScale is released under the Apache 2.0 licence except for component libraries under different licences (Cytoscape and YUI)
 http://www.apache.org/licenses/LICENSE-2.0
 
 CytoScape Web is released under the LGPL licence
@@ -12,6 +12,10 @@ http://cytoscapeweb.cytoscape.org/about/license
 
 YUI is tradmarked by Yahoo! Inc  and released under the BSD licence
 http://yuilibrary.com/license/
+
+FlowScale uses FloodLight (http://floodlight.openflowhub.org/) to provide an OpenFlow API 
+Floodlight is licenced under the Apache 2.0 licence
+
 
 Dependancies
 ===========
@@ -21,8 +25,11 @@ Cytoscape Web
 	Cytoscape Web can be downloaded at http://cytoscapeweb.cytoscape.org/download
 
 YUI Library
-     configuation set for remote access, can be downloaded for reliability and speed improvements or to 
-     support deployments where the Yahoo servers can not be accessed
+        configuation set for remote access, can be downloaded for reliability and speed improvements or to 
+        support deployments where the Yahoo servers can not be accessed
+
+Floodlight
+	OpenFlow API code is included in the FlowScale repository
 
 
 
