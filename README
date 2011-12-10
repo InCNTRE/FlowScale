@@ -1,0 +1,19 @@
+FlowScale is released under the Apache 2.0 licence except for the Cytoscape Web libraries
+http://www.apache.org/licenses/LICENSE-2.0
+
+CytoScape Web is released under the LGPL licence
+http://cytoscapeweb.cytoscape.org/about/license
+
+
+Dependancies
+===========
+Cytoscape Web
+
+	It is expected that the Cytoscape Web code is downloaded into the /swf directory on the same server as FlowScale
+	Cytoscape Web can be downloaded at http://cytoscapeweb.cytoscape.org/download
+
+YUI Library
+     configuation set for remote access, can be downloaded for reliability and speed improvements or to support deployments where the Yahoo servers can not be accessed
+
+
+
