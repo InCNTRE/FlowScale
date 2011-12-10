@@ -23,7 +23,6 @@ window.onload = function() {
                                      { id: "10", parent: "BL Sensors" },
                                      { id: "11", parent: "BL Sensors" },
                                      { id: "12", parent: "BL Sensors" },
-                                     { id: "srv1.ictc", parent: "Input Ports" },
                                      { id: "cr3.bldc", parent: "Input Ports" },
                                      { id: "cr4.bldc", parent: "Input Ports", },
                                      { id: "cr5.bldc", parent: "Input Ports" },
