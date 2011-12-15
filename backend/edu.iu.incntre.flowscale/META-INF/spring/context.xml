@@ -15,7 +15,6 @@
     init-method="startUp" destroy-method="shutDown">
     <property name="beaconProvider" ref="beaconProvider"/>
     <property name="jettyListenerPort" value="8080"/>
-    <property name="capstatsFilePath" value="/var/flowscale/linux.gtk.x86_64"/>
     <property name="username" value="root" />
 	<property name="password" value="root" />
 	<property name="host" value="localhost" />
