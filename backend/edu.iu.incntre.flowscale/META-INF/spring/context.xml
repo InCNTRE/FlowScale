@@ -15,11 +15,10 @@
     init-method="startUp" destroy-method="shutDown">
     <property name="beaconProvider" ref="beaconProvider"/>
     <property name="jettyListenerPort" value="8080"/>
-    <property name="capstatsFilePath" value="/var/flowscale/linux.gtk.x86_64"/>
-    <property name="username" value="root" />
-	<property name="password" value="root" />
-	<property name="host" value="localhost" />
-	<property name="port" value="3306" />
+    <property name="username" value="db-username-here" />
+	<property name="password" value="db-password-here" />
+	<property name="host" value="host-uri" />
+	<property name="port" value="host-port" />
   </bean>
 
 

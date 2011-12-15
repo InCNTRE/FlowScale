@@ -144,46 +144,8 @@ public class FlowscaleController implements IOFSwitchListener,
 
 			xConnectList.remove(xConnect);
 
-		}else if (requestAction.equals("getCapstats")){
+		}
 			
-			FlowscaleController.logger.debug("action is getCapstats");
-			
-	
-			
-			try{
-				  // Open the file that is the first 
-				  // command line parameter
-				  FileInputStream fstream = new FileInputStream(capstatsFilePath);
-				  // Get the object of DataInputStream
-				  DataInputStream in = new DataInputStream(fstream);
-				  BufferedReader br = new BufferedReader(new InputStreamReader(in));
-				  String strLine;
-				  //Read File Line By Line
-				  JSONArray jsonArray = new JSONArray();
-				  for(int i=0 ; i < 10; i++)   {
-				  // Print the content on the console
-					  strLine = br.readLine();
-					  
-					  String [] values = strLine.split("\\s+");
-					  logger.debug("{}",values[0]);
-					  JSONObject jsonObject = new JSONObject();
-						jsonObject.put("sensor", values[0]);
-						jsonObject.put("kpps", values[1]);
-						jsonObject.put("mbps",values[2]);
-						jsonArray.add(jsonObject);
-						
-					  
-				//  System.out.println (strLine);
-				  }
-				  output = jsonArray.toJSONString();
-				  
-				  //Close the input stream
-				  in.close();
-				    }catch (Exception e){//Catch exception if any
-				  FlowscaleController.logger.error("Error {}: " + e);
-				  }
-				  
-		}	
 		
 		
 			else if (requestAction.equals("addSwitch")) {
