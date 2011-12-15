@@ -1,0 +1,22 @@
+Licences
+========
+
+FlowScale is released under the Apache 2.0 licence except for component libraries under different licences 
+http://www.apache.org/licenses/LICENSE-2.0
+
+CytoScape Web is released under the LGPL licence
+http://cytoscapeweb.cytoscape.org/about/license
+
+YUI is tradmarked by Yahoo! Inc  and released under the BSD licence
+http://yuilibrary.com/license/
+
+FlowScale uses Beacon (https://openflow.stanford.edu/display/Beacon/License) which is 
+licenced under the GPL v2 and the Stanford University FOSS Licence Exception 1.0
+
+FlowScale is utalizing the provisions of the FOSS Licence Exception to release FlowScale under 
+the Apache 2.0 Licence  
+
+
+
+
+

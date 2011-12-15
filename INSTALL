@@ -1,0 +1,24 @@
+
+Dependancies
+===========
+Cytoscape Web
+
+        It is expected that the Cytoscape Web code is downloaded into the /swf directory 
+	on the same web server as FlowScale UI
+        Cytoscape Web can be downloaded at http://cytoscapeweb.cytoscape.org/download
+
+YUI Library
+        configuation set for remote access, can be downloaded for
+	 reliability and speed improvements or to
+        support deployments where the Yahoo servers can not be accessed
+
+
+Beacon
+       The FlowScale backend utalises the BEacon API 
+
+
+
+Install 
+========
+
+Install documentation will go here

@@ -1,4 +1,0 @@
-Content-type: text/plain
-
-test
-test
