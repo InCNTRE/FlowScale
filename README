@@ -1,37 +1,7 @@
-FlowScale is a Load Balancer as a service application. It uses OpenFlow to provide a way to load balance traffic
-easily and inexpensivly on Layer 2 switches. 
-
-Licences
-========
-
-FlowScale is released under the Apache 2.0 licence except for component libraries under different licences (Cytoscape and YUI)
-http://www.apache.org/licenses/LICENSE-2.0
-
-CytoScape Web is released under the LGPL licence
-http://cytoscapeweb.cytoscape.org/about/license
-
-YUI is tradmarked by Yahoo! Inc  and released under the BSD licence
-http://yuilibrary.com/license/
-
-FlowScale uses FloodLight (http://floodlight.openflowhub.org/) to provide an OpenFlow API 
-Floodlight is licenced under the Apache 2.0 licence
 
 
-Dependancies
-===========
-Cytoscape Web
-
-	It is expected that the Cytoscape Web code is downloaded into the /swf directory on the same server as FlowScale
-	Cytoscape Web can be downloaded at http://cytoscapeweb.cytoscape.org/download
-
-YUI Library
-        configuation set for remote access, can be downloaded for reliability and speed improvements or to 
-        support deployments where the Yahoo servers can not be accessed
-
-Floodlight
-	OpenFlow API code is included in the FlowScale repository
-
-
-
-
-
+FlowScale is a project to divide and distribute the traffic over multiple physical ports. FlowScale replicates the functionality in load balancing​ appliances but using a Top of Rack (ToR) switch to distribute traffic. Using software to handle the control plane specification but switch hardware to do forwarding gives both great flexibility and allows for low cost, high throughput deployments.
+FlowScale components are:
+a Web UI to administer how traffic is divided​ and providing a view of statistics and status
+OpenFlow controller sending rules based on policy configured
+OpenFlow capable ToR switch
