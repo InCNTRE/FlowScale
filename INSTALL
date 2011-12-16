@@ -17,8 +17,73 @@ Beacon
        The FlowScale backend utalises the BEacon API 
 
 
-
 Install 
 ========
 
-Install documentation will go here
+
+Binary Deployment
+==================
+
+Download 
+	Download the tarball fomr [url] for your platform and extract to your desired directory
+
+Configuration
+	The following values could be configured:
+
+	jetty listener port: 
+
+	The port that listens to the HTTP server configured in Flowscale.  
+	To change the port create a file called flowscale.properties in the root directory and add the value 	
+	flowscaleController.jettyListenerPort=[your_port].
+
+	Database properties:
+
+	Creating a flowscale.properies file in the root directory also allows flowscale database values to be set:
+	1) flowscaleController.port
+	2) flowscaleController.host
+	3) flowscaleController.username
+	4) flowscaleController.password
+
+	Controller (Beacon) Properties:
+	Create a file called beacon.properites and add 
+	controller.listenPort=[listner_port]
+
+	Log level:
+
+	Up to 4 levels may be logged (INFO,WARN,ERROR,DEBUG). To set the logger level and output see logback-example.xml
+	You must update the flowscale-controller.ini to point to the right log configuration file:
+
+	e.g.
+	-Dlogback.configurationFile=logback-example.xml
+
+
+	management console:
+	If desiring to manage the osgi environment update the flowscale-controller.ini file and add
+	-console
+	[console-port]
+
+	This will allow telnet to the port and the osgi cli will appear.
+
+
+
+Deploy from Eclipse
+=====================
+
+
+Follow all the instruction from www.beaconcontroller.net to setup Beacon and openflowj, then 
+download the source code from the repository:
+
+ 	git@github.com:InCNTRE/FlowScale.git	
+
+
+In order to export the code as binary see the following:
+
+https://openflow.stanford.edu/display/Beacon/Exporting+a+Binary
+
+
+
+
+
+Database Deployment
+=====================
+Create a new database called webUI and run the file  and run the webui.sql 
