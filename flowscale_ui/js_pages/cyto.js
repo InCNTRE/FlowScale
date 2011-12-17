@@ -238,31 +238,33 @@ function MeasurementGraph(container, legend_container, options){
     this.graph            = null;
     this.panel            = null;
     this.updating         = null;
-    this.POLL_INTERVAL    = 10000000;
+    this.POLL_INTERVAL    = 10000;
+
+
+    var round = function(value){
+        return Math.round(value*100)/100;
+    }
 
     this.convertToSI = function(value){
         if (value == 0 || value == null){
             return "0";
         }
         if (value < 1){
-            return Math.round(value * 1000) + " m";
+            return round(value * 1000) + " m";
         }
         if (value >= 1000*1000*1000){
-            if (value <= 1000*1000*1000*10) {
-                return Math.round(value / (1000*1000*100)) / 10 + " G";
-            }
-            else {
-                return Math.round(value / (1000*1000*1000)) + " G";
-            }
+            return round(value / (1000*1000*1000)) + " G";
         }
         if (value >= 1000*1000){
-            return Math.round(value / (1000*1000)) + " M";
+            return round(value / (1000*1000)) + " M";
         }
         if (value >= 1000){
-            return Math.round(value / (1000)) + " k";
+            return round(value / (1000)) + " k";
         }
-        return Math.round(value);
+        return round(value);
     };
+
+    
 
     this.GRAPH_CONFIG = {lines: {
                                   show: true, 
