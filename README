@@ -6,6 +6,6 @@ do the forwarding gives both great flexibility and allows for low cost, high thr
 FlowScale components include:
 
  * a Web UI to administer how traffic is divided​ and providing a view of statistics and status
- * OpenFlow controller sending rules based on policy configured
+ * OpenFlow controller sending rules based on policy configured  
  * OpenFlow capable ToR switch
 
