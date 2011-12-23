@@ -7,18 +7,16 @@
 
   <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
     <property name="ignoreResourceNotFound" value="true" />
-    <property name="locations" value="file:./flowscale.properties"/>
+    <property name="locations" value="file:./web_interface.properties"/>
   </bean>
 
 
-  <bean id="flowscaleController" class="edu.iu.incntre.flowscale.FlowscaleController"
+  <bean id="flowscaleHttpListener" class="edu.iu.incntre.flowscalehttplistener.HttpListener"
     init-method="startUp" destroy-method="shutDown">
-    <property name="beaconProvider" ref="beaconProvider"/>
-	<property name="username" value="db-username-here" />
-	<property name="password" value="db-password-here" />
-	<property name="host" value="host-uri" />
-	<property name="port" value="host-port" />
+    <property name="flowscaleController" ref="flowscaleController"/>
+       <property name="jettyListenerPort" value="8080"/>
+  </bean>
 
-</bean>
+
   
 </beans>

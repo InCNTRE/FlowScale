@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FlowScale is a project to divide and distribute traffic over multiple physical switch ports. FlowScale 
 replicates the functionality in load balancing appliances but using a Top of Rack (ToR) switch 
 to distribute traffic. Using software to handle the control plane specification but 
@@ -9,5 +10,16 @@ FlowScale components are:
 * Web UI to administer how traffic is divided and providing a view of statistics and status
 * OpenFlow controller sending rules based on policy configured
 * OpenFlow capable ToR switch
+=======
+FlowScale is a project to divide and distribute traffic over multiple physical switch ports. FlowScale
+replicates the functionality in load balancing​ appliances but using a Top of Rack (ToR) switch to 
+distribute traffic. Using software to handle the control plane specification but switch hardware to 
+do the forwarding gives both great flexibility and allows for low cost, high throughput deployments.
 
+FlowScale components include:
+>>>>>>> origin/master
+
+ * a Web UI to administer how traffic is divided​ and providing a view of statistics and status
+ * OpenFlow controller sending rules based on policy configured  
+ * OpenFlow capable ToR switch
 

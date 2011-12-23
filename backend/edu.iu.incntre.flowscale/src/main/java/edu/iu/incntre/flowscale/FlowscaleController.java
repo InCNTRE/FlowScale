@@ -35,14 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.mortbay.jetty.HttpConnection;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.Handler;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -50,566 +42,395 @@ import java.util.concurrent.TimeUnit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+
 /**
  * @author Ali Khalfan (akhalfan@indiana.edu)
  */
 
 public class FlowscaleController implements IOFSwitchListener,
-		IOFMessageListener, Handler {
+        IOFMessageListener {
 
-	protected IBeaconProvider ibeaconProvider;
-	protected int jettyListenerPort;
-	protected String capstatsFilePath;
-	private HashMap<Long, SwitchDevice> controllerSwitches = new HashMap<Long, SwitchDevice>();
-	private HashMap<Integer, Group> groupList = new HashMap<Integer, Group>();
+    protected IBeaconProvider ibeaconProvider;
 
-	private String username, password, host, port;
+    private HashMap<Long, SwitchDevice> controllerSwitches = new HashMap<Long, SwitchDevice>();
+    private HashMap<Integer, Group> groupList = new HashMap<Integer, Group>();
 
-	private ArrayList<XConnect> xConnectList = new ArrayList<XConnect>();
-	Server server;
+    private String username, password, host, port;
 
-	protected static Logger logger = LoggerFactory
-			.getLogger(FlowscaleController.class);
+    private ArrayList<XConnect> xConnectList = new ArrayList<XConnect>();
 
-	@Override
-	public void handle(String arg0, HttpServletRequest request,
-			HttpServletResponse response, int arg3) throws IOException,
-			ServletException {
-		// TODO Auto-generated method stub
+    protected static Logger logger = LoggerFactory
+            .getLogger(FlowscaleController.class);
 
-		logger.debug("http request received");
-		logger.debug("request header type is {}", request.getMethod());
+    // implementation of the IOFMessage Listener
 
-		Request base_request = (request instanceof Request) ? (Request) request
-				: HttpConnection.getCurrentConnection().getRequest();
-		base_request.setHandled(true);
-		response.setContentType("text/html;charset=utf-8");
+    @Override
+    public Command receive(IOFSwitch sw, OFMessage msg) {
+        // TODO Auto-generated method stub
 
-		String output = "";
+        if (msg.getType() == OFType.PACKET_IN) {
 
-		if (request.getMethod() != "GET") {
+            return Command.CONTINUE;
 
-			response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        }
 
-			JSONObject obj = new JSONObject();
-			obj.put("success", 0);
-			obj.put("error", "method not allowed");
-			response.getWriter().print(obj);
+        if (msg.getType() == OFType.PORT_STATUS) {
 
-			return;
-		}
+            logger.info("you got a port status message");
 
-		String requestAction = request.getHeader("action");
+            OFPortStatus ps = (OFPortStatus) msg;
 
-		logger.debug("action is {}", requestAction);
-		if (requestAction.equals("getSwitchStatus")) {
+            logger.info("port {}, with h/w address {} is updated", ps.getDesc()
+                    .getPortNumber(), ps.getDesc().getHardwareAddress());
 
-			String switchId = request.getHeader("datapathId");
+            if (OFPortReason.values()[ps.getReason()] == OFPortReason.OFPPR_MODIFY) {
 
-			// getSwitchStatus(switchId);
+                updateGroupsWithPortStatus(sw, ps.getDesc().getPortNumber(),
+                        ps.getDesc());
 
-		} else if (requestAction.equals("getSwitchPorts")) {
+            }
 
-			long datapathId = HexString.toLong(request.getHeader("datapathId"));
+            // update switch as well
 
-			JSONArray objArray = new JSONArray();
-			objArray = this.getSwitchPorts(datapathId);
+            SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
 
-			output = objArray.toJSONString();
+            if (switchDevice != null)
+                switchDevice.updatePort(ps);
 
-		} else if (requestAction.equals("addXonnect")) {
+        }
 
-			XConnect xConnect = new XConnect();
-			xConnect.setInputSwitch(HexString.toLong(request
-					.getHeader("inputSwitch")));
-			xConnect.setOutputSwitch(HexString.toLong(request
-					.getHeader("outputSwitch")));
-			xConnect.setInputPortNum(Integer.parseInt(request
-					.getHeader("inputPort")));
-			xConnect.setOutputPortNum(Integer.parseInt(request
-					.getHeader("outputPort")));
-			xConnectList.add(xConnect);
+        return null;
+    }
 
-		} else if (requestAction.equals("removeXconnect")) {
+    private void updateGroupsWithPortStatus(IOFSwitch sw, short portNum,
+            OFPhysicalPort physicalPort) {
 
-			XConnect xConnect = new XConnect();
-			xConnect.setInputSwitch(HexString.toLong(request
-					.getHeader("inputSwitch")));
-			xConnect.setOutputSwitch(HexString.toLong(request
-					.getHeader("outputSwitch")));
-			xConnect.setInputPortNum(Integer.parseInt(request
-					.getHeader("inputPort")));
-			xConnect.setOutputPortNum(Integer.parseInt(request
-					.getHeader("outputPort")));
+        for (Integer groupId : groupList.keySet()) {
+            Group group = groupList.get(groupId);
 
-			xConnectList.remove(xConnect);
+            if ((sw.getId() == group.getInputSwitchDatapathId() || sw.getId() == group
+                    .getOutputSwitchDatapathId())
+                    && (group.getInputPorts().contains(portNum) || group
+                            .getOutputPorts().contains(portNum))) {
 
-		}
-			
-		
-		
-			else if (requestAction.equals("addSwitch")) {
-		
+                group.alert(sw, portNum, physicalPort, null);
 
-			FlowscaleController.logger.debug(("action is to add Switch"));
-			long datapathId = HexString.toLong(request.getHeader("datapathId"));
+            }
+        }
 
-			SwitchDevice switchDevice = new SwitchDevice(datapathId);
+    }
 
-			IOFSwitch ofSwitch = ibeaconProvider.getSwitches().get(datapathId);
+    // implementation of the IOFSwitchLisnter
 
-			if (ofSwitch != null) {
+    @Override
+    public void addedSwitch(IOFSwitch sw) {
+        // TODO Auto-generated method stub
+        SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
+        if (switchDevice == null) {
 
-				switchDevice.setOpenFlowSwitch(ofSwitch);
+            switchDevice = new SwitchDevice();
+            switchDevice.setDatapathId(sw.getId());
+          
+        }
 
-			}
+        try {
 
-			controllerSwitches.put(datapathId, switchDevice);
+            OFFlowMod ofDeleteAll = new OFFlowMod();
+            OFMatch ofMatchAll = new OFMatch();
+            ofMatchAll.setWildcards(OFMatch.OFPFW_ALL);
+            ofDeleteAll.setMatch(ofMatchAll);
+            ofDeleteAll.setCommand(OFFlowMod.OFPFC_DELETE);
 
-		} else if (requestAction.equals("removeSwitch")) {
-			long datapathId = HexString.toLong(request.getHeader("datapathId"));
-			controllerSwitches.remove(datapathId);
+            OFFlowMod ofDefaultDropRule = new OFFlowMod();
 
-		} else if (requestAction.equals("addGroup")) {
-			Group g = new Group(this);
+            ofDefaultDropRule.setPriority((short) 5);
+            ofDefaultDropRule.setMatch(ofMatchAll);
+            ofDefaultDropRule.setIdleTimeout((short) 0);
+            ofDefaultDropRule.setHardTimeout((short) 0);
+            ArrayList<OFAction> emptyActions = new ArrayList<OFAction>();
 
-			// get all values for the grouop
+            ofDefaultDropRule.setActions(emptyActions);
+         
 
-			String groupIdString = request.getHeader("groupId");
-			String groupName = request.getHeader("groupName");
-			String inputSwitchDatapathIdString = request
-					.getHeader("inputSwitch");
-			String outputSwitchDatapathIdString = request
-					.getHeader("outputSwitch");
-			String inputPortListString = request.getHeader("inputPorts");
-			String outputPortListString = request.getHeader("outputPorts");
-			String typeString = request.getHeader("type");
-			String priorityString = request.getHeader("priority");
-			String valuesString = request.getHeader("values");
-			String maximumFlowsAllowedString = request
-					.getHeader("maximumFlowsAllowed");
+            sw.getOutputStream().write(ofDeleteAll);
 
-			// end get all values for the gorup
+            ofDefaultDropRule.setBufferId(-1);
+            ofDefaultDropRule.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH));
+            sw.getOutputStream().write(ofDefaultDropRule);
 
-			g.addGroupDetails(groupIdString, groupName,
-					inputSwitchDatapathIdString, outputSwitchDatapathIdString,
-					inputPortListString, outputPortListString, typeString,
-					priorityString, valuesString, maximumFlowsAllowedString);
+            sw.getOutputStream().flush();
 
-			g.pushRules();
+        } catch (Exception e) {
 
-			groupList.put(Integer.parseInt(request.getHeader("groupId")), g);
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("result", "group added");
-			output = jsonObject.toJSONString();
+            FlowscaleController.logger.error("{}", e);
+        }
 
-		}
+        switchDevice.setOpenFlowSwitch(sw);
+        logger.debug("ports on initiation {}" ,sw.getFeaturesReply().getPorts());
+        
+        switchDevice.setPhysicalPorts(sw.getFeaturesReply().getPorts());
+        
+        controllerSwitches.put(sw.getId(), switchDevice);
 
-		else if (requestAction.equals("editGroup")) {
+        for (Integer groupId : groupList.keySet()) {
+            Group group = groupList.get(groupId);
 
-			Group g = groupList.get(Integer.parseInt(request
-					.getHeader("groupId")));
-			g.editGroup(request.getHeader("editType"),
-					request.getHeader("updateValue"));
+            if (sw.getId() == group.getOutputSwitchDatapathId()) {
 
-			// parse command ,
-			// the right methods
+                group.switchUpAlert(sw);
 
-		} else if (requestAction.equals("deleteGroup")) {
+            }
 
-			logger.debug(groupList.toString());
-			logger.debug("group id is {}", request.getHeader("groupId"));
+        }
 
-			Group g = groupList.get(Integer.parseInt(request
-					.getHeader("groupId")));
+        logger.info("switch {} added", sw.getId());
 
-			g.removeGroup();
-			groupList.remove(Integer.parseInt(request.getHeader("groupId")));
+    }
 
-		} else if (requestAction.equals("getSwitchStatistics")) {
+    @Override
+    public void removedSwitch(IOFSwitch sw) {
+        // TODO Auto-generated method stub
+        for (Integer groupId : groupList.keySet()) {
+            Group group = groupList.get(groupId);
 
-			long datapathId = HexString.toLong(request.getHeader("datapathId"));
+            if (sw.getId() == group.getOutputSwitchDatapathId()) {
 
-			SwitchDevice switchDevice = controllerSwitches.get(datapathId);
-			JSONArray jsonArray = switchDevice.getStatistics((request
-					.getHeader("type")));
+                group.switchDownAlert(sw);
 
-			output = jsonArray.toJSONString();
+            }
 
-		}
+        }
+        logger.info("switch {} removed", sw.getId());
+    }
 
-		response.setStatus(HttpServletResponse.SC_OK);
+    @Override
+    public String getName() {
+        // TODO Auto-generated method stub
+        return "flowscaleController";
+    }
 
-		logger.debug("{}", output);
+    // controller listeners
 
-		response.getWriter().print(output);
+    public IBeaconProvider getIBeaconProvider() {
 
-	}
+        return this.ibeaconProvider;
 
-	// implementation of the IOFMessage Listener
+    }
 
-	@Override
-	public Command receive(IOFSwitch sw, OFMessage msg) {
-		// TODO Auto-generated method stub
+    public void setBeaconProvider(IBeaconProvider beaconProvider) {
+        this.ibeaconProvider = beaconProvider;
+    }
 
-		if (msg.getType() == OFType.PACKET_IN) {
+    public String getSwitchPorts(long datapathId) {
+        JSONArray js = new JSONArray();
 
-			return Command.CONTINUE;
+        logger.debug("all switches {}", controllerSwitches.toString());
+        logger.debug("this datapath id {}", datapathId);
+        SwitchDevice switchDevice = this.controllerSwitches.get(datapathId);
 
-		}
+        logger.debug("ibeacon provider switches {}", ibeaconProvider.getSwitches());
+                logger.debug("ports now {}", switchDevice.getOpenFlowSwitch().getFeaturesReply().getPorts());
+                logger.debug("sw port states ", switchDevice.getPortStates());
+                            
+        if (switchDevice.getPortStates() == null) {
+            logger.debug("switch is null");
+            return null;
+        }
 
-		if (msg.getType() == OFType.PORT_STATUS) {
+        List<OFPhysicalPort> ss = switchDevice.getPortStates();
 
-			logger.info("you got a port status message");
+        for (OFPhysicalPort pp : ss) {
 
-			OFPortStatus ps = (OFPortStatus) msg;
+            JSONObject obj = new JSONObject();
+            if (pp.getPortNumber() == -2) {
+                continue;
+            }
+            obj.put("port_id", pp.getPortNumber());
+            obj.put("port_address",
+                    HexString.toHexString(pp.getHardwareAddress()));
+            obj.put("config", pp.getConfig());
+            obj.put("supported", pp.getSupportedFeatures());
+            obj.put("current", pp.getCurrentFeatures());
 
-			logger.info("port {}, with h/w address {} is updated", ps.getDesc()
-					.getPortNumber(), ps.getDesc().getHardwareAddress());
+            obj.put("state", pp.getState());
 
-			if (OFPortReason.values()[ps.getReason()] == OFPortReason.OFPPR_MODIFY) {
+            logger.debug("port {}", pp.getPortNumber());
+            logger.debug("h/w {}",
+                    HexString.toHexString(pp.getHardwareAddress()));
 
-				updateGroupsWithPortStatus(sw, ps.getDesc().getPortNumber(),
-						ps.getDesc());
+            logger.debug("state {}", pp.getState());
 
-			}
+            logger.debug("-------");
 
-			// update switch as well
+            js.add(obj);
 
-			SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
+        }
 
-			if (switchDevice != null)
-				switchDevice.updatePort(ps);
+       // return js;
+        
+        return  js.toJSONString();
+        
+    }
 
-		}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-		return null;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	private void updateGroupsWithPortStatus(IOFSwitch sw, short portNum,
-			OFPhysicalPort physicalPort) {
+    public void setHost(String host) {
+        this.host = host;
 
-		for (Integer groupId : groupList.keySet()) {
-			Group group = groupList.get(groupId);
+    }
 
-			if ((sw.getId() == group.getInputSwitchDatapathId() || sw.getId() == group
-					.getOutputSwitchDatapathId())
-					&& (group.getInputPorts().contains(portNum) || group
-							.getOutputPorts().contains(portNum))) {
+    public void setPort(String port) {
 
-				group.alert(sw, portNum, physicalPort, null);
+        this.port = port;
+    }
 
-			}
-		}
+    public void startUp() {
 
-	}
+        try {
+            DatabaseUtility db = new DatabaseUtility();
+            db.setConnection(username, password, host, port);
 
-	// implementation of the IOFSwitchLisnter
+            logger.info("initiating controller");
+            ibeaconProvider.addOFMessageListener(OFType.PACKET_IN, this);
+            ibeaconProvider.addOFMessageListener(OFType.FEATURES_REPLY, this);
+            ibeaconProvider.addOFMessageListener(OFType.ECHO_REQUEST, this);
+            ibeaconProvider.addOFMessageListener(OFType.ERROR, this);
+            ibeaconProvider.addOFMessageListener(OFType.PORT_MOD, this);
+            ibeaconProvider.addOFMessageListener(OFType.PORT_STATUS, this);
+            logger.info("adding switch listener");
+            ibeaconProvider.addOFSwitchListener(this);
 
-	@Override
-	public void addedSwitch(IOFSwitch sw) {
-		// TODO Auto-generated method stub
-		SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
-		if (switchDevice == null) {
+            this.controllerSwitches = db.populateSwitchesFromDatabase(this);
+            this.groupList = db.populateGroupsFromDatabase(this);
 
-			switchDevice = new SwitchDevice();
-			switchDevice.setDatapathId(sw.getId());
-			controllerSwitches.put(sw.getId(), switchDevice);
-		}
+            logger.debug("groupList has {}", groupList);
 
-		try {
+            for (Integer groupId : groupList.keySet()) {
+                Group group = groupList.get(groupId);
 
-			OFFlowMod ofDeleteAll = new OFFlowMod();
-			OFMatch ofMatchAll = new OFMatch();
-			ofMatchAll.setWildcards(OFMatch.OFPFW_ALL);
-			ofDeleteAll.setMatch(ofMatchAll);
-			ofDeleteAll.setCommand(OFFlowMod.OFPFC_DELETE);
+            }
 
-			OFFlowMod ofDefaultDropRule = new OFFlowMod();
+        } catch (Exception e) {
+            logger.error("{}", e);
+        }
 
-			ofDefaultDropRule.setPriority((short) 5);
-			ofDefaultDropRule.setMatch(ofMatchAll);
-			ofDefaultDropRule.setIdleTimeout((short) 0);
-			ofDefaultDropRule.setHardTimeout((short) 0);
-			ArrayList<OFAction> emptyActions = new ArrayList<OFAction>();
+    }
 
-			ofDefaultDropRule.setActions(emptyActions);
-			// hard coding SC switch to not delete all flows since switch is
-			// shared
+    public void shutDown() {
+        logger.info("controller is shutting down");
+        ibeaconProvider.removeOFMessageListener(OFType.PACKET_IN, this);
+        ibeaconProvider.removeOFMessageListener(OFType.ECHO_REQUEST, this);
+        ibeaconProvider.removeOFMessageListener(OFType.ERROR, this);
 
-			sw.getOutputStream().write(ofDeleteAll);
+        ibeaconProvider.removeOFSwitchListener(this);
 
-			ofDefaultDropRule.setBufferId(-1);
-			ofDefaultDropRule.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH));
-			sw.getOutputStream().write(ofDefaultDropRule);
+        try {
 
-			sw.getOutputStream().flush();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            logger.error("{}", e
 
-		} catch (Exception e) {
+            );
+        }
 
-			FlowscaleController.logger.error("{}", e);
-		}
+    }
 
-		switchDevice.setOpenFlowSwitch(sw);
-		switchDevice.setPhysicalPorts(sw.getFeaturesReply().getPorts());
+    public HashMap<Long, SwitchDevice> getSwitchDevices() {
 
-		for (Integer groupId : groupList.keySet()) {
-			Group group = groupList.get(groupId);
+        return this.controllerSwitches;
 
-			if (sw.getId() == group.getOutputSwitchDatapathId()) {
+    }
 
-				group.switchUpAlert(sw);
+    public void addSwitchFromInterface(String datapathIdString) {
 
-			}
+        long datapathId = HexString.toLong(datapathIdString);
 
-		}
+                
+        SwitchDevice switchDevice = new SwitchDevice(datapathId);
 
-		logger.info("switch {} added", sw.getId());
+        IOFSwitch ofSwitch = ibeaconProvider.getSwitches().get(datapathId);
 
-	}
+        if (ofSwitch != null) {
 
-	@Override
-	public void removedSwitch(IOFSwitch sw) {
-		// TODO Auto-generated method stub
-		for (Integer groupId : groupList.keySet()) {
-			Group group = groupList.get(groupId);
+            switchDevice.setOpenFlowSwitch(ofSwitch);
+            
+            switchDevice.setPhysicalPorts(ofSwitch.getFeaturesReply().getPorts());
 
-			if (sw.getId() == group.getOutputSwitchDatapathId()) {
+        }
 
-				group.switchDownAlert(sw);
+        controllerSwitches.put(datapathId, switchDevice);
 
-			}
+    }
 
-		}
-		logger.info("switch {} removed", sw.getId());
-	}
+    public void removeSwitchFromInterface(String datapathIdString) {
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return "flowscaleController";
-	}
+        long datapathId = HexString.toLong(datapathIdString);
+        controllerSwitches.remove(datapathId);
 
-	// controller listeners
+    }
+    
+    
+    public String addGroupFromInterface(String groupIdString,String groupName, String inputSwitchDatapathIdString, String outputSwitchDatapathIdString,
+                String inputPortListString, String outputPortListString, String typeString,
+           String priorityString, String valuesString, String maximumFlowsAllowedString){
+        
+        Group g = new Group(this);
+        g.addGroupDetails(groupIdString, groupName,
+                inputSwitchDatapathIdString, outputSwitchDatapathIdString,
+                inputPortListString, outputPortListString, typeString,
+                priorityString, valuesString, maximumFlowsAllowedString);
 
-	public IBeaconProvider getIBeaconProvider() {
+        g.pushRules();
 
-		return this.ibeaconProvider;
+        groupList.put(Integer.parseInt(groupIdString), g);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result", "group added");
+        
+        
+        return jsonObject.toJSONString();
+       
+        
+    }
+    
+    public String editGroupFromInterface(String groupIdString, String editTypeString, String updateValueString){
+        
+        Group g = groupList.get(Integer.parseInt(groupIdString));
+        g.editGroup(editTypeString, updateValueString);
+        
+        return null;
+    }
+    
+    public String deleteGroupFromInterface(String groupIdString){
+        
+        logger.debug(groupList.toString());
+        
+        Group g = groupList.get(Integer.parseInt(groupIdString));
 
-	}
+        g.removeGroup();
+        groupList.remove(Integer.parseInt(groupIdString));
+        
+        return null;
+        
+    }
+    
+    
+    public String getSwitchStatisticsFromInterface(String datapathIdString, String typeString){
+        
 
-	public void setBeaconProvider(IBeaconProvider beaconProvider) {
-		this.ibeaconProvider = beaconProvider;
-	}
+        long datapathId = HexString.toLong(datapathIdString);
 
-	public void setJettyListenerPort(int port) {
+        SwitchDevice switchDevice = controllerSwitches.get(datapathId);
+        JSONArray jsonArray = switchDevice.getStatistics(typeString);
+        
+        return jsonArray.toJSONString();
 
-		this.jettyListenerPort = port;
-	}
-	public void setCapstatsFilePath(String filePath){
-		this.capstatsFilePath = filePath;
-	}
-
-	private JSONArray getSwitchPorts(long datapathId) {
-		JSONArray js = new JSONArray();
-
-		logger.debug("all switches {}", controllerSwitches.toString());
-		logger.debug("this datapath id {}", datapathId);
-		SwitchDevice switchDevice = this.controllerSwitches.get(datapathId);
-
-		if (switchDevice.getPortStates() == null) {
-			logger.debug("switch is null");
-			return null;
-		}
-
-		List<OFPhysicalPort> ss = switchDevice.getPortStates();
-
-		for (OFPhysicalPort pp : ss) {
-
-			JSONObject obj = new JSONObject();
-			if (pp.getPortNumber() == -2) {
-				continue;
-			}
-			obj.put("port_id", pp.getPortNumber());
-			obj.put("port_address",
-					HexString.toHexString(pp.getHardwareAddress()));
-			obj.put("config", pp.getConfig());
-			obj.put("supported", pp.getSupportedFeatures());
-			obj.put("current", pp.getCurrentFeatures());
-
-			obj.put("state", pp.getState());
-
-			logger.debug("port {}", pp.getPortNumber());
-			logger.debug("h/w {}",
-					HexString.toHexString(pp.getHardwareAddress()));
-
-			logger.debug("state {}", pp.getState());
-
-			logger.debug("-------");
-
-			js.add(obj);
-
-		}
-
-		return js;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-
-	}
-
-	public void setPort(String port) {
-
-		this.port = port;
-	}
-
-	public void startUp() {
-
-		try {
-			DatabaseUtility db = new DatabaseUtility();
-			db.setConnection(username, password, host, port);
-			Handler handler = this;
-			logger.info("starting http server at port *:{}", jettyListenerPort);
-			server = new Server(jettyListenerPort);
-			server.setHandler(handler);
-			server.start();
-
-			logger.info("initiating controller");
-			ibeaconProvider.addOFMessageListener(OFType.PACKET_IN, this);
-			ibeaconProvider.addOFMessageListener(OFType.FEATURES_REPLY, this);
-			ibeaconProvider.addOFMessageListener(OFType.ECHO_REQUEST, this);
-			ibeaconProvider.addOFMessageListener(OFType.ERROR, this);
-			ibeaconProvider.addOFMessageListener(OFType.PORT_MOD, this);
-			ibeaconProvider.addOFMessageListener(OFType.PORT_STATUS, this);
-			logger.info("adding switch listener");
-			ibeaconProvider.addOFSwitchListener(this);
-
-			this.controllerSwitches = db.populateSwitchesFromDatabase(this);
-			this.groupList = db.populateGroupsFromDatabase(this);
-
-			logger.debug("groupList has {}", groupList);
-
-			for (Integer groupId : groupList.keySet()) {
-				Group group = groupList.get(groupId);
-
-			}
-
-		} catch (Exception e) {
-			logger.error("{}", e);
-		}
-
-	}
-
-	public void shutDown() {
-		logger.info("controller is shutting down");
-		ibeaconProvider.removeOFMessageListener(OFType.PACKET_IN, this);
-		ibeaconProvider.removeOFMessageListener(OFType.ECHO_REQUEST, this);
-		ibeaconProvider.removeOFMessageListener(OFType.ERROR, this);
-
-		ibeaconProvider.removeOFSwitchListener(this);
-
-		try {
-			server.stop();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error("{}", e
-
-			);
-		}
-
-	}
-
-	public HashMap<Long, SwitchDevice> getSwitchDevices() {
-
-		return this.controllerSwitches;
-
-	}
-
-	@Override
-	public void addLifeCycleListener(Listener arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setServer(Server arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean isFailed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isRunning() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isStarted() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isStarting() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isStopped() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isStopping() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void removeLifeCycleListener(Listener arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void start() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void stop() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Server getServer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    }
+   
 
 }

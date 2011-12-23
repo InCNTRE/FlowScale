@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import net.beaconcontroller.core.IOFSwitch;
 
@@ -21,6 +21,12 @@ import org.openflow.protocol.action.OFAction;
 import org.openflow.protocol.action.OFActionOutput;
 import org.openflow.util.HexString;
 import org.openflow.util.U16;
+
+
+
+/**
+ * @author Ali Khalfan (akhalfan@indiana.edu)
+ */
 
 public class Group {
 
