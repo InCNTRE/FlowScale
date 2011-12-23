@@ -3,60 +3,13 @@ window.onload = function() {
        var div_id = "cytoscapeweb";
        var myTabs = new YAHOO.widget.TabView("demo");
 
+        //AJAX topo call
+        var network_json= new YAHOO.util.DataSource("webservice/topo_json.cgi");
+        network_json.responseType = YAHOO.util.DataSource.TYPE_JSON;
 
-       var network_json = {
-		// NOTE the parent attribute
-		data: {
-                            nodes: [ 
-                                     { id: "Input Ports" },
-                                     { id: "BL Sensors" }, 
-                                     { id: "Loadbalancers" },
-                                     { id: "1", parent: "BL Sensors" },
-                                     { id: "2", parent: "BL Sensors" },
-                                     { id: "3", parent: "BL Sensors" },
-                                     { id: "4", parent: "BL Sensors" },
-                                     { id: "5", parent: "BL Sensors" },
-                                     { id: "6", parent: "BL Sensors" },
-                                     { id: "7", parent: "BL Sensors" },
-                                     { id: "8", parent: "BL Sensors" },
-                                     { id: "9", parent: "BL Sensors" },
-                                     { id: "10", parent: "BL Sensors" },
-                                     { id: "11", parent: "BL Sensors" },
-                                     { id: "12", parent: "BL Sensors" },
-                                     { id: "cr3.bldc", parent: "Input Ports" },
-                                     { id: "cr4.bldc", parent: "Input Ports", },
-                                     { id: "cr5.bldc", parent: "Input Ports" },
-                                     { id: "dcr3.bldc", parent: "Input Ports" },                                 
-                                     { id: "dcr4.bldc", parent: "Input Ports" },
-                                     { id: "lb1.bldc", parent: "Loadbalancers" },
-                                     { id: "cr3.hper", parent: "Input Ports" },
-                                     { id: "cr4.hper", parent: "Input Ports" },
-                                     { id: "cr5.hper", parent: "Input Ports" },
-                            ],
-          		      edges: [ 
-                                    { target: "lb1.bldc", source: "cr3.bldc" },
-                                    { target: "lb1.bldc", source: "cr4.bldc" },
-                                    { target: "lb1.bldc", source: "cr5.bldc" },
-                                    { target: "lb1.bldc", source: "dcr3.bldc" },
-                                    { target: "lb1.bldc", source: "dcr4.bldc" },
-                                    { target: "lb1.bldc", source: "cr3.hper" },
-                                    { target: "lb1.bldc", source: "cr4.hper" },
-                                    { target: "lb1.bldc", source: "cr5.hper" },
-                                    { target: "1", source: "lb1.bldc" },
-                                    { target: "2", source: "lb1.bldc" },
-                                    { target: "3", source: "lb1.bldc" },
-                                    { target: "4", source: "lb1.bldc" },
-                                    { target: "5", source: "lb1.bldc" },
-                                    { target: "6", source: "lb1.bldc" },
-                                    { target: "7", source: "lb1.bldc" },
-                                    { target: "8", source: "lb1.bldc" },
-                                    { target: "9", source: "lb1.bldc" },
-                                    { target: "10", source: "lb1.bldc" },
-                                    { target: "11", source: "lb1.bldc" },
-                                    { target: "12", source: "lb1.bldc" },
-                            ]
-                        }
-                };
+
+
+
 
 		// Visual style
 		var visual_style = {

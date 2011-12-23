@@ -18,7 +18,7 @@ sub new {
 
 	my %args = (
 		config =>
-'/var/www/html/flowscale-dev/conf/controller.xml',
+'/home/chsmall/git/FlowScale/flowscale_ui/conf/controller.xml',
 		@_,
 	);
 

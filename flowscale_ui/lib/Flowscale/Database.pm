@@ -20,7 +20,7 @@ sub new {
 
 	my %args = (
 		config =>
-'/var/www/html/flowscale-dev/conf/database.xml',
+'/home/chsmall/git/FlowScale/flowscale_ui/conf/database.xml',
 		@_,
 	);
 
@@ -715,6 +715,42 @@ sub get_group_values {
 
 }
 
+sub get_switch_input_ports {
+	my $self = shift;
+        my %args = @_;
+
+        my $dpid = $args{'dpid'};
+	
+	my $ports = [];
+
+	my $sth = $self->_prepare_query(
+	"select group_port.port_id, flow_group.input_switch, port_address
+	from switch_port, flow_group, group_port
+	where switch_port.switch_id = ? and 
+	flow_group.input_switch = switch_port.switch_id and
+        group_port.port_id = switch_port.port_id and 
+	group_port.port_direction = 0" 
+        );
+	
+	$sth->execute( $dpid );
+
+        while ( my $input_row = $sth->fetchrow_hashref() ) {
+		push(
+                        @$ports,
+                        {
+				"dpid",         $dpid,
+                                "port_id",      $input_row->{'port_id'},
+                                "port_address", $input_row->{'port_address'}
+                        }
+                );
+
+        }
+
+        return $ports;
+}
+
+
+
 sub get_group_input_ports {
 
 	my $self = shift;
@@ -744,6 +780,41 @@ sub get_group_input_ports {
 
 	return $ports;
 
+}
+
+
+sub get_switch_output_ports {
+        my $self = shift;
+        my %args = @_;
+
+        my $dpid = $args{'dpid'};
+
+        my $ports = [];
+
+        my $sth = $self->_prepare_query(
+        "select group_port.port_id, flow_group.output_switch, port_address
+        from switch_port, flow_group, group_port
+        where switch_port.switch_id = ? and 
+        flow_group.output_switch = switch_port.switch_id and
+        group_port.port_id = switch_port.port_id and 
+        group_port.port_direction = 1"
+        );
+
+        $sth->execute( $dpid );
+
+        while ( my $output_row = $sth->fetchrow_hashref() ) {
+                push(
+                        @$ports,
+                        {
+				"dpid",		$dpid,
+                                "port_id",      $output_row->{'port_id'},
+                                "port_address", $output_row->{'port_address'}
+                        }
+                );
+
+        }
+
+        return $ports;
 }
 
 
