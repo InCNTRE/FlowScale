@@ -56,17 +56,11 @@ sub get_topo() {
 	my $num_outports = 0;
 	my $st;
 	my $status;
+
+	my ($sw_rrd_str,$out_rrd_str,$in_rrd_str,$lb_rrd_str) = "";
 	
         my $switches = $db->get_switches();
 
-
-	#if any switches exist add Loadbalancers node
-	if ($switches) {
-	   push (
-		@nodes,
-		  { "id" => "Loadbalancers" }
-	   );
-	}
 
         # Loop through each switch
 	foreach my $switch (@$switches) {
@@ -83,13 +77,6 @@ sub get_topo() {
 		}
 	     }
 	  
-	  # Add switch to nodes
-	  push ( @nodes, { "id" => $switch->{"switch_name"}, 
-			   "parent" => "Loadbalancers", 
-		           "ip" => $switch->{"ip_address"},
-			"status" => $status->{$switch->{"switch_name"}}});
-
-
 	  my $in_ports = $db->get_switch_input_ports( dpid => $switch->{'datapath_id'});
 	  if ($in_ports)  {
 	     # Add input port box 
@@ -102,10 +89,13 @@ sub get_topo() {
 		else { $st = 2; }
 
 		# Add in port node
-		push ( @nodes, { "id" => $in_port->{"port_id"}, "parent" => "Input Ports", "status" => $st});
+		push ( @nodes, { "id" => $in_port->{"port_id"}, "parent" => "Input Ports", 
+			          "status" => $st});
 		# Add in port edge
 		push ( @edges, { "target" => $switch->{"switch_name"}, "source" =>  $in_port->{"port_id"} });
 	        # increment in ports
+	        my $in_rrd = $switch->{"ip_address"} . "_" . $in_port->{"port_id"} . ".rrd";
+	        $in_rrd_str .= $in_rrd; 
 	        $num_inports++;
 	     }
 	}
@@ -124,17 +114,39 @@ sub get_topo() {
                 push ( @nodes, { "id" => $out_port->{"port_id"}, "parent" => "Output Ports", "status" => $st});
 		# Add out port edge
 		push ( @edges, { "source" => $switch->{"switch_name"}, "target" =>  $out_port->{"port_id"} });
+
+		my $out_rrd = $switch->{"ip_address"} . "_" . $out_port->{"port_id"} . ".rrd:";
+                $out_rrd_str .= $out_rrd;
 		$num_outports++;
 	     }
 	  }
+	
+        $sw_rrd_str = $in_rrd_str . $out_rrd_str;
+	$lb_rrd_str .= $sw_rrd_str;
+	  
+ 	# Add switch to nodes
+ 	push ( @nodes, { "id" => $switch->{"switch_name"},
+ 	                 "parent" => "Loadbalancers",
+ 			 "rrd" => $sw_rrd_str, 
+ 			 "status" => $status->{$switch->{"switch_name"}}});	
 
 	
 	}
 
 
 
+
+	    #if any switches exist add Loadbalancers node
+	    if ($switches) {
+	    	push ( @nodes, { "id" => "Loadbalancers",
+				 "rrd" => $lb_rrd_str
+				});
+	    }
+
+
+
 	my $results = { "dataSchema" => { nodes => [ { "name" => "status", "type" => "int" },
-						     { "name" => "ip", "type" => "string" } ] },
+						     { "name" => "rrd", "type" => "string" } ] },
 			"data" => { "nodes" => \@nodes, "edges" => \@edges}
 		      };
 

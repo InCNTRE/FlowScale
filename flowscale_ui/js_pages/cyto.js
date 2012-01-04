@@ -92,14 +92,13 @@ function update_cyto() {
                          var target = event.target;
                          
                          clear();
-			  var rrdfile = target.data["ip"] + "_" + target.data["id"] + ".rrd";
+			  var rrdfile = target.data["rrd"];
                          print(target.data["id"] + " RRD: " + rrdfile); 
 
 			// Clear old graph
 			 document.getElementById("traffic_graph").innerHTML = "";
 	          	 
 			 // Create new graph
-			 var rrdfile = target.data["ip"] + "_" + target.data["id"] + ".rrd";
 			 setupMeasurementGraph(rrdfile);
 
                     }

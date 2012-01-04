@@ -41,7 +41,7 @@ function MeasurementGraph(container, legend_container, options){
     this.graph            = null;
     this.panel            = null;
     this.updating         = null;
-    this.POLL_INTERVAL    = 10000;
+    this.POLL_INTERVAL    = 100000000;
 
 
     var round = function(value){
@@ -263,7 +263,7 @@ function MeasurementGraph(container, legend_container, options){
         }
 
         if (! this.options.circuit_id){
-           this.options.circuit_id = "156.56.5.43_25.rrd:156.56.5.43_26.rrd:156.56.5.43_27.rrd"; 
+           this.options.circuit_id = ""; 
         }
         
         var ds = new YAHOO.util.DataSource("webservice/fs_measurement_agg.cgi?file="+this.options.circuit_id+"&start="+parseInt(this.options.start));
