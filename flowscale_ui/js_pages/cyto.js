@@ -1,164 +1,6 @@
-window.onload = function() {
-     // id of Cytoscape Web container div
-       var div_id = "cytoscapeweb";
-       var myTabs = new YAHOO.widget.TabView("demo");
+window.onload = load_cyto();
 
-		// Visual style
-		var visual_style = {
-                    nodes: {
-                        color: {
-                                discreteMapper: {
-                                attrName: "id",
-                                entries: [
-                                    { attrValue: "lb1.bldc", value: "#25E86D" },
-                                    { attrValue: "1", value: "#25E86D" },
-                                    { attrValue: "2", value: "#25E86D" },
-                                    { attrValue: "3", value: "#25E86D" },
-                                    { attrValue: "4", value: "#25E86D" },
-                                    { attrValue: "5", value: "#25E86D" },
-                                    { attrValue: "6", value: "#25E86D" },
-                                    { attrValue: "7", value: "#25E86D" },
-                                    { attrValue: "8", value: "#25E86D" },
-                                    { attrValue: "9", value: "#25E86D" },
-                                    { attrValue: "10", value: "#25E86D" },
-                                    { attrValue: "11", value: "#25E86D" },
-                                    { attrValue: "12", value: "#F28F96" },
-                                    { attrValue: "cr4.bldc", value: "#25E86D" },
-                                    { attrValue: "cr3.bldc", value: "#25E86D" },
-                                    { attrValue: "cr5.bldc", value: "#25E86D" },
-                                    { attrValue: "dcr3.bldc", value: "#F28F96" },
-                                    { attrValue: "dcr4.bldc", value: "#F28F96" },
-                                    { attrValue: "cr3.hper", value: "#F28F96" },
-                                    { attrValue: "cr4.hper", value: "#F28F96" },
-                                    { attrValue: "cr5.hper", value: "#F28F96" },
-                                    { attrValue: "srv1.ictc", value: "#25E86D" },
-                                ]
-                            }
-                        },
-                        compoundShape: "RECTANGLE",
-                        label: { passthroughMapper: { attrName: "id" } } ,
-                        compoundLabel: { passthroughMapper: { attrName: "id" } } ,
-                        borderWidth: 2,
-                        compoundBorderWidth: 1,
-                        borderColor: "#666666",
-                        compoundBorderColor: "#999999",
-                        size: 25,
-                        compoundColor: "#eaeaea",
-                    }
-                };
-
-		// initialization options
-		var options = {
-                    swfPath: "/swf/CytoscapeWeb",
-                    flashInstallerPath: "/swf/playerProductInstall",
-                };
-
-
-	
-		var network_json = "";	
-		$.getJSON("webservice/topo_json.cgi",
-        		function(data){
-			var network_json = data;
-			}); 
-
-                var vis = new org.cytoscapeweb.Visualization(div_id, options);
-
-		
-
-                vis.ready(function() {
-
-                    // add a listener for when nodes and edges are clicked
-		    vis.addListener("click", "nodes", function(event) {
-                        handle_click(event);
-                    });
-
-                    function handle_click(event) {
-                         var target = event.target;
-                         
-                         clear();
-        
-                         var file = "156.56.5.43_41.rrd";
-
-                         if (event.target.data.id == "1") { file = "156.56.5.43_1.rrd"; }
-                         if (event.target.data.id == "2") { file = "156.56.5.43_4.rrd"; }
-                         if (event.target.data.id == "3") { file = "156.56.5.43_5.rrd"; }
-                         if (event.target.data.id == "4") { file = "156.56.5.43_8.rrd"; }
-                         if (event.target.data.id == "5") { file = "156.56.5.43_9.rrd"; }
-                         if (event.target.data.id == "6") { file = "156.56.5.43_12.rrd"; }
-                         if (event.target.data.id == "7") { file = "156.56.5.43_13.rrd"; }
-                         if (event.target.data.id == "8") { file = "156.56.5.43_16.rrd"; }
-                         if (event.target.data.id == "9") { file = "156.56.5.43_17.rrd"; }
-                         if (event.target.data.id == "10") { file = "156.56.5.43_20.rrd"; }
-                         if (event.target.data.id == "11") { file = "156.56.5.43_21.rrd"; }
- 
-                         if (event.target.data.id == "Loadbalancers") { file = "156.56.5.43_25.rrd:156.56.5.43_26.rrd:156.56.5.43_27.rrd:140.221.223.201_51.rrd"; }
-                         if (event.target.data.id == "BL Sensors") { file = "156.56.5.43_1.rrd:156.56.5.43_4.rrd:156.56.5.43_5.rrd:156.56.5.43_8.rrd:156.56.5.43_9.rrd:156.56.5.43_12.rrd:156.56.5.43_13.rrd:156.56.5.43_16.rrd:156.56.5.43_17.rrd:156.56.5.43_20.rrd:156.56.5.43_21.rrd"; }
-                        
-                         if (event.target.data.id == "Input Ports") { file = "156.56.5.43_25.rrd:156.56.5.43_26.rrd:156.56.5.43_27.rrd:140.221.223.201_51.rrd"; } 
-        
-                          if (event.target.data.id == "cr3.bldc") { file = "156.56.5.43_25.rrd"; }
-                         if (event.target.data.id == "cr4.bldc") { file = "156.56.5.43_26.rrd"; }
-                         if (event.target.data.id == "cr5.bldc") { file = "156.56.5.43_27.rrd"; }
-
-                        
-                         if (event.target.data.id == "lb1.bldc") { file = "156.56.5.43_25.rrd:156.56.5.43_26.rrd:156.56.5.43_27.rrd"; }
-
-	
-			//graph.render(); 
-			   var date = new Date();
-                           var now  = date.valueOf() / 1000;
-                           var then = now - 600;
-                           var graph = new MeasurementGraph("traffic_graph",
-                                     "traffic_legend",
-                                     {
-                                         title:      "foobar",
-                                         circuit_id: file,
-                                         start:      then,
-                                         end:        now
-                                     }
-                                     );
-
-                         graph.render();
-			//setupMeasurementGraph(file);
-			 if (event.target.data.parent == null) {
-                            document.getElementById("note").innerHTML = "<p>" + event.target.data.id + "</p>"; }
-                         else {
-                            document.getElementById("note").innerHTML = "<p>" + event.target.data.parent + ": " + event.target.data.id + "</p>"; }
-
-                         //for (var i in target.data) {
-                         //   var variable_name = i;
-                         //   var variable_value = target.data[i];
-                         //   print( "event.target.data." + variable_name + " = " + variable_value );
-                         //}
-                         }
-
-			function clear() {
-                           document.getElementById("note").innerHTML = "";
-                         }
-                
-                        function print(msg) {
-                           document.getElementById("note").innerHTML += "<p>" + msg + "</p>";
-                        } 
-
-                   });
-                
-                   var draw_options = {
-		 	// your data goes here
-		 	network: network_json,
-                        // this is the best layout to use when the network has compound nodes
-			layout: "CompoundSpringEmbedder",
-			// set the style at initialisation
-			visualStyle: visual_style,
-			// hide pan zoom
-		        panZoomControlVisible: true
-	            };
-		    
-		    vis.draw(draw_options);
-                    setupMeasurementGraph();
-            };
-
-
-	    function setupMeasurementGraph(file){
+function setupMeasurementGraph(file){
                 var date = new Date();
                 var now  = date.valueOf() / 1000;
                 var then = now - 600;
@@ -476,7 +318,7 @@ function load_cyto() {
 	return;
    }
 
-   var url = "webservice/topo_json_test.cgi";
+   var url = "webservice/topo_json.cgi";
 
    request.open("GET",url,true);
    request.onreadystatechange = update_cyto;
@@ -493,15 +335,23 @@ function update_cyto() {
 	if (request.status == 200) {
 
 	  var resp = request.responseText;
-          var network_json = resp; 
-
-	document.getElementById("note").innerHTML += "<p>" + network_json + "</p>";
+          var network_json = JSON.parse(resp); 
+         //document.getElementById("note").innerHTML += "<p>" + resp + "</p>";
 
     var div_id = "cytoscapeweb";
 
 
     var visual_style = {
 	nodes: {
+		       color: {
+			 discreteMapper: {
+                                attrName: "status",
+                                entries: [
+                                    { attrValue: 0, value: "#25E86D" },
+                                    { attrValue: 1, value: "#F28F96" }
+				]
+				}
+			},
                         compoundShape: "RECTANGLE",
                         label: { passthroughMapper: { attrName: "id" } } ,
                         compoundLabel: { passthroughMapper: { attrName: "id" } } ,
@@ -554,7 +404,8 @@ function update_cyto() {
 	   // draw options
 	    var draw_options = {
 		network: network_json,
-		panZoomControlVisible: true
+		panZoomControlVisible: true,
+		visualStyle: visual_style
 	    };
 
 	    vis.draw(draw_options);

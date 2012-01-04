@@ -91,6 +91,7 @@ sub get_topo() {
 	     # Add input port box 
 	     if ($num_inports == 0) {
 		push ( @nodes, { "id" => "Input Ports" });
+		$num_inports++;
 	     }
 	     foreach my $in_port (@$in_ports) {
 		if ($status->{$in_port->{"port_id"}}) { $status = $status->{$in_port->{"port_id"}}} 
@@ -110,6 +111,7 @@ sub get_topo() {
              # Add output port box 
              if ($num_outports == 0) {
              	push ( @nodes, { "id" => "Output Ports" });
+		$num_outports++;
              }
              foreach my $out_port (@$out_ports) {
 		if ($status->{$out_port->{"port_id"}}) { $status = $status->{$out_port->{"port_id"}}} 
@@ -126,7 +128,10 @@ sub get_topo() {
 	}
 
 
-	my $results = { "data" => { "nodes" => \@nodes, "edges" => \@edges}};
+
+	my $results = { "dataSchema" => { nodes => [ { "name" => "status", "type" => "int" } ] },
+			"data" => { "nodes" => \@nodes, "edges" => \@edges}
+		      };
 
         #print "results\n==========\n";
         #print Dumper $results;
