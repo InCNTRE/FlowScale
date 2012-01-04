@@ -59,6 +59,7 @@ sub get_topo() {
 	
         my $switches = $db->get_switches();
 
+
 	#if any switches exist add Loadbalancers node
 	if ($switches) {
 	   push (
@@ -83,7 +84,10 @@ sub get_topo() {
 	     }
 	  
 	  # Add switch to nodes
-	  push ( @nodes, { "id" => $switch->{"switch_name"}, "parent" => "Loadbalancers", "status" => $status->{$switch->{"switch_name"}}});
+	  push ( @nodes, { "id" => $switch->{"switch_name"}, 
+			   "parent" => "Loadbalancers", 
+		           "ip" => $switch->{"ip_address"},
+			"status" => $status->{$switch->{"switch_name"}}});
 
 
 	  my $in_ports = $db->get_switch_input_ports( dpid => $switch->{'datapath_id'});
@@ -129,7 +133,8 @@ sub get_topo() {
 
 
 
-	my $results = { "dataSchema" => { nodes => [ { "name" => "status", "type" => "int" } ] },
+	my $results = { "dataSchema" => { nodes => [ { "name" => "status", "type" => "int" },
+						     { "name" => "ip", "type" => "string" } ] },
 			"data" => { "nodes" => \@nodes, "edges" => \@edges}
 		      };
 

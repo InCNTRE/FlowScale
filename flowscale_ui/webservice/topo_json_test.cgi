@@ -49,23 +49,94 @@ sub main {
 }
 sub get_topo() {
 
-     
+	my $ports;
+	my @nodes = ();
+	my @edges = ();;
+	my $num_inports = 0;
+	my $num_outports = 0;
+	my $st;
+	my $status;
+	
+        my $switches = $db->get_switches();
 
 
-	my $results = { data => {
-                            nodes => [ { id => "1" },
-                                       { id => "2" },
-				       { id => "3", parent => "1" },
-                                       { id => "4", parent => "2" },
-                                       { id => "5", parent => "2" },
-                            ],
-                            edges => [ 
-                                    { target => "3", source => "4" },
-				    { target => "3", source => "5" },
-                            ]
-                        }
-		};
+	#if any switches exist add Loadbalancers node
+	if ($switches) {
+	   push (
+		@nodes,
+		  { "id" => "Loadbalancers" }
+	   );
+	}
 
+        # Loop through each switch
+	foreach my $switch (@$switches) {
+
+	  # Get pp status 
+	  $ports = $ctrl->get_switch_ports( switch_id => $switch->{'datapath_id'});
+	  # By default switch is down
+	  $status->{$switch->{"switch_name"}} = 0;
+	  if ( $ports ) {
+		$status->{$switch->{"switch_name"}} = 1;
+		my $ppp = decode_json($ports);
+		foreach my $pt (@$ppp) {
+		   $status->{$pt->{'port_id'}} = $pt->{'state'};
+		}
+	     }
+	  
+	  # Add switch to nodes
+	  push ( @nodes, { "id" => $switch->{"switch_name"}, 
+			   "parent" => "Loadbalancers", 
+		           "ip" => $switch->{"ip_address"},
+			"status" => $status->{$switch->{"switch_name"}}});
+
+
+	  my $in_ports = $db->get_switch_input_ports( dpid => $switch->{'datapath_id'});
+	  if ($in_ports)  {
+	     # Add input port box 
+	     if ($num_inports == 0) {
+		push ( @nodes, { "id" => "Input Ports" });
+		$num_inports++;
+	     }
+	     foreach my $in_port (@$in_ports) {
+		if ($status->{$in_port->{"port_id"}}) { $status = $status->{$in_port->{"port_id"}}} 
+		else { $st = 2; }
+
+		# Add in port node
+		push ( @nodes, { "id" => $in_port->{"port_id"}, "parent" => "Input Ports", "status" => $st});
+		# Add in port edge
+		push ( @edges, { "target" => $switch->{"switch_name"}, "source" =>  $in_port->{"port_id"} });
+	        # increment in ports
+	        $num_inports++;
+	     }
+	}
+
+	 my $out_ports = $db->get_switch_output_ports( dpid => $switch->{'datapath_id'});
+          if ($out_ports)  {
+             # Add output port box 
+             if ($num_outports == 0) {
+             	push ( @nodes, { "id" => "Output Ports" });
+		$num_outports++;
+             }
+             foreach my $out_port (@$out_ports) {
+		if ($status->{$out_port->{"port_id"}}) { $status = $status->{$out_port->{"port_id"}}} 
+                else { $st = 2; }
+                # Add out port node
+                push ( @nodes, { "id" => $out_port->{"port_id"}, "parent" => "Output Ports", "status" => $st});
+		# Add out port edge
+		push ( @edges, { "source" => $switch->{"switch_name"}, "target" =>  $out_port->{"port_id"} });
+		$num_outports++;
+	     }
+	  }
+
+	
+	}
+
+
+
+	my $results = { "dataSchema" => { nodes => [ { "name" => "status", "type" => "int" },
+						     { "name" => "ip", "type" => "string" } ] },
+			"data" => { "nodes" => \@nodes, "edges" => \@edges}
+		      };
 
         #print "results\n==========\n";
         #print Dumper $results;
