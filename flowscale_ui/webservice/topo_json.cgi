@@ -78,7 +78,6 @@ sub get_topo() {
 		$status->{$switch->{"switch_name"}} = 1;
 		my $ppp = decode_json($ports);
 		foreach my $pt (@$ppp) {
-		   #print "$sw->{'switch_name'} : $pt->{'port_id'} : $pt->{'state'}\n";
 		   $status->{$pt->{'port_id'}} = $pt->{'state'};
 		}
 	     }

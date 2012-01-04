@@ -3,14 +3,6 @@ window.onload = function() {
        var div_id = "cytoscapeweb";
        var myTabs = new YAHOO.widget.TabView("demo");
 
-        //AJAX topo call
-        var network_json= new YAHOO.util.DataSource("webservice/topo_json.cgi");
-        network_json.responseType = YAHOO.util.DataSource.TYPE_JSON;
-
-
-
-
-
 		// Visual style
 		var visual_style = {
                     nodes: {
@@ -60,8 +52,18 @@ window.onload = function() {
                     swfPath: "/swf/CytoscapeWeb",
                     flashInstallerPath: "/swf/playerProductInstall",
                 };
-                
+
+
+	
+		var network_json = "";	
+		$.getJSON("webservice/topo_json.cgi",
+        		function(data){
+			var network_json = data;
+			}); 
+
                 var vis = new org.cytoscapeweb.Visualization(div_id, options);
+
+		
 
                 vis.ready(function() {
 
@@ -448,6 +450,117 @@ function MeasurementGraph(container, legend_container, options){
     return this;
 }
 
+
+function createRequest() {
+
+  try {
+     request = new XMLHttpRequest();
+  } catch (tryMS) {
+    try {
+        request = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (failed) {
+	request = null;
+    }
+   }
+
+   return request;
+}
+
+
+function load_cyto() {
+
+   request = createRequest();
+
+   if (request == null) {
+	alert ("Unable to create request");
+	return;
+   }
+
+   var url = "webservice/topo_json_test.cgi";
+
+   request.open("GET",url,true);
+   request.onreadystatechange = update_cyto;
+   request.send(null);
+	
+} 
+
+
+function update_cyto() {
+
+
+  
+   if (request.readyState == 4) {
+	if (request.status == 200) {
+
+	  var resp = request.responseText;
+          var network_json = resp; 
+
+	document.getElementById("note").innerHTML += "<p>" + network_json + "</p>";
+
+    var div_id = "cytoscapeweb";
+
+
+    var visual_style = {
+	nodes: {
+                        compoundShape: "RECTANGLE",
+                        label: { passthroughMapper: { attrName: "id" } } ,
+                        compoundLabel: { passthroughMapper: { attrName: "id" } } ,
+                        borderWidth: 2,
+                        compoundBorderWidth: 1,
+                        borderColor: "#666666",
+                        compoundBorderColor: "#999999",
+                        size: 25,
+                        compoundColor: "#eaeaea",
+                }
+	  };
+	
+       var options = {
+                    swfPath: "/swf/CytoscapeWeb",
+                    flashInstallerPath: "/swf/playerProductInstall",
+                };
+
+
+	 var vis = new org.cytoscapeweb.Visualization(div_id, options);
+	  // callback when Cytoscape Web has finished drawing
+	   vis.ready(function() {
+		   vis.addListener("click", "nodes", function(event) {
+                        handle_click(event);
+                    })
+                    .addListener("click", "edges", function(event) {
+                        handle_click(event);
+                    });
+                    
+                    function handle_click(event) {
+                         var target = event.target;
+                         
+                         clear();
+                         print("event.group = " + event.group);
+                         for (var i in target.data) {
+                            var variable_name = i;
+                            var variable_value = target.data[i];
+                            print( "event.target.data." + variable_name + " = " + variable_value );
+                         }
+                    }
+                    
+                    function clear() {
+                        document.getElementById("note").innerHTML = "";
+                    }
+                
+                    function print(msg) {
+                        document.getElementById("note").innerHTML += "<p>" + msg + "</p>";
+                    }
+                });
+
+	   // draw options
+	    var draw_options = {
+		network: network_json,
+		panZoomControlVisible: true
+	    };
+
+	    vis.draw(draw_options);
+	}
+     }
+}        
 
 
 
