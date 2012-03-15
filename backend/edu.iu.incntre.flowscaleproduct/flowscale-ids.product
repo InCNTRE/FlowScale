@@ -32,45 +32,45 @@
    </vm>
 
    <plugins>
-      <plugin id="ch.qos.logback.classic" fragment=""/>
-      <plugin id="ch.qos.logback.core" fragment=""/>
-      <plugin id="com.mysql.jdbc" fragment=""/>
-      <plugin id="com.springsource.net.sf.cglib" fragment=""/>
-      <plugin id="com.springsource.org.aopalliance" fragment=""/>
+      <plugin id="ch.qos.logback.classic"/>
+      <plugin id="ch.qos.logback.core"/>
+      <plugin id="com.mysql.jdbc"/>
+      <plugin id="com.springsource.net.sf.cglib"/>
+      <plugin id="com.springsource.org.aopalliance"/>
       <plugin id="edu.iu.incntre.flowscale"/>
       <plugin id="edu.iu.incntre.flowscalehttplistener"/>
-      <plugin id="grnoc.net.util" fragment=""/>
+      <plugin id="grnoc.net.util"/>
       <plugin id="javax.servlet"/>
-      <plugin id="jcl.over.slf4j" fragment=""/>
-      <plugin id="net.beaconcontroller.core" fragment=""/>
-      <plugin id="net.beaconcontroller.logging.bridge" fragment=""/>
-      <plugin id="net.beaconcontroller.packet" fragment=""/>
-      <plugin id="net.beaconcontroller.util" fragment=""/>
-      <plugin id="org.apache.commons.io" fragment=""/>
+      <plugin id="jcl.over.slf4j"/>
+      <plugin id="net.beaconcontroller.core"/>
+      <plugin id="net.beaconcontroller.logging.bridge"/>
+      <plugin id="net.beaconcontroller.packet"/>
+      <plugin id="net.beaconcontroller.util"/>
+      <plugin id="org.apache.commons.io"/>
       <plugin id="org.eclipse.equinox.ds"/>
-      <plugin id="org.eclipse.equinox.log" fragment=""/>
+      <plugin id="org.eclipse.equinox.log"/>
       <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
       <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
-      <plugin id="org.json.simple" fragment=""/>
+      <plugin id="org.json.simple"/>
       <plugin id="org.mortbay.jetty.server"/>
       <plugin id="org.mortbay.jetty.util"/>
-      <plugin id="org.openflow" fragment=""/>
-      <plugin id="org.springframework.aop" fragment=""/>
-      <plugin id="org.springframework.asm" fragment=""/>
-      <plugin id="org.springframework.beans" fragment=""/>
-      <plugin id="org.springframework.context" fragment=""/>
-      <plugin id="org.springframework.context.source" fragment=""/>
-      <plugin id="org.springframework.context.support" fragment=""/>
-      <plugin id="org.springframework.core" fragment=""/>
-      <plugin id="org.springframework.expression" fragment=""/>
-      <plugin id="org.springframework.osgi.core" fragment=""/>
-      <plugin id="org.springframework.osgi.extender" fragment=""/>
-      <plugin id="org.springframework.osgi.extensions.annotations" fragment=""/>
-      <plugin id="org.springframework.osgi.io" fragment=""/>
-      <plugin id="slf4j.api" fragment=""/>
+      <plugin id="org.openflow"/>
+      <plugin id="org.springframework.aop"/>
+      <plugin id="org.springframework.asm"/>
+      <plugin id="org.springframework.beans"/>
+      <plugin id="org.springframework.context"/>
+      <plugin id="org.springframework.context.source"/>
+      <plugin id="org.springframework.context.support"/>
+      <plugin id="org.springframework.core"/>
+      <plugin id="org.springframework.expression"/>
+      <plugin id="org.springframework.osgi.core"/>
+      <plugin id="org.springframework.osgi.extender"/>
+      <plugin id="org.springframework.osgi.extensions.annotations"/>
+      <plugin id="org.springframework.osgi.io"/>
+      <plugin id="slf4j.api"/>
    </plugins>
 
    <configurations>
@@ -80,6 +80,7 @@
       <plugin id="com.springsource.net.sf.cglib" autoStart="true" startLevel="0" />
       <plugin id="com.springsource.org.aopalliance" autoStart="true" startLevel="0" />
       <plugin id="edu.iu.incntre.flowscale" autoStart="true" startLevel="0" />
+      <plugin id="edu.iu.incntre.flowscalehttplistener" autoStart="true" startLevel="0" />
       <plugin id="grnoc.net.util" autoStart="true" startLevel="0" />
       <plugin id="javax.servlet" autoStart="true" startLevel="0" />
       <plugin id="jcl.over.slf4j" autoStart="true" startLevel="0" />
