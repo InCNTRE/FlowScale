@@ -1,10 +1,13 @@
 package edu.iu.incntre.flowscale;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,7 +29,13 @@ import org.openflow.protocol.statistics.OFStatisticsType;
 import org.openflow.protocol.statistics.OFTableStatistics;
 import org.openflow.util.HexString;
 
+import edu.iu.incntre.flowscale.exception.NoSwitchException;
+
 import net.beaconcontroller.core.IOFSwitch;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * @author Ali Khalfan (akhlafan@indiana.edu)
@@ -34,347 +43,309 @@ import net.beaconcontroller.core.IOFSwitch;
  */
 public class SwitchDevice {
 
-    private String switchName;
-    private String ipAddress;
-    private String macAddress;
-    private long datapathId;
-    private ArrayList<OFRule> switchRules = new ArrayList<OFRule>();
-    private ArrayList<SwitchPort> ports = new ArrayList<SwitchPort>();
-    private IOFSwitch openFlowSwitch;
-    private List<OFPhysicalPort> portList;
-    private List<Short> outputPortsUp = new ArrayList<Short>();
+	private String switchName;
+	private String ipAddress;
+	private String macAddress;
+	private long datapathId;
+	private ArrayList<OFRule> switchRules = new ArrayList<OFRule>();
+	private ArrayList<SwitchPort> ports = new ArrayList<SwitchPort>();
+	private IOFSwitch openFlowSwitch;
+	private List<OFPhysicalPort> portList;
+	private List<Short> outputPortsUp = new ArrayList<Short>();
+
+	public SwitchDevice() {
+
+	}
+
+	public SwitchDevice(String switchName, String ipAddress, String macAddress,
+			long datapathId) {
+		this.switchName = switchName;
+		this.ipAddress = ipAddress;
+		this.macAddress = macAddress;
+		this.datapathId = datapathId;
 
-    public SwitchDevice() {
+	}
 
-    }
+	public SwitchDevice(long datapathId) {
 
-    public SwitchDevice(String switchName, String ipAddress, String macAddress,
-            long datapathId) {
-        this.switchName = switchName;
-        this.ipAddress = ipAddress;
-        this.macAddress = macAddress;
-        this.datapathId = datapathId;
+		this.datapathId = datapathId;
+	}
 
-    }
+	public String getSwitchName() {
+		return switchName;
+	}
 
-    public SwitchDevice(long datapathId) {
+	public void setSwitchName(String switchName) {
+		this.switchName = switchName;
+	}
 
-        this.datapathId = datapathId;
-    }
+	public String getIpAddress() {
+		return ipAddress;
+	}
 
-    public String getSwitchName() {
-        return switchName;
-    }
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
 
-    public void setSwitchName(String switchName) {
-        this.switchName = switchName;
-    }
+	public String getMacAddress() {
+		return macAddress;
+	}
 
-    public String getIpAddress() {
-        return ipAddress;
-    }
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
+	}
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
+	public long getDatapathId() {
+		return datapathId;
+	}
 
-    public String getMacAddress() {
-        return macAddress;
-    }
+	public void setDatapathId(long datapathId) {
+		this.datapathId = datapathId;
+	}
 
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
-    }
+	public void setPhysicalPorts(List<OFPhysicalPort> portList) {
+	
 
-    public long getDatapathId() {
-        return datapathId;
-    }
+		this.portList = portList;
 
-    public void setDatapathId(long datapathId) {
-        this.datapathId = datapathId;
-    }
+	}
 
-    public void setPhysicalPorts(List<OFPhysicalPort> portList) {
-        // FlowscaleController.logger.info("setting up portlist {}", portList);
+	public void updatePort(OFPortStatus ps) {
 
-        this.portList = portList;
+		
 
-    }
+		OFPortReason reason = OFPortReason.values()[ps.getReason()];
 
-    public void updatePort(OFPortStatus ps) {
+		if (reason == OFPortReason.OFPPR_ADD) {
+			portList.add(ps.getDesc());
+			return;
+		}
 
-        // OFPhysicalPort portModified =
-        // portList.get(ps.getDesc().getPortNumber());
-        // FlowscaleController.logger.info("port list is {}", this.portList);
-        FlowscaleController.logger.info("{}", ps.getReason());
+		
 
-        OFPortReason reason = OFPortReason.values()[ps.getReason()];
+				if (reason == OFPortReason.OFPPR_DELETE) {
+					
+					for(OFPhysicalPort ofp : portList){
+						if(ofp.getPortNumber() == ps.getDesc().getPortNumber() && HexString.toHexString(ofp.getHardwareAddress()).equals(HexString.toHexString(ps.getDesc().getHardwareAddress())) ) {
+						portList.remove(ofp);
+						return;
+						}
+						
+					}
+					
+					
+				} else if (reason == OFPortReason.OFPPR_MODIFY) {
 
-        if (reason == OFPortReason.OFPPR_ADD) {
-            portList.add(ps.getDesc());
-            return;
-        }
+					
+					for(OFPhysicalPort ofp : portList){
+						if(ofp.getPortNumber() == ps.getDesc().getPortNumber() && HexString.toHexString(ofp.getHardwareAddress()).equals(HexString.toHexString(ps.getDesc().getHardwareAddress())) )   {
+						portList.remove(ofp);
+						break;
+						}
+						
+					}
+						
+				
+					portList.add(ps.getDesc());
+					
+					return;
 
-        for (OFPhysicalPort ofp : this.portList) {
+				}
 
-            if (HexString.toHexString(ofp.getHardwareAddress()).equals(
-                    HexString.toHexString(ps.getDesc().getHardwareAddress()))) {
+		return;
 
-                if (reason == OFPortReason.OFPPR_DELETE) {
-                    portList.remove(ofp);
-                    return;
-                } else if (reason == OFPortReason.OFPPR_MODIFY) {
+	}
 
-                    portList.remove(ofp);
-                    portList.add(ps.getDesc());
+	public List<OFPhysicalPort> getPortStates() {
 
-                    return;
+		return this.portList;
 
-                }
+	}
 
-            }
+	public void setOpenFlowSwitch(IOFSwitch sw) {
 
-        }
+		this.openFlowSwitch = sw;
 
-        return;
+	}
 
-    }
+	public IOFSwitch getOpenFlowSwitch() {
+		return this.openFlowSwitch;
 
-    public List<OFPhysicalPort> getPortStates() {
+	}
 
-        return this.portList;
 
-    }
 
-    public void setOpenFlowSwitch(IOFSwitch sw) {
 
-        this.openFlowSwitch = sw;
 
-    }
+	  List<OFStatistics> getStatistics(String type) throws IOException, InterruptedException, ExecutionException, TimeoutException, NoSwitchException {
 
-    public IOFSwitch getOpenFlowSwitch() {
-        return this.openFlowSwitch;
+		
 
-    }
+		if (type.equals("aggregate")) {
+			return getAggregateStatistics();
+		} else if (type.equals("table")) {
+			return getTableStatistics();
+		} else if (type.equals("flow")) {
+			return getFlowStatistics();
+		} else if (type.equals("port")) {
+			return getPortStatistics();
+		}
 
-    public JSONObject getSwitchPorts() {
+		return null;
 
-        return new JSONObject();
+	}
 
-    }
+	
+	
 
-    public void pushRuleToSwitch(OFFlowMod flowMod) {
 
-    }
 
-    public JSONArray getStatistics(String type) {
+	public List<OFStatistics> getFlowStatisticsForLoader()
+			throws NoSwitchException, IOException, InterruptedException,
+			ExecutionException, TimeoutException {
+		IOFSwitch iofSwitch = this.openFlowSwitch;
+		Future<List<OFStatistics>> future;
+		OFStatisticsRequest req = new OFStatisticsRequest();
+		OFFlowStatisticsRequest fsr = new OFFlowStatisticsRequest();
+		OFMatch match = new OFMatch();
+		match.setWildcards(0xffffffff);
+		fsr.setMatch(match);
+		fsr.setOutPort(OFPort.OFPP_NONE.getValue());
+		fsr.setTableId((byte) 0xff);
+		req.setStatisticType(OFStatisticsType.FLOW);
+		req.setStatistics(Collections.singletonList((OFStatistics) fsr));
+		req.setLengthU(req.getLengthU() + fsr.getLength());
 
-        JSONArray jsonArray = new JSONArray();
+		if (iofSwitch == null) {
+			throw new NoSwitchException();
 
-        if (type.equals("aggregate")) {
-            jsonArray = getAggregateStatistics();
-        } else if (type.equals("table")) {
-            jsonArray = getTableStatistics();
-        } else if (type.equals("flow")) {
-            jsonArray = getFlowStatistics();
-        } else if (type.equals("port")) {
-            jsonArray = getPortStatistics();
-        }
+		}
 
-        return jsonArray;
+		future = iofSwitch.getStatistics(req);
+		List<OFStatistics> futureValues = null;
 
-    }
+		futureValues = future.get(10, TimeUnit.SECONDS);
+		return futureValues;
 
-    private JSONArray getPortStatistics() {
+	}
 
-        JSONArray jsonArray = new JSONArray();
+	
+	
+	
+	
+	
+	private  List<OFStatistics> getPortStatistics() throws NoSwitchException, IOException, InterruptedException, ExecutionException, TimeoutException {
 
-        Future<List<OFStatistics>> future;
-        IOFSwitch iofSwitch = this.openFlowSwitch;
+		
 
-        OFStatisticsRequest req = new OFStatisticsRequest();
-        OFPortStatisticsRequest fsr = new OFPortStatisticsRequest();
-        fsr.setPortNumber(OFPort.OFPP_NONE.getValue());
-        req.setStatisticType(OFStatisticsType.PORT);
-        req.setStatistics(Collections.singletonList((OFStatistics) fsr));
-        req.setLengthU(fsr.getLength() + req.getLength());
+		Future<List<OFStatistics>> future;
+		IOFSwitch iofSwitch = this.openFlowSwitch;
+		if(iofSwitch == null){
+			throw new NoSwitchException(HexString.toHexString(this.datapathId));
+		}
+		OFStatisticsRequest req = new OFStatisticsRequest();
+		OFPortStatisticsRequest fsr = new OFPortStatisticsRequest();
+		fsr.setPortNumber(OFPort.OFPP_NONE.getValue());
+		req.setStatisticType(OFStatisticsType.PORT);
+		req.setStatistics(Collections.singletonList((OFStatistics) fsr));
+		req.setLengthU(fsr.getLength() + req.getLength());
+		List<OFStatistics> values = null;
+	
 
-        try {
-            future = iofSwitch.getStatistics(req);
-            List<OFStatistics> values = null;
-            values = future.get(10, TimeUnit.SECONDS);
+				future = iofSwitch.getStatistics(req);
+				
+				 values = future.get(10, TimeUnit.SECONDS);
+		
+			return values;
+			 
 
-            for (OFStatistics ofst : values) {
+				
+				
 
-                OFPortStatisticsReply st = (OFPortStatisticsReply) ofst;
-                // st.getPortNumber() st.getReceiveBytes();
+	}
 
-                JSONObject jsonObject = new JSONObject();
-                if (st.getPortNumber() == -2 ){
-                	continue;
-                }
-                jsonObject.put("port_id", st.getPortNumber());
-                jsonObject.put("receive_packets", st.getreceivePackets());
-                jsonObject.put("transmit_packets", st.getTransmitPackets());
-                jsonObject.put("receive_bytes", st.getReceiveBytes());
-                jsonObject.put("transmit_bytes",st.getTransmitBytes());
-                
-                jsonArray.add(jsonObject);
+	private List<OFStatistics> getTableStatistics() throws IOException, InterruptedException, ExecutionException, TimeoutException, NoSwitchException {
 
-            }
+		JSONArray jsonArray = new JSONArray();
 
-            FlowscaleController.logger.debug("values are {}", values);
-        } catch (Exception e) {
-            FlowscaleController.logger.error("Failure retrieving {} ", e);
-        }
+		Future<List<OFStatistics>> futureTable;
+		IOFSwitch iofSwitch = this.openFlowSwitch;
+		if(iofSwitch == null){
+			throw new NoSwitchException(HexString.toHexString(this.datapathId));
+		}
+		OFStatisticsRequest reqTable = new OFStatisticsRequest();
 
-        return jsonArray;
-    }
+		reqTable.setStatisticType(OFStatisticsType.TABLE);
+		reqTable.setLengthU(reqTable.getLengthU());
 
-    private JSONArray getTableStatistics() {
+	
+		
+				futureTable = iofSwitch.getStatistics(reqTable);
+				List<OFStatistics> values = null;
+				
+				values = futureTable.get(10, TimeUnit.SECONDS);
+				return values;
 
-        JSONArray jsonArray = new JSONArray();
+	}
+	
+	
+	
+	
+	
+	
+	private List<OFStatistics>getFlowStatistics() throws IOException, InterruptedException, ExecutionException, TimeoutException, NoSwitchException {
 
-        Future<List<OFStatistics>> futureTable;
-        IOFSwitch iofSwitch = this.openFlowSwitch;
+		
 
-        OFStatisticsRequest reqTable = new OFStatisticsRequest();
+		Future<List<OFStatistics>> future;
+		IOFSwitch iofSwitch = this.openFlowSwitch;
+		if(iofSwitch == null){
+			throw new NoSwitchException(HexString.toHexString(this.datapathId));
+		}
+		OFStatisticsRequest req = new OFStatisticsRequest();
+		OFFlowStatisticsRequest fsr = new OFFlowStatisticsRequest();
+		OFMatch match = new OFMatch();
+		match.setWildcards(0xffffffff);
+		fsr.setMatch(match);
+		fsr.setOutPort(OFPort.OFPP_NONE.getValue());
+		fsr.setTableId((byte) 0xff);
+		req.setStatisticType(OFStatisticsType.FLOW);
+		req.setStatistics(Collections.singletonList((OFStatistics) fsr));
+		req.setLengthU(req.getLengthU() + fsr.getLength());
 
-        reqTable.setStatisticType(OFStatisticsType.TABLE);
-        reqTable.setLengthU(reqTable.getLengthU());
+	
+			future = iofSwitch.getStatistics(req);
+			List<OFStatistics> futureValues = null;
 
-        try {
-            futureTable = iofSwitch.getStatistics(reqTable);
-            List<OFStatistics> values = null;
-            values = futureTable.get(10, TimeUnit.SECONDS);
+			futureValues = future.get(10, TimeUnit.SECONDS);
+			
+			return futureValues;
 
-            for (OFStatistics ofst : values) {
+	}
 
-                OFTableStatistics st = (OFTableStatistics) ofst;
-                // st.getPortNumber() st.getReceiveBytes();
+	private List<OFStatistics> getAggregateStatistics() throws NoSwitchException , IOException, InterruptedException, ExecutionException, TimeoutException {
 
-                FlowscaleController.logger.debug(
-                        "Maximum Entries {} and and Table id {}",
-                        st.getMaximumEntries(), st.getTableId());
-                FlowscaleController.logger.debug(
-                        "Name {} and and Table length {}", st.getName(),
-                        st.getLength());
+		JSONArray jsonArray = new JSONArray();
 
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("match_count", st.getMatchedCount());
-                jsonObject.put("maximum_entries", st.getMaximumEntries());
-                jsonObject.put("name", st.getName());
-                jsonObject.put("table_id", st.getTableId());
+		Future<List<OFStatistics>> future;
+		IOFSwitch iofSwitch = this.openFlowSwitch;
+		if(iofSwitch == null){
+			
+		}
 
-                jsonArray.add(jsonObject);
+		OFStatisticsRequest req = new OFStatisticsRequest();
+		OFAggregateStatisticsRequest fsr = new OFAggregateStatisticsRequest();
 
-            }
+		req.setStatisticType(OFStatisticsType.AGGREGATE);
+		req.setStatistics(Collections.singletonList((OFStatistics) fsr));
+		req.setLengthU(fsr.getLength() + req.getLength());
 
-            FlowscaleController.logger.debug("values are {}", values);
-        } catch (Exception e) {
-            FlowscaleController.logger.error("Failure retrieving {} ", e);
-        }
-
-        return jsonArray;
-    }
-
-    private JSONArray getFlowStatistics() {
-
-        JSONArray jsonArray = new JSONArray();
-
-        Future<List<OFStatistics>> future;
-        IOFSwitch iofSwitch = this.openFlowSwitch;
-
-        OFStatisticsRequest req = new OFStatisticsRequest();
-        OFFlowStatisticsRequest fsr = new OFFlowStatisticsRequest();
-        OFMatch match = new OFMatch();
-        match.setWildcards(0xffffffff);
-        fsr.setMatch(match);
-        fsr.setOutPort(OFPort.OFPP_NONE.getValue());
-        fsr.setTableId((byte) 0xff);
-        req.setStatisticType(OFStatisticsType.FLOW);
-        req.setStatistics(Collections.singletonList((OFStatistics) fsr));
-        req.setLengthU(req.getLengthU() + fsr.getLength());
-
-        try {
-            future = iofSwitch.getStatistics(req);
-            List<OFStatistics> futureValues = null;
-
-            futureValues = future.get(10, TimeUnit.SECONDS);
-            FlowscaleController.logger.debug("Future values are {}",
-                    futureValues);
-            for (OFStatistics ofst : futureValues) {
-
-                OFFlowStatisticsReply st = (OFFlowStatisticsReply) ofst;
-                // st.getPortNumber() st.getReceiveBytes();
-
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("actions", st.getActions().toString());
-                jsonObject.put("hard_timeout", st.getHardTimeout());
-                jsonObject.put("idle_timeout", st.getIdleTimeout());
-                jsonObject.put("match", st.getMatch().toString());
-                jsonObject.put("priority", st.getPriority());
-                jsonObject.put("packet_count", st.getPacketCount());
-                jsonObject.put("byte_count", st.getByteCount());
-                jsonObject.put("table_id", st.getTableId());
-
-                jsonArray.add(jsonObject);
-
-            }
-
-            FlowscaleController.logger.debug("values are {}", futureValues);
-        } catch (Exception e) {
-            FlowscaleController.logger.error("Failure retrieving {} ", e);
-        }
-
-        if (jsonArray.size() == 0) {
-            JSONObject jso = new JSONObject();
-            jso.put("data", "nono");
-        }
-
-        return jsonArray;
-    }
-
-    private JSONArray getAggregateStatistics() {
-
-        JSONArray jsonArray = new JSONArray();
-
-        Future<List<OFStatistics>> future;
-        IOFSwitch iofSwitch = this.openFlowSwitch;
-
-        OFStatisticsRequest req = new OFStatisticsRequest();
-        OFAggregateStatisticsRequest fsr = new OFAggregateStatisticsRequest();
-
-        req.setStatisticType(OFStatisticsType.AGGREGATE);
-        req.setStatistics(Collections.singletonList((OFStatistics) fsr));
-        req.setLengthU(fsr.getLength() + req.getLength());
-
-        try {
-            future = iofSwitch.getStatistics(req);
-            List<OFStatistics> values = null;
-            values = future.get(10, TimeUnit.SECONDS);
-
-            for (OFStatistics ofst : values) {
-
-                OFAggregateStatisticsReply st = (OFAggregateStatisticsReply) ofst;
-
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("packet_count", st.getPacketCount());
-                jsonObject.put("flow_count", st.getFlowCount());
-
-                jsonArray.add(jsonObject);
-
-            }
-
-            FlowscaleController.logger.debug("values are {}", values);
-        } catch (Exception e) {
-            FlowscaleController.logger.error("Failure retrieving {} ", e);
-        }
-
-        return jsonArray;
-    }
-
-
+		
+			future = iofSwitch.getStatistics(req);
+			List<OFStatistics> values = null;
+			values = future.get(10, TimeUnit.SECONDS);
+			return values;
+			
+	}
 
 }
-

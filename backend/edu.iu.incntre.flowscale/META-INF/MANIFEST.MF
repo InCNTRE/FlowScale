@@ -2,12 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: edu.iu.incntre.flowscale
 Bundle-SymbolicName: edu.iu.incntre.flowscale
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Import-Package: com.mysql.jdbc,
- grnoc.util.net.ipaddress,
+ grnoc.net.util.ipaddress,
  net.beaconcontroller.core,
  net.beaconcontroller.core.io,
- net.beaconcontroller.util,
  org.json.simple,
  org.mortbay.component,
  org.mortbay.jetty,
@@ -20,4 +19,7 @@ Import-Package: com.mysql.jdbc,
  org.slf4j,
  org.springframework.beans.factory.config
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: edu.iu.incntre.flowscale
+Export-Package: edu.iu.incntre.flowscale,
+ edu.iu.incntre.flowscale.exception,
+ edu.iu.incntre.flowscale.util
+

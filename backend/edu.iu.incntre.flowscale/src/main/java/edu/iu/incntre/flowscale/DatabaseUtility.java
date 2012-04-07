@@ -9,6 +9,8 @@ import java.util.HashMap;
 
 import org.openflow.util.HexString;
 
+import edu.iu.incntre.flowscale.exception.NoDatabaseException;
+
 import net.beaconcontroller.core.IOFSwitch;
 
 public class DatabaseUtility {
@@ -16,14 +18,15 @@ public class DatabaseUtility {
 	static PreparedStatement updateTotal = null;
 	static Connection conn;
 
-	static String DRIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
+	public void setDriver(String driver) {
 
-	public void setConnection(String username, String password, String host,
-			String port) {
+	}
 
-		// Provided by your driver documentation. In this case, a MySql driver
+	public void setConnection(String username, String password,
+			String connectionString, String dbDriver) {
 
-		String db_conn_string = "jdbc:mysql://" + host + ":" + port + "/webui";
+		String DRIVER_CLASS_NAME = dbDriver;
+
 		conn = null;
 		try {
 			Class.forName(DRIVER_CLASS_NAME).newInstance();
@@ -34,31 +37,41 @@ public class DatabaseUtility {
 		}
 
 		try {
-			conn = DriverManager.getConnection(db_conn_string, username,
+			conn = DriverManager.getConnection(connectionString, username,
 					password);
 		} catch (SQLException e) {
 			FlowscaleController.logger
 					.error("Driver loaded, but cannot connect to db: "
-							+ db_conn_string);
+							+ connectionString);
 
 		}
 
 	}
 
-	public HashMap<Integer, Group> populateGroupsFromDatabase(
-			FlowscaleController controller) {
+	public HashMap<Integer, Group> populateGroupsFromDatabase (
+			FlowscaleController controller) throws NoDatabaseException{
 
+			if (conn == null){
+				throw new NoDatabaseException();
+			}
+		
 		FlowscaleController.logger
 				.info("adding groups from database incase there are any records ");
 
 		HashMap<Integer, Group> groupList = new HashMap<Integer, Group>();
 		// do all db transaction here
-		String flow_group_query = "SELECT group_id , input_switch ,output_switch , comments , priority , type, maximum_flows type FROM flow_group";
+		String flow_group_query = "SELECT group_id , input_switch ,output_switch , comments , priority , type, maximum_flows, "
+				+ "network_protocol, transport_direction FROM flow_group";
 
 		String group_port_query = "SELECT port_direction, port_id FROM group_port WHERE group_id = ?";
 
 		String group_values_query = "SELECT value FROM group_values where group_id = ?";
+		
+		
+		
 		try {
+		
+			
 			PreparedStatement groupPS = conn.prepareStatement(flow_group_query);
 			PreparedStatement groupPortPS = conn
 					.prepareStatement(group_port_query);
@@ -76,6 +89,8 @@ public class DatabaseUtility {
 			String priorityString = "";
 			String valuesString = "";
 			String maximumFlowsAllowedString = "";
+			String networkProtocolString = "";
+			String transportDirectionString = "";
 
 			while (groupRs.next()) {
 
@@ -90,9 +105,12 @@ public class DatabaseUtility {
 				priorityString = groupRs.getString(5);
 				typeString = groupRs.getString(6);
 				maximumFlowsAllowedString = groupRs.getString(7);
+				networkProtocolString = groupRs.getString(8);
+				transportDirectionString = groupRs.getString(9);
 
 				groupPortPS.setInt(1, Integer.parseInt(groupIdString));
 				ResultSet groupPortRS = groupPortPS.executeQuery();
+
 				inputPortListString = "";
 				outputPortListString = "";
 				while (groupPortRS.next()) {
@@ -120,7 +138,11 @@ public class DatabaseUtility {
 
 					valuesString += "," + groupValuesRS.getString(1);
 				}
-				valuesString = valuesString.substring(1);
+				try{valuesString = valuesString.substring(1);
+				
+				}catch(StringIndexOutOfBoundsException stringOutOfBoundException){
+					continue;
+				}
 
 				FlowscaleController.logger.debug("value {}", valuesString);
 				FlowscaleController.logger.debug("input {}",
@@ -145,7 +167,8 @@ public class DatabaseUtility {
 						inputSwitchDatapathIdString,
 						outputSwitchDatapathIdString, inputPortListString,
 						outputPortListString, typeString, priorityString,
-						valuesString, maximumFlowsAllowedString);
+						valuesString, maximumFlowsAllowedString,
+						networkProtocolString, transportDirectionString);
 
 				groupList.put(Integer.parseInt(groupIdString), group);
 				FlowscaleController.logger.debug("group list in loop {}",
@@ -155,6 +178,13 @@ public class DatabaseUtility {
 		} catch (SQLException sqlE) {
 			FlowscaleController.logger.info("{}", sqlE);
 
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				FlowscaleController.logger.info("{}", e);
+			}
 		}
 		FlowscaleController.logger.debug("this is the group list in the db {}",
 				groupList);
@@ -164,10 +194,15 @@ public class DatabaseUtility {
 	}
 
 	public HashMap<Long, SwitchDevice> populateSwitchesFromDatabase(
-			FlowscaleController controller) {
+			FlowscaleController controller) throws NoDatabaseException{
 
 		HashMap<Long, SwitchDevice> switchList = new HashMap<Long, SwitchDevice>();
 		String switch_query = "select datapath_id from switch";
+		
+		if (conn == null){
+			throw new NoDatabaseException();
+		}
+		
 		try {
 			PreparedStatement switchPS = conn.prepareStatement(switch_query);
 

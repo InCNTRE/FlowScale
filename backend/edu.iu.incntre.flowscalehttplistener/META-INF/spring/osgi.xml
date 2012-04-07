@@ -11,7 +11,9 @@
     interface="edu.iu.incntre.flowscale.FlowscaleController">
   </osgi:reference>
   
-
+ <!--osgi:reference id="flowUpdate" cardinality="1..1"
+    interface="edu.iu.incntre.flowscaleflowupdate.FlowscaleFlowUpdate">
+  </osgi:reference-->
   
   <osgi:service id="HttpListener" ref="flowscaleHttpListener"
     interface="edu.iu.incntre.flowscalehttplistener.HttpListener">
