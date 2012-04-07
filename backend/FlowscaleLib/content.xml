@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?metadataRepository version='1.1.0'?>
+<repository name='file:/Users/akhalfan/Documents/NOC/workspace-flowscale-0.5/FlowscaleLib/ - metadata' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1'>
+  <properties size='2'>
+    <property name='p2.timestamp' value='1333830795556'/>
+    <property name='p2.compressed' value='false'/>
+  </properties>
+  <units size='2'>
+    <unit id='com.mysql.jdbc' version='1.0.0' singleton='false'>
+      <update id='com.mysql.jdbc' range='[0.0.0,1.0.0)' severity='0'/>
+      <properties size='2'>
+        <property name='org.eclipse.equinox.p2.name' value='Mysql-osgi'/>
+        <property name='org.eclipse.equinox.p2.provider' value='mysql'/>
+      </properties>
+      <provides size='14'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.mysql.jdbc' version='1.0.0'/>
+        <provided namespace='osgi.bundle' name='com.mysql.jdbc' version='1.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.exceptions' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.exceptions.jdbc4' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.integration.c3p0' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.integration.jboss' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.interceptors' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.jdbc2.optional' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.log' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.profiler' version='0.0.0'/>
+        <provided namespace='java.package' name='com.mysql.jdbc.util' version='0.0.0'/>
+        <provided namespace='java.package' name='org.gjt.mm.mysql' version='0.0.0'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.mysql.jdbc' version='1.0.0'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-ManifestVersion: 2&#xA;Bundle-Version: 1.0.0&#xA;Export-Package: com.mysql.jdbc,com.mysql.jdbc.exceptions,com.mysql.jdbc.exceptions.jdbc4,com.mysql.jdbc.integration.c3p0,com.mysql.jdbc.integration.jboss,com.mysql.jdbc.interceptors,com.mysql.jdbc.jdbc2.optional,com.mysql.jdbc.log,com.mysql.jdbc.profiler,com.mysql.jdbc.util,org.gjt.mm.mysql&#xA;Manifest-Version: 1.0&#xA;Bundle-SymbolicName: com.mysql.jdbc&#xA;Bundle-Name: Mysql-osgi&#xA;Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.0&#xA;Bundle-Vendor: mysql&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='org.json.simple' version='1.0.0' singleton='false'>
+      <update id='org.json.simple' range='[0.0.0,1.0.0)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.name' value='org.json.simple'/>
+      </properties>
+      <provides size='4'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.json.simple' version='1.0.0'/>
+        <provided namespace='osgi.bundle' name='org.json.simple' version='1.0.0'/>
+        <provided namespace='java.package' name='org.json.simple' version='0.0.0'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='org.json.simple' version='1.0.0'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-ManifestVersion: 2&#xA;Bundle-Name: org.json.simple&#xA;Bundle-Version: 1.0.0&#xA;Created-By: 10.0-b23 (Sun Microsystems Inc.)&#xA;Export-Package: org.json.simple&#xA;Bundle-RequiredExecutionEnvironment: JavaSE-1.6&#xA;Bundle-SymbolicName: org.json.simple&#xA;Manifest-Version: 1.0&#xA;Ant-Version: Apache Ant 1.6.2&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+  </units>
+</repository>

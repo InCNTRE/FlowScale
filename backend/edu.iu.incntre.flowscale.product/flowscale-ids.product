@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Flowscale Controller" uid="flowscale-controller" version="0.3.0" useFeatures="false" includeLaunchers="true">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -console 7777 -Dlogback.configurationFile=/home/akhalfan/logback-tet.xml</programArgs>
+      <vmArgs>-server
+-XX:-UseParallelOldGC
+-XX:-UseParallelGC
+-Declipse.ignoreApp=true
+-Dosgi.noShutdown=true
+-Dequinox.ds.print=true</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <launcher name="flowscale-controller">
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.0</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
+   </vm>
+
+   <plugins>
+      <plugin id="ch.qos.logback.classic"/>
+      <plugin id="ch.qos.logback.core"/>
+      <plugin id="com.mysql.jdbc"/>
+      <plugin id="com.springsource.net.sf.cglib"/>
+      <plugin id="com.springsource.org.aopalliance"/>
+      <plugin id="edu.iu.incntre.flowscale"/>
+      <plugin id="edu.iu.incntre.flowscalehttplistener"/>
+      <plugin id="grnoc.net.util"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="jcl.over.slf4j"/>
+      <plugin id="net.beaconcontroller.core"/>
+      <plugin id="net.beaconcontroller.logging.bridge"/>
+      <plugin id="net.beaconcontroller.packet"/>
+      <plugin id="net.beaconcontroller.util"/>
+      <plugin id="org.apache.commons.io"/>
+      <plugin id="org.eclipse.equinox.ds"/>
+      <plugin id="org.eclipse.equinox.log"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
+      <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.json.simple"/>
+      <plugin id="org.mortbay.jetty.server"/>
+      <plugin id="org.mortbay.jetty.util"/>
+      <plugin id="org.openflow"/>
+      <plugin id="org.springframework.aop"/>
+      <plugin id="org.springframework.asm"/>
+      <plugin id="org.springframework.beans"/>
+      <plugin id="org.springframework.context"/>
+      <plugin id="org.springframework.context.source"/>
+      <plugin id="org.springframework.context.support"/>
+      <plugin id="org.springframework.core"/>
+      <plugin id="org.springframework.expression"/>
+      <plugin id="org.springframework.osgi.core"/>
+      <plugin id="org.springframework.osgi.extender"/>
+      <plugin id="org.springframework.osgi.extensions.annotations"/>
+      <plugin id="org.springframework.osgi.io"/>
+      <plugin id="slf4j.api"/>
+   </plugins>
+
+   <configurations>
+      <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="0" />
+      <plugin id="ch.qos.logback.core" autoStart="true" startLevel="0" />
+      <plugin id="com.mysql.jdbc" autoStart="true" startLevel="0" />
+      <plugin id="com.springsource.net.sf.cglib" autoStart="true" startLevel="0" />
+      <plugin id="com.springsource.org.aopalliance" autoStart="true" startLevel="0" />
+      <plugin id="edu.iu.incntre.flowscale" autoStart="true" startLevel="0" />
+      <plugin id="edu.iu.incntre.flowscalehttplistener" autoStart="true" startLevel="0" />
+      <plugin id="grnoc.net.util" autoStart="true" startLevel="0" />
+      <plugin id="javax.servlet" autoStart="true" startLevel="0" />
+      <plugin id="jcl.over.slf4j" autoStart="true" startLevel="0" />
+      <plugin id="net.beaconcontroller.core" autoStart="true" startLevel="0" />
+      <plugin id="net.beaconcontroller.logging.bridge" autoStart="true" startLevel="0" />
+      <plugin id="net.beaconcontroller.packet" autoStart="true" startLevel="0" />
+      <plugin id="net.beaconcontroller.util" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.commons.io" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.log" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
+      <plugin id="org.json.simple" autoStart="true" startLevel="0" />
+      <plugin id="org.mortbay.jetty.server" autoStart="true" startLevel="0" />
+      <plugin id="org.mortbay.jetty.util" autoStart="true" startLevel="0" />
+      <plugin id="org.openflow" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.aop" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.asm" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.beans" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.context" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.context.source" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.context.support" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.core" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.expression" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.osgi.core" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.osgi.extender" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.osgi.extensions.annotations" autoStart="true" startLevel="0" />
+      <plugin id="org.springframework.osgi.io" autoStart="true" startLevel="0" />
+      <plugin id="slf4j.api" autoStart="true" startLevel="0" />
+   </configurations>
+
+</product>
