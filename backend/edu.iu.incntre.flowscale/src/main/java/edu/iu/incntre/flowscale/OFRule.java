@@ -36,6 +36,11 @@ public class OFRule {
     public ArrayList<OFAction> getActions() {
         return actions;
     }
+    public void setMirrorPort(int port){
+    	OFActionOutput mirrorAction = new OFActionOutput();
+    	mirrorAction.setPort((short)port);
+    	actions.add(mirrorAction);
+    }
 
     public void setPort(int port) {
         

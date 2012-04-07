@@ -1,13 +1,11 @@
 package edu.iu.incntre.flowscale;
 
-import grnoc.util.net.ipaddress.IPv4Address;
+import grnoc.net.util.ipaddress.IPv4Address;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-
-
 
 import net.beaconcontroller.core.IOFSwitch;
 
@@ -21,8 +19,6 @@ import org.openflow.protocol.action.OFAction;
 import org.openflow.protocol.action.OFActionOutput;
 import org.openflow.util.HexString;
 import org.openflow.util.U16;
-
-
 
 /**
  * @author Ali Khalfan (akhalfan@indiana.edu)
@@ -41,12 +37,18 @@ public class Group {
 	private long outputSwitchDatapathId;
 	public static final short ETHERTYPE_IP = 0X800;
 	public static final byte NWTYPE_TCP = 6;
-	public static final int MAXIMUM_FLOWS_TO_PUSH = 600;
+
+	public static final int IP_TYPE = 1;
+	public static final int TRANSPORT_TYPE = 2;
+	public static final int ETHERNET_TYPE = 3;
 	private int type;
 	private int maximumFlowsAllowed;
 	private boolean dropPortGroup = false;
 	private FlowscaleController flowscaleController;
-
+	private byte transportDirection;
+	private byte networkProtocol;
+	private int portCounter = 0;
+	HashMap<Integer, Integer> mirrorMapper = new HashMap<Integer, Integer>();
 	private ArrayList<OFRule> groupRules = new ArrayList<OFRule>();
 
 	public Group(FlowscaleController controller) {
@@ -55,13 +57,13 @@ public class Group {
 
 	}
 
-	public void switchUpAlert(IOFSwitch sw) {
+	public void switchUpAlert(IOFSwitch sw) throws Exception{
 
 		List<OFPhysicalPort> physicalPorts = sw.getFeaturesReply().getPorts();
 
 		for (OFPhysicalPort ofp : physicalPorts) {
 
-			if (ofp.getState() == 0
+			if (ofp.getState() % 2 == 0
 					&& this.outputPorts.contains(ofp.getPortNumber())) {
 				FlowscaleController.logger.debug("added port {}",
 						ofp.getPortNumber());
@@ -88,7 +90,8 @@ public class Group {
 			String outputSwitchDatapathIdString, String inputPortListString,
 			String outputPortListString, String typeString,
 			String priorityString, String valuesString,
-			String maximumFlowsAllowedString) {
+			String maximumFlowsAllowedString, String networkProtocolString,
+			String transportDirectionString) {
 
 		try {
 			groupId = Integer.parseInt(groupIdString);
@@ -102,12 +105,6 @@ public class Group {
 
 		inputSwitchDatapathId = HexString.toLong(inputSwitchDatapathIdString);
 		outputSwitchDatapathId = HexString.toLong(outputSwitchDatapathIdString);
-
-		// for (String s : inputPortsString) {
-
-		// inputPorts.add(Short.parseShort(s));
-
-		// }
 
 		if (outputPortListString.equals("")) {
 
@@ -133,6 +130,12 @@ public class Group {
 		type = Integer.parseInt(typeString);
 		maximumFlowsAllowed = Integer.parseInt(maximumFlowsAllowedString);
 
+		if (type == TRANSPORT_TYPE) {
+			this.networkProtocol = Byte.parseByte(networkProtocolString);
+			this.transportDirection = Byte.parseByte(transportDirectionString);
+
+		}
+
 		priority = Short.parseShort(priorityString);
 
 		values = valuesString.split(",");
@@ -147,7 +150,7 @@ public class Group {
 		if (physicals != null) {
 
 			for (OFPhysicalPort physical : physicals) {
-				if (physical.getState() == 0
+				if (physical.getState() % 2 == 0
 						&& outputPorts.contains(physical.getPortNumber()))
 					outputPortsUp.add(physical.getPortNumber());
 
@@ -162,24 +165,26 @@ public class Group {
 	}
 
 	private void generateRules() throws ArithmeticException {
-		FlowscaleController.logger.info("in generating rules with type {}",
+		FlowscaleController.logger.trace("in generating rules with type {}",
 				type);
 		switch (type) {
 
-		case 1:
-			try{generateIPRules();
-			
-			}catch(ArithmeticException ae){
+		case IP_TYPE:
+			try {
+				generateIPRules();
+
+			} catch (ArithmeticException ae) {
 				throw ae;
 			}
 
 			break;
 
-		case 2:
-			generateTransportPortRules();
+		case TRANSPORT_TYPE:
+
+			generateTransportPortRules(networkProtocol, transportDirection);
 			break;
 
-		case 3:
+		case ETHERNET_TYPE:
 			generateEtherRules();
 			break;
 
@@ -206,28 +211,39 @@ public class Group {
 
 			int actionPort = 0;
 			short rulePriority = this.priority;
+			int portCounter = 0;
 			for (IPAddress ipAddress : ipAddressValues) {
 
 				if (this.dropPortGroup) {
 					actionPort = -1;
 				} else {
-					try{
-					actionPort = this.outputPortsUp.get(i
-							% outputPortsUp.size());
-					}catch(ArithmeticException ae){
+					try {
+						java.util.Random generator = new java.util.Random();
+
+						int randomIndex = generator.nextInt(outputPortsUp
+								.size());
+
+						actionPort = this.outputPortsUp.get(portCounter
+								% outputPortsUp.size());
+						portCounter = portCounter + 1;
+
+					} catch (ArithmeticException ae) {
 						throw new ArithmeticException();
+					} catch (IllegalArgumentException iae) {
+						FlowscaleController.logger
+								.info("No ports are up for this group exiting...");
+						continue;
 					}
 				}
-				i++;
 
 				// set source rule
 
 				OFRule ofRuleSource = new OFRule();
 				OFMatch ofMatchSource = new OFMatch();
 				ofMatchSource.setDataLayerType((short) 0x0800);
+
+				
 				ofMatchSource.setNetworkSource(ipAddress.getIpAddressValue());
-				ofMatchSource.setWildcards(OFMatch.OFPFW_ALL
-						^ OFMatch.OFPFW_DL_TYPE ^ OFMatch.OFPFW_NW_SRC_MASK);
 
 				short maskingBits = (short) (ipAddress.getSubnet() - 1);
 				int wildCardSource = OFMatch.OFPFW_ALL ^ OFMatch.OFPFW_DL_TYPE
@@ -238,6 +254,7 @@ public class Group {
 
 				ofRuleSource.setMatch(ofMatchSource);
 				ofRuleSource.setPriority(rulePriority);
+
 				ofRuleSource.setPort(actionPort);
 
 				FlowscaleController.logger.debug(
@@ -255,11 +272,10 @@ public class Group {
 				// set destination rule:
 				OFRule ofRuleDestination = new OFRule();
 				OFMatch ofMatchDestination = new OFMatch();
+				
 				ofMatchDestination.setDataLayerType((short) 0x0800);
 				ofMatchDestination.setNetworkDestination(ipAddress
 						.getIpAddressValue());
-				ofMatchDestination.setWildcards(OFMatch.OFPFW_ALL
-						^ OFMatch.OFPFW_DL_TYPE ^ OFMatch.OFPFW_NW_DST_MASK);
 
 				int wildCardDestination = OFMatch.OFPFW_ALL
 						^ OFMatch.OFPFW_DL_TYPE ^ OFMatch.OFPFW_NW_DST_ALL
@@ -282,8 +298,7 @@ public class Group {
 				this.groupRules.add(ofRuleDestination);
 
 				// end set destination rules
-				rulePriority++;
-				
+
 			}
 
 		}
@@ -295,7 +310,8 @@ public class Group {
 		ArrayList<IPAddress> ipAddressValues = new ArrayList<IPAddress>();
 		FlowscaleController.logger.debug("in method generate ips and subnets");
 		String byteValue = Long.toBinaryString(flowForEachValue);
-		FlowscaleController.logger.debug("IP and subnet details {}", ipAndSubnet);
+		FlowscaleController.logger.debug("IP and subnet details {}",
+				ipAndSubnet);
 		FlowscaleController.logger.debug("group type is {}", type);
 		int newSubnetValue = Integer.parseInt(ipAndSubnet[1])
 				+ byteValue.length() - 1;
@@ -339,7 +355,7 @@ public class Group {
 
 	}
 
-	private void generateTransportPortRules() {
+	private void generateTransportPortRules(byte protocol, byte direction) {
 
 		// loop round robin through output ports
 
@@ -353,20 +369,52 @@ public class Group {
 			if (this.dropPortGroup) {
 				actionPort = -1;
 			} else {
-				actionPort = this.outputPortsUp.get(i % outputPortsUp.size());
+
+				if (outputPortsUp.size() == 0) {
+
+					FlowscaleController.logger
+							.info("all group ports are down, no flows are added ");
+					return;
+				}
+
+				try {
+					java.util.Random generator = new java.util.Random();
+					int randomIndex = generator.nextInt(outputPortsUp.size());
+					actionPort = this.outputPortsUp.get(randomIndex);
+
+					actionPort = this.outputPortsUp.get(portCounter
+							% outputPortsUp.size());
+					portCounter = portCounter + 1;
+
+				} catch (ArithmeticException ae) {
+					throw new ArithmeticException();
+				} catch (IllegalArgumentException iae) {
+					FlowscaleController.logger
+							.info("No ports are up for this group exiting...");
+					continue;
+				}
+
 			}
 			i++;
 
 			OFRule rule = new OFRule();
-			
+
 			rule.setPort(actionPort);
 			OFMatch match = new OFMatch();
 			match.setDataLayerType((short) ETHERTYPE_IP);
-			match.setNetworkProtocol(NWTYPE_TCP);
+			match.setNetworkProtocol(protocol);
 			rule.setPriority(this.priority);
-			match.setTransportDestination((short) portMatch);
-			match.setWildcards(OFMatch.OFPFW_ALL ^ OFMatch.OFPFW_DL_TYPE
-					^ OFMatch.OFPFW_NW_PROTO ^ OFMatch.OFPFW_TP_DST);
+
+			if (direction == 0) {
+				match.setTransportSource((short) portMatch);
+				match.setWildcards(OFMatch.OFPFW_ALL ^ OFMatch.OFPFW_DL_TYPE
+						^ OFMatch.OFPFW_NW_PROTO ^ OFMatch.OFPFW_TP_SRC);
+			} else if (direction == 1) {
+				match.setTransportDestination((short) portMatch);
+				match.setWildcards(OFMatch.OFPFW_ALL ^ OFMatch.OFPFW_DL_TYPE
+						^ OFMatch.OFPFW_NW_PROTO ^ OFMatch.OFPFW_TP_DST);
+			}
+
 			rule.setMatch(match);
 
 			groupRules.add(rule);
@@ -389,7 +437,13 @@ public class Group {
 
 			if (this.dropPortGroup) {
 				actionPort = -1;
+
 			} else {
+				if (outputPortsUp.size() == 0) {
+					FlowscaleController.logger
+							.info("No ports up , can't add flow to switch");
+					return;
+				}
 				actionPort = outputPortsUp.get(i % outputPortsUp.size());
 			}
 			i++;
@@ -411,16 +465,24 @@ public class Group {
 
 	public void pushRules() {
 		if (this.groupRules == null || this.groupRules.size() == 0)
-			try{generateRules();}
-			catch(ArithmeticException ae){
-				FlowscaleController.logger.error("no output ports are up , no rules injected");
+			try {
+				generateRules();
+			} catch (ArithmeticException ae) {
+				FlowscaleController.logger
+						.error("no output ports are up , no rules injected");
+				FlowscaleController.logger.error("{}", ae);
+				return;
+			} catch (ArrayIndexOutOfBoundsException aeiob) {
+				FlowscaleController.logger
+						.error("There seems to be a conflict in the values and group type!");
+				FlowscaleController.logger.error("{}", aeiob);
 				return;
 			}
 
 		// handle two switches later
-		FlowscaleController.logger.info("in ruleset pushing rules now ");
+		FlowscaleController.logger.trace("in ruleset pushing rules now: ");
 
-		FlowscaleController.logger.debug("group rules are {} ", groupRules);
+		FlowscaleController.logger.trace("group rules are {} ", groupRules);
 		// handle output switch first
 
 		IOFSwitch outputSwitch = flowscaleController.getIBeaconProvider()
@@ -448,6 +510,51 @@ public class Group {
 
 			flowModRule.setMatch(rule.getMatch());
 			if (!this.dropPortGroup) {
+				// add mirroring capabitlites
+
+				HashMap<Short, Short> switchMirrors = flowscaleController
+						.getSwitchFlowMirrorPortsHashMap().get(
+								outputSwitch.getId());
+
+				if (switchMirrors != null) {
+					FlowscaleController.logger.debug("Mirror hashmap {}",
+							switchMirrors.toString());
+					OFActionOutput actionPort = null;
+					try {
+						FlowscaleController.logger.debug("Mirror actions = {}",
+								rule.getActions());
+						if (rule.getActions() != null) {
+
+							actionPort = ((OFActionOutput) rule.getActions()
+									.get(0));
+
+							FlowscaleController.logger.debug(
+									"Action port for Mirror is {}",
+									actionPort.getPort());
+						}
+						Short mirrorPortValue = switchMirrors.get(actionPort
+								.getPort());
+						if (mirrorPortValue != null) {
+							FlowscaleController.logger
+									.debug("mirror {} for switch {} set ",
+											actionPort.getPort()
+													+ ","
+													+ mirrorPortValue
+															.toString(),
+											HexString.toHexString(outputSwitch
+													.getId()));
+							rule.setMirrorPort(mirrorPortValue);
+						}
+
+					} catch (NumberFormatException nfe) {
+						FlowscaleController.logger.error(
+								"OFAction {} is not directed to a switch port",
+								flowModRule.getActions().get(0).toString());
+					}
+
+				}
+
+				// after checking mirrors set actions
 				flowModRule.setActions(rule.getActions());
 			}
 			flowModRule.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH
@@ -457,11 +564,12 @@ public class Group {
 			try {
 				FlowscaleController.logger.debug("{}", flowModRule);
 				outputSwitch.getOutputStream().write(flowModRule);
-				if (count == MAXIMUM_FLOWS_TO_PUSH) {
+				if (count >= flowscaleController.getMaximumFlowsToPush()) {
 					count = 0;
 
 					outputSwitch.getOutputStream().flush();
-					Thread.sleep(10);
+
+					Thread.sleep(5000);
 
 				}
 			} catch (InterruptedException interruptedException) {
@@ -550,8 +658,8 @@ public class Group {
 
 			try {
 
-				FlowscaleController.logger
-						.info("delete flow  {}", flowToDelete);
+				FlowscaleController.logger.debug(
+						" Attempting to delete flow  {}", flowToDelete);
 				sw.getOutputStream().write(flowToDelete);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -589,24 +697,35 @@ public class Group {
 
 		} else if (reason == null) {
 
+			// just check that the last bit is zero then set the status to 0 or
+			// 1 meaning port is down
 			portStatus = physicalPort.getState();
+			if (portStatus % 2 == 0) {
+				portStatus = 0;
+			} else {
+				portStatus = 1;
+			}
 
 		}
 
-		FlowscaleController.logger
-				.info("updating flows since there is a port modification");
+		FlowscaleController.logger.info(
+				"updating flows since there is a port modification at port {}",
+				physicalPort.getPortNumber());
 
 		switch (portStatus) {
 
 		case 0:
 			FlowscaleController.logger
-					.info("a port belonging to the group output ports has been added");
+					.info("a port belonging to the group output ports is up");
 
 			outputPortsUp.add(portNum);
 			int ruleDistribution = this.outputPortsUp.size();
 
 			int i = 1;
 
+			FlowscaleController.logger.info(
+					"Modifying flows for switch {} to add port {}",
+					HexString.toHexString(sw.getId()), portNum);
 			for (OFRule ofRule : this.groupRules) {
 
 				if (i % ruleDistribution == 0) {
@@ -625,8 +744,8 @@ public class Group {
 							+ OFActionOutput.MINIMUM_LENGTH));
 
 					try {
-						FlowscaleController.logger.info(
-								"modifying flow here  {}", updateFlow);
+						FlowscaleController.logger.trace("modifying flow   {}",
+								updateFlow);
 
 						sw.getOutputStream().write(updateFlow);
 
@@ -639,6 +758,7 @@ public class Group {
 
 				i++;
 			}
+			FlowscaleController.logger.info("Modification of flows completed");
 
 			break;
 		case 1:
@@ -647,33 +767,71 @@ public class Group {
 
 			outputPortsUp.remove(Short.valueOf(portNum));
 			FlowscaleController.logger
-					.info("port removed so flows for this will be updated");
-
+					.info("port {} for switch {} is down so flows for this will be updated",
+							portNum, HexString.toHexString(sw.getId()));
+			int count = 0;
 			for (OFRule ofRule : this.groupRules) {
 
 				OFActionOutput ofActionOutput = (OFActionOutput) ofRule
 						.getActions().get(0);
 
 				if (ofActionOutput.getPort() == (short) portNum) {
-
-					ofActionOutput.setPort((short) this.outputPortsUp.get(i++
-							% outputPortsUp.size()));
+					short newPort =0;
+					try {
+						 newPort = this.outputPortsUp
+						.get(i++ % outputPortsUp.size());
+						ofActionOutput.setPort( newPort);
+					} catch (ArithmeticException aeException) {
+						FlowscaleController.logger
+								.info("No group ports are up , ...no flows redirected");
+						continue;
+					}
 					ArrayList<OFAction> actionList = ofRule.getActions();
 					actionList.clear();
-					actionList.add(ofActionOutput);
+					//add mirror ports if there are any 
+					
+			
+					
+	HashMap<Short, Short> switchMirrors = flowscaleController
+						.getSwitchFlowMirrorPortsHashMap().get(
+								sw.getId());
+	actionList.add(ofActionOutput);
+					if(switchMirrors != null){
+					Short mirrorPort = switchMirrors.get(newPort);
+					if (mirrorPort != null){
+						OFActionOutput mirrorAction = new OFActionOutput();
+						mirrorAction.setPort(mirrorPort);
+						actionList.add(mirrorAction);
+						
+					}
+					
+					}
+					
+					
 					updateFlow.setMatch(ofRule.getMatch());
 					updateFlow.setBufferId(-1);
 					updateFlow.setPriority(this.priority);
 
 					updateFlow.setActions(actionList);
-					updateFlow.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH
-							+ OFActionOutput.MINIMUM_LENGTH));
 
 					try {
-						FlowscaleController.logger.info("updating flow {}",
+						FlowscaleController.logger.trace("updating flow {}",
 								updateFlow);
-
 						sw.getOutputStream().write(updateFlow);
+						if (count >= flowscaleController
+								.getMaximumFlowsToPush()) {
+							count = 0;
+							sw.getOutputStream().flush();
+							FlowscaleController.logger
+									.trace("reached maximum flows to push to switch thread sleeping");
+							try {
+								Thread.sleep(5000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								FlowscaleController.logger.error("{}", e);
+							}
+
+						}
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -683,18 +841,19 @@ public class Group {
 				}
 
 			}
+			FlowscaleController.logger
+					.info("Flow modification for port removal complete");
 
 			break;
 
 		}
 		try {
+			FlowscaleController.logger.trace("flushing rules");
 			sw.getOutputStream().flush();
 			FlowscaleController.logger.info("update complete");
 		} catch (IOException ioe) {
 			FlowscaleController.logger.error("{}", ioe);
 		}
-
-		// logger.info("with status of {}", ps.get )
 
 	}
 

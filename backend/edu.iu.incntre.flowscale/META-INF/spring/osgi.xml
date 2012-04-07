@@ -10,7 +10,7 @@
   <osgi:reference id="beaconProvider" cardinality="1..1"
     interface="net.beaconcontroller.core.IBeaconProvider">
   </osgi:reference>
-
+  
   <osgi:service id="FlowscaleController" ref="flowscaleController"
     interface="edu.iu.incntre.flowscale.FlowscaleController">
   </osgi:service>
