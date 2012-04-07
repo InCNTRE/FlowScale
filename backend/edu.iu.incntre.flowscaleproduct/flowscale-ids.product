@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Flowscale Controller" uid="flowscale-controller" version="0.3.0" useFeatures="false" includeLaunchers="true">
+<product name="Flowscale Controller" uid="flowscale-controller" version="0.5.0" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -153,17 +153,17 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
       <plugin id="com.mysql.jdbc" autoStart="true" startLevel="0" />
       <plugin id="com.springsource.net.sf.cglib" autoStart="true" startLevel="0" />
       <plugin id="com.springsource.org.aopalliance" autoStart="true" startLevel="0" />
-      <plugin id="edu.iu.incntre.flowscale" autoStart="true" startLevel="1" />
-      <plugin id="edu.iu.incntre.flowscaleflowupdate" autoStart="true" startLevel="0" />
+      <plugin id="edu.iu.incntre.flowscale" autoStart="true" startLevel="0" />
+      <plugin id="edu.iu.incntre.flowscaleflowupdate" autoStart="false" startLevel="0" />
       <plugin id="edu.iu.incntre.flowscalehttplistener" autoStart="true" startLevel="1" />
       <plugin id="edu.iu.incntre.flowscalestatcollector" autoStart="true" startLevel="0" />
       <plugin id="grnoc.net.util" autoStart="true" startLevel="0" />
       <plugin id="javax.servlet" autoStart="true" startLevel="0" />
       <plugin id="jcl.over.slf4j" autoStart="true" startLevel="0" />
-      <plugin id="net.beaconcontroller.core" autoStart="true" startLevel="4" />
+      <plugin id="net.beaconcontroller.core" autoStart="false" startLevel="0" />
       <plugin id="net.beaconcontroller.packet" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.equinox.console.telnet" autoStart="true" startLevel="5" />
+      <plugin id="org.eclipse.equinox.console.telnet" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.log" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="0" />
