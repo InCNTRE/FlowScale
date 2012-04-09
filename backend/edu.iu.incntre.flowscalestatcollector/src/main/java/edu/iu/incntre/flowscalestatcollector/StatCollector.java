@@ -61,6 +61,8 @@ public class StatCollector {
 	private HashMap<Long,HashMap<Long,Long>> tempPortStatTransmittedHashMap = new HashMap<Long,HashMap<Long,Long>>();
 	private HashMap<Long,HashMap<Long,Long>> tempPortStatReceivedHashMap = new HashMap<Long, HashMap<Long,Long>>();
 	private HashMap<Long,HashMap<String,Long>> tempFlowStatHashMap = new HashMap<Long,HashMap<String,Long>>();
+	private String dbUsername;
+	private String dbPassword;
 	
 	private Calendar calendar;
 	
@@ -91,6 +93,14 @@ public class StatCollector {
 	public void setDatabaseClass(String databaseClass) {
 		this.databaseClass = databaseClass;
 	}
+	public void setDbUsername(String dbUsername) {
+		this.dbUsername = dbUsername;
+	}
+
+	public void setDbPassword(String dbPassword) {
+		this.dbPassword = dbPassword;
+
+	}
 
 	public void killThread() {
 
@@ -109,8 +119,8 @@ public class StatCollector {
 			try {
 
 				Class.forName(databaseClass);
-				conn = DriverManager.getConnection(databaseDriver, "root",
-						"password");
+				conn = DriverManager.getConnection(databaseDriver, dbUsername,
+						dbPassword);
 				stat = conn.createStatement();
 			} catch (ClassNotFoundException e2) {
 
@@ -128,7 +138,7 @@ public class StatCollector {
 
 				@Override
 				public void run() {
-
+					try{
 					logger.trace("Starting Thread ..");
 					logger.trace("Getting flows from switch every {} seconds",
 							intervalTime);
@@ -291,8 +301,12 @@ public class StatCollector {
 						// TODO Auto-generated catch block
 						logger.error("{}", e);
 					}
+				
+				}	catch(Exception generalException){
+						logger.error("General Exception throws {} ", generalException);
+				
 				}
-
+				}
 				private void storeSwitchDetails(long datapathId,
 						String portStats, String flowStats, String portStatus  , HashMap<Long,Long> tempPortStatTransmitted, HashMap<Long,Long> tempPortStatReceived, HashMap<String,Long> tempFlowStat) {
 
@@ -503,9 +517,12 @@ public class StatCollector {
 						}
 
 					}
-
+				
+				
 				}
 
+				
+				
 			}, "Switch Stat Collector");
 			statThread.start();
 
