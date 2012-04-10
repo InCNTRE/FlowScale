@@ -57,6 +57,14 @@ public class Group {
 
 	}
 
+	public List<OFRule> getGroupRules(){
+		
+		
+		return this.groupRules;
+		
+		
+	}
+	
 	public void switchUpAlert(IOFSwitch sw) throws Exception{
 
 		List<OFPhysicalPort> physicalPorts = sw.getFeaturesReply().getPorts();
@@ -67,7 +75,10 @@ public class Group {
 					&& this.outputPorts.contains(ofp.getPortNumber())) {
 				FlowscaleController.logger.debug("added port {}",
 						ofp.getPortNumber());
+				
+				if(!(outputPortsUp.contains(new Short(ofp.getPortNumber())))){
 				outputPortsUp.add(ofp.getPortNumber());
+				}
 
 			}
 
@@ -118,7 +129,9 @@ public class Group {
 					outputPortListString);
 			for (String s : outputPortsString) {
 				try {
+				if (!(outputPorts.contains(new Short(Short.parseShort(s)) ))){
 					outputPorts.add(Short.parseShort(s));
+				}
 				} catch (NumberFormatException numbe) {
 					FlowscaleController.logger.error("{}", numbe);
 					continue;
@@ -152,7 +165,10 @@ public class Group {
 			for (OFPhysicalPort physical : physicals) {
 				if (physical.getState() % 2 == 0
 						&& outputPorts.contains(physical.getPortNumber()))
+			
+					if(!(outputPortsUp.contains(new Short(physical.getPortNumber())))){
 					outputPortsUp.add(physical.getPortNumber());
+					}
 
 			}
 
@@ -718,14 +734,16 @@ public class Group {
 			FlowscaleController.logger
 					.info("a port belonging to the group output ports is up");
 
-			outputPortsUp.add(portNum);
+			if(!(outputPortsUp.contains(new Short(physicalPort.getPortNumber())))){
+			outputPortsUp.add(physicalPort.getPortNumber());
+			}
 			int ruleDistribution = this.outputPortsUp.size();
 
 			int i = 1;
 
 			FlowscaleController.logger.info(
 					"Modifying flows for switch {} to add port {}",
-					HexString.toHexString(sw.getId()), portNum);
+					HexString.toHexString(sw.getId()), physicalPort.getPortNumber());
 			for (OFRule ofRule : this.groupRules) {
 
 				if (i % ruleDistribution == 0) {
@@ -734,7 +752,24 @@ public class Group {
 					ofActionOutput.setPort(portNum);
 					ArrayList<OFAction> actionList = ofRule.getActions();
 					actionList.clear();
-					actionList.add(ofActionOutput);
+					HashMap<Short, Short> switchMirrors = flowscaleController
+					.getSwitchFlowMirrorPortsHashMap().get(
+							sw.getId());
+actionList.add(ofActionOutput);
+				if(switchMirrors != null){
+				Short mirrorPort = switchMirrors.get(portNum);
+				if (mirrorPort != null){
+					OFActionOutput mirrorAction = new OFActionOutput();
+					mirrorAction.setPort(mirrorPort);
+					actionList.add(mirrorAction);
+					
+				}
+				
+				}
+				
+					
+					
+					
 					updateFlow.setMatch(ofRule.getMatch());
 					updateFlow.setBufferId(-1);
 					updateFlow.setPriority(ofRule.getPriority());
@@ -764,11 +799,14 @@ public class Group {
 		case 1:
 
 			i = 0;
-
-			outputPortsUp.remove(Short.valueOf(portNum));
+			FlowscaleController.logger.trace("outputPortUp before removal {}", outputPortsUp);
+			
+			outputPortsUp.remove(new Short(physicalPort.getPortNumber()));
+			FlowscaleController.logger.trace("outputPortsUp after removal {}",outputPortsUp);
+			
 			FlowscaleController.logger
 					.info("port {} for switch {} is down so flows for this will be updated",
-							portNum, HexString.toHexString(sw.getId()));
+							physicalPort.getPortNumber(), HexString.toHexString(sw.getId()));
 			int count = 0;
 			for (OFRule ofRule : this.groupRules) {
 

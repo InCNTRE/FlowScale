@@ -610,6 +610,25 @@ public class FlowscaleController implements IOFSwitchListener,
 		}
 		for(OFFlowMod ofFlowMod : ofFlowMods){
 			
+			for(Integer groupKey : groupList.keySet()){
+				
+				Group group = groupList.get(groupKey);
+				
+				ArrayList<OFRule> groupRules= new ArrayList<OFRule>();
+				
+				for(OFRule rule : groupRules){
+					
+					if (rule.getMatch().equals(ofFlowMod.getMatch())){
+						
+						rule.setActions(ofFlowMod.getActions());
+			
+					}
+			
+					break;
+					
+				}
+				
+			}
 			
 			logger.info("injecting flow {}", ofFlowMod);
 			try {

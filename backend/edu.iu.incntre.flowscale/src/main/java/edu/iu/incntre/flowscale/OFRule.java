@@ -1,6 +1,7 @@
 package edu.iu.incntre.flowscale;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openflow.protocol.OFMatch;
 import org.openflow.protocol.action.OFAction;
@@ -55,6 +56,12 @@ public class OFRule {
       
     }
 
+    public void setActions(List<OFAction> ofActions){
+    	
+    	actions = (ArrayList<OFAction>)ofActions;
+    	
+    }
+    
     public short getPriority() {
         return priority;
     }
