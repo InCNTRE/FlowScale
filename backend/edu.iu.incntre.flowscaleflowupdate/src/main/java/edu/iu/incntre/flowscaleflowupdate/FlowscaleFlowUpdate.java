@@ -67,10 +67,10 @@ public class FlowscaleFlowUpdate {
 	protected Thread hotSwappingThread;
 	private FlowscaleController flowscaleController;
 	private int intervalTime;
-	
+
 	private String dbUsername;
 	private String dbPassword;
-	private HashMap<Long,HashMap<Short,Short>> switchFlowMirrorPortsHashMap;
+	private HashMap<Long, HashMap<Short, Short>> switchFlowMirrorPortsHashMap;
 
 	private HashMap<Long, ArrayList<Short>> loadedPortsHashMap = new HashMap<Long, ArrayList<Short>>();
 	double optimalPercentage;
@@ -131,7 +131,8 @@ public class FlowscaleFlowUpdate {
 
 		try {
 			Class.forName(databaseClass);
-			conn = DriverManager.getConnection(databaseDriver, dbUsername, dbPassword);
+			conn = DriverManager.getConnection(databaseDriver, dbUsername,
+					dbPassword);
 			sqlStatement = conn.createStatement();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -141,7 +142,6 @@ public class FlowscaleFlowUpdate {
 			logger.error("{}", e);
 		}
 
-
 		logger.info("Start up of flow updater ");
 
 		hotSwappingThread = new Thread(new Runnable() {
@@ -149,28 +149,71 @@ public class FlowscaleFlowUpdate {
 			@Override
 			public void run() {
 				try {
-						
+
 					String flowStatQuery = "SELECT datapath_id, match_string, action, packet_count FROM flow_stats where datapath_id = ? AND  timestamp >= ?";
-					switchFlowMirrorPortsHashMap = flowscaleController.getSwitchFlowMirrorPortsHashMap();
+					switchFlowMirrorPortsHashMap = flowscaleController
+							.getSwitchFlowMirrorPortsHashMap();
 					while (hotSwappingThread != null) {
-						
+
 						logger.info("in flow updater thread ");
 						HashMap<Long, SwitchDevice> switchDevices = flowscaleController
 								.getSwitchDevices();
 						long queryTime = Calendar.getInstance()
 								.getTimeInMillis();
-						
+
 						for (long datapathId : loadedPortsHashMap.keySet()) {
-							HashMap<Short, Short> mirroredPorts = null;
-							mirroredPorts = switchFlowMirrorPortsHashMap.get(datapathId);
 							
-							if (mirroredPorts == null){
-								mirroredPorts = new HashMap<Short, Short>();
+							if(flowscaleController.getSwitchDevices().get(datapathId) == null){
+								
+								logger.info("switch {} is not connected yet", HexString.toHexString(datapathId));
+								continue;
 							}
 							
-							ArrayList<Short> loadedPorts = loadedPortsHashMap
+							HashMap<Short, Short> mirroredPorts = null;
+							mirroredPorts = switchFlowMirrorPortsHashMap
 									.get(datapathId);
-						
+
+							if (mirroredPorts == null) {
+								mirroredPorts = new HashMap<Short, Short>();
+							}
+
+							ArrayList<Short> loadedPorts = new ArrayList<Short>();
+							for(Short shortPort : loadedPortsHashMap.get(datapathId)){
+								
+								loadedPorts.add(shortPort);
+								
+								
+							}
+							
+							
+							Collections.copy(loadedPorts,loadedPortsHashMap.get(datapathId));
+							
+							
+							logger.info("port list {}", flowscaleController.getSwitchDevices().get(datapathId).getPortStates());
+							
+							if (flowscaleController.getSwitchDevices().get(datapathId).getPortStates() ==null){
+								logger.info("switch {} not ready for flow update yet ", HexString.toHexString(datapathId));
+								continue;
+							}
+							
+							
+							
+							for (int i =0; i < flowscaleController.getSwitchDevices().get(datapathId).getPortStates().size(); i++){
+									OFPhysicalPort checkedPorts = flowscaleController.getSwitchDevices().get(datapathId).getPortStates().get(i);	
+
+								if (loadedPorts.contains(checkedPorts
+										.getPortNumber())) {
+
+									if (checkedPorts.getState() % 2 != 0) {
+
+										loadedPorts.remove(new Short(checkedPorts
+												.getPortNumber()));
+
+									}
+
+								}
+
+							}
 
 							if (switchDevices.get(datapathId)
 									.getOpenFlowSwitch() == null) {
