@@ -149,9 +149,10 @@ public class FlowscaleController implements IOFSwitchListener,
 		// TODO Auto-generated method stub
 		try {
 			
+			logger.debug("controller switches are {}",controllerSwitches);
 		SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
 		if (switchDevice == null) {
-			logger.info("switch device is not in list exiting...");
+			logger.info("switch {} device is not in list exiting..." , HexString.toHexString(sw.getId()));
 			return;
 			// switchDevice = new SwitchDevice();
 			// switchDevice.setDatapathId(sw.getId());
