@@ -614,17 +614,19 @@ public class FlowscaleController implements IOFSwitchListener,
 				
 				Group group = groupList.get(groupKey);
 				
-				ArrayList<OFRule> groupRules= new ArrayList<OFRule>();
+				
+				ArrayList<OFRule> groupRules = (ArrayList<OFRule>) group.getGroupRules();
 				
 				for(OFRule rule : groupRules){
 					
 					if (rule.getMatch().equals(ofFlowMod.getMatch())){
-						
+						logger.trace("rule match {} is equal to offlowmod match {}",rule.getMatch().toString(),ofFlowMod.getMatch().toString());
+						rule.getActions().clear();
 						rule.setActions(ofFlowMod.getActions());
-			
+						
 					}
 			
-					break;
+					
 					
 				}
 				
