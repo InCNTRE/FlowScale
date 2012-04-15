@@ -143,7 +143,7 @@ public class FlowscaleFlowUpdate {
 		}
 
 		logger.info("Start up of flow updater ");
-
+		try{
 		hotSwappingThread = new Thread(new Runnable() {
 
 			@Override
@@ -275,6 +275,13 @@ public class FlowscaleFlowUpdate {
 									String action = flowStatRs.getString(3);
 									packetCount = flowStatRs.getLong(4);
 
+									
+									if(!(matchString.contains("nw_src") || matchString.contains("nw_dst"))){
+										
+										//skip saving of flow if not layer 3
+										continue;
+									}
+									
 									Short loadedPort = 0;
 
 									String[] actions = action.split(",");
@@ -898,12 +905,14 @@ public class FlowscaleFlowUpdate {
 					}
 
 				} catch (Exception runException) {
-					logger.error("General Exception {}", runException);
+					logger.error(" {}", runException);
 				}
 			}
 		}, "Hot Swapping Thread");
 		hotSwappingThread.start();
-		logger.info("thread hot swapping done !!");
+		}catch(Exception e){
+			logger.error("{}",e);
+		}
 
 	}
 
