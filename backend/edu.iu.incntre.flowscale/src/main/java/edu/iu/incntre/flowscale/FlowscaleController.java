@@ -1,5 +1,6 @@
 package edu.iu.incntre.flowscale;
 
+import org.openflow.protocol.OFBarrierRequest;
 import org.openflow.protocol.OFFlowMod;
 import org.openflow.protocol.OFMatch;
 import org.openflow.protocol.OFMessage;
@@ -78,6 +79,44 @@ public class FlowscaleController implements IOFSwitchListener,
 	public Command receive(IOFSwitch sw, OFMessage msg) {
 		// TODO Auto-generated method stub
 
+		
+		
+		if(msg.getType() == OFType.BARRIER_REPLY){
+
+			logger.info("received barrier info from switch {} with xid {}", sw.getId(),
+					msg.getXid());
+			
+			if(msg.getXid() ==2 ){
+			SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
+			logger.debug("ports on initiation {}", sw.getFeaturesReply().getPorts());
+
+			switchDevice.setPhysicalPorts(sw.getFeaturesReply().getPorts());
+
+			controllerSwitches.put(sw.getId(), switchDevice);
+
+			for (Integer groupId : groupList.keySet()) {
+				Group group = groupList.get(groupId);
+
+				if (sw.getId() == group.getOutputSwitchDatapathId()) {
+
+				
+					try {
+						group.switchUpAlert(sw);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						logger.error("{}",e);
+					}
+
+				}
+
+			}
+
+			logger.info("switch {} added", HexString.toHexString(sw.getId()));
+			connectedSwitches.add(switchDevice);
+
+			}
+		}
+		
 		if (msg.getType() == OFType.PACKET_IN) {
 
 			return Command.CONTINUE;
@@ -169,27 +208,7 @@ public class FlowscaleController implements IOFSwitchListener,
 		initiateSwitch(sw);
 
 		switchDevice.setOpenFlowSwitch(sw);
-		logger.debug("ports on initiation {}", sw.getFeaturesReply().getPorts());
-
-		switchDevice.setPhysicalPorts(sw.getFeaturesReply().getPorts());
-
-		controllerSwitches.put(sw.getId(), switchDevice);
-
-		for (Integer groupId : groupList.keySet()) {
-			Group group = groupList.get(groupId);
-
-			if (sw.getId() == group.getOutputSwitchDatapathId()) {
-
-			
-				group.switchUpAlert(sw);
-
-			}
-
-		}
-
-		logger.info("switch {} added", HexString.toHexString(sw.getId()));
-		connectedSwitches.add(switchDevice);
-
+		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.info("adding group exception {}",e);
@@ -295,7 +314,12 @@ public class FlowscaleController implements IOFSwitchListener,
 				
 			}
 			
-
+			OFBarrierRequest ofbr = new OFBarrierRequest();
+			
+			ofbr.setXid(2);
+		
+			sw.getOutputStream().write(ofbr);
+			
 			sw.getOutputStream().flush();
 
 		} catch (Exception e) {
@@ -456,6 +480,7 @@ public class FlowscaleController implements IOFSwitchListener,
 			ibeaconProvider.addOFMessageListener(OFType.ERROR, this);
 			ibeaconProvider.addOFMessageListener(OFType.PORT_MOD, this);
 			ibeaconProvider.addOFMessageListener(OFType.PORT_STATUS, this);
+			ibeaconProvider.addOFMessageListener(OFType.BARRIER_REPLY, this);
 			logger.info("adding switch listener");
 			ibeaconProvider.addOFSwitchListener(this);
 
@@ -621,8 +646,8 @@ public class FlowscaleController implements IOFSwitchListener,
 					
 					if (rule.getMatch().equals(ofFlowMod.getMatch())){
 						logger.trace("rule match {} is equal to offlowmod match {}",rule.getMatch().toString(),ofFlowMod.getMatch().toString());
-						rule.getActions().clear();
-						rule.setActions(ofFlowMod.getActions());
+					//	rule.getActions().clear();
+					//	rule.setActions(ofFlowMod.getActions());
 						
 					}
 			
