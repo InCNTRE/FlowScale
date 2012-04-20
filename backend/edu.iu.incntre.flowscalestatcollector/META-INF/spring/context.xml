@@ -18,7 +18,9 @@
       <property name="isQuery" value="true"/>
       <property name="databaseClass" value="com.mysql.jdbc.Driver" />
       <property name="intervalTime" value="10000"/>
- 	  <property name="databaseDriver" value="jdbc:mysql://localhost:3306/flowscale_db" />
+ 	  <property name="databaseDriver" value="jdbc:mysql://192.168.56.101:3306/flowscale_db" />
+ 	     <property name="dbUsername" value="root" />
+   		<property name="dbPassword" value="root" /> 
   </bean>
 
 

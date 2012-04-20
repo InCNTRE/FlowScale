@@ -14,7 +14,6 @@
   <bean id="flowscaleHttpListener" class="edu.iu.incntre.flowscalehttplistener.HttpListener"
     init-method="startUp" destroy-method="shutDown">
     <property name="flowscaleController" ref="flowscaleController"/>
-      <!--property name="flowUpdate" ref="flowUpdate"/-->
        <property name="jettyListenerPort" value="8080"/>
   </bean>
 

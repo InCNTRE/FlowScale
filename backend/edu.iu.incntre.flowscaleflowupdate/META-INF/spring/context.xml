@@ -14,11 +14,12 @@
   <bean id="flowUpdate" class="edu.iu.incntre.flowscaleflowupdate.FlowscaleFlowUpdate"
     init-method="startUp" destroy-method="shutDown">
     <property name="flowscaleController" ref="flowscaleController"/>
-      <property name="databaseClass" value="databaseclass" />
-  <property name="databaseDriver" value="database driver" />
-  <property name="loadedPorts" value="loadedports" />
+      <property name="databaseClass" value="com.mysql.jdbc.Driver" />
+  <property name="databaseDriver" value="jdbc:mysql://192.168.56.101:3306/flowscale_db" />
+  <property name="loadedPorts" value="1:11,12,13" />
  	<property name="intervalTime" value="10" />
-   
+   <property name="dbUsername" value="root" />
+   <property name="dbPassword" value="root" /> 
   </bean>
 
 

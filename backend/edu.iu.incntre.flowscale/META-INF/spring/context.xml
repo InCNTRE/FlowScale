@@ -14,10 +14,10 @@
   <bean id="flowscaleController" class="edu.iu.incntre.flowscale.FlowscaleController"
     init-method="startUp" destroy-method="shutDown">
     <property name="beaconProvider" ref="beaconProvider"/>
-	<property name="username" value="username" />
-	<property name="password" value="password" />
-	<property name="connectionString" value="db-connection-string" />
-	<property name="dbDriverString" value="database-driver" />
+	<property name="username" value="root" />
+	<property name="password" value="root" />
+	<property name="connectionString" value="jdbc:mysql://192.168.56.101:3306/flowscale_db" />
+	<property name="dbDriverString" value="com.mysql.jdbc.Driver" />
 	<property name="defaultRulePriority" value="5" />
 	<property name="mirrorPriority" value="0" />
 	<!--property name="mirroringRules" value="18-25,41;19-27,41;20-31,43;21-33,43;22-35,45;23-37,45;24-39,47" /-->
