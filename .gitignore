@@ -5,5 +5,5 @@
 *.jar
 *.war
 bin
-
+*.target
 
