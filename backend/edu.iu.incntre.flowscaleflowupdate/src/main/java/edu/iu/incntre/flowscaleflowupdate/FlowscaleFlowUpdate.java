@@ -1,5 +1,7 @@
 package edu.iu.incntre.flowscaleflowupdate;
 
+
+
 import grnoc.net.util.ipaddress.IPv4Address;
 import java.io.IOException;
 import java.sql.Connection;
@@ -149,7 +151,7 @@ public class FlowscaleFlowUpdate {
 			@Override
 			public void run() {
 				try {
-
+//get stats from database
 					String flowStatQuery = "SELECT datapath_id, match_string, action, packet_count FROM flow_stats where datapath_id = ? AND  timestamp >= ?";
 					switchFlowMirrorPortsHashMap = flowscaleController
 							.getSwitchFlowMirrorPortsHashMap();
@@ -163,11 +165,13 @@ public class FlowscaleFlowUpdate {
 
 						for (long datapathId : loadedPortsHashMap.keySet()) {
 							
-							if(flowscaleController.getSwitchDevices().get(datapathId) == null){
+							if(switchDevices.get(datapathId) == null || switchDevices.get(datapathId).getOpenFlowSwitch() ==null){
 								
 								logger.info("switch {} is not connected yet", HexString.toHexString(datapathId));
 								continue;
 							}
+							
+						
 							
 							HashMap<Short, Short> mirroredPorts = null;
 							mirroredPorts = switchFlowMirrorPortsHashMap
@@ -185,52 +189,30 @@ public class FlowscaleFlowUpdate {
 								
 							}
 							
+	//end get stats from database
 							
+						//copy loaded ports into another arraylist since some ports will be removed if they are down during this iteration 	
 							Collections.copy(loadedPorts,loadedPortsHashMap.get(datapathId));
 							
 							
-							logger.info("port list {}", flowscaleController.getSwitchDevices().get(datapathId).getPortStates());
+							logger.debug("port list {}", flowscaleController.getSwitchDevices().get(datapathId).getPortStates());
 							
-							if (flowscaleController.getSwitchDevices().get(datapathId).getPortStates() ==null){
-								logger.info("switch {} not ready for flow update yet ", HexString.toHexString(datapathId));
+							if (switchDevices.get(datapathId).getPortStates() ==null){
+								logger.info("switch {} not ready for flow update yet, port states data structure is null ", HexString.toHexString(datapathId));
 								continue;
 							}
 							
-							
-							
-							for (int i =0; i < flowscaleController.getSwitchDevices().get(datapathId).getPortStates().size(); i++){
-									OFPhysicalPort checkedPorts = flowscaleController.getSwitchDevices().get(datapathId).getPortStates().get(i);	
+							//make sure only load balance on ports that are up 
+							removeDownPorts(flowscaleController, datapathId,loadedPorts);
+					
 
-								if (loadedPorts.contains(checkedPorts
-										.getPortNumber())) {
-
-									if (checkedPorts.getState() % 2 != 0) {
-
-										loadedPorts.remove(new Short(checkedPorts
-												.getPortNumber()));
-
-									}
-
-								}
-
-							}
-
-							if (switchDevices.get(datapathId)
-									.getOpenFlowSwitch() == null) {
-								continue;
-							}
-
+						
+							//obtain optimal percentage for each loaded ports
 							optimalPercentage = (double) (100 / loadedPorts
 									.size());
 
-							// use datapath id and get stuff
-
-							String datapathIdString = HexString
-									.toHexString(datapathId);
-
-							datapathIdString = datapathIdString.replaceAll(":",
-									"");
-
+					//retreive flowstats from database since the load balancing will be donw by moving flows
+							
 							PreparedStatement flowStatPs = null;
 							ResultSet flowStatRs = null;
 
@@ -247,7 +229,7 @@ public class FlowscaleFlowUpdate {
 							ArrayList<OFFlowMod> flowMods = new ArrayList<OFFlowMod>();
 							ArrayList<FlowPercent> flowPercentArrayList = new ArrayList<FlowPercent>();
 							long totalPacketCount = 0;
-							long packetCount = 0;
+				
 
 							try {
 								logger.info(
@@ -268,83 +250,9 @@ public class FlowscaleFlowUpdate {
 									portPacketCount.put(loadedPort, 0L);
 
 								}
-								while (flowStatRs.next()) {
-
-									String matchString = flowStatRs
-											.getString(2);
-									String action = flowStatRs.getString(3);
-									packetCount = flowStatRs.getLong(4);
-
-									
-									if(!(matchString.contains("nw_src") || matchString.contains("nw_dst"))){
-										
-										//skip saving of flow if not layer 3
-										continue;
-									}
-									
-									Short loadedPort = 0;
-
-									String[] actions = action.split(",");
-									try {
-										loadedPort = Short
-												.parseShort(actions[0]);
-
-									} catch (NumberFormatException nfe) {
-
-										continue;
-
-									}
-
-									if (loadedPorts.contains(loadedPort)) {
-										flowToPortHashMap.put(matchString,
-												loadedPort);
-
-										// increment here
-										ArrayList<String> portFlows = new ArrayList<String>();
-										if (portToFlowHashMap.get(loadedPort) != null) {
-
-											portFlows = portToFlowHashMap
-													.get(loadedPort);
-
-										} else {
-											ArrayList<String> newFlowList = new ArrayList<String>();
-											portToFlowHashMap.put(loadedPort,
-													newFlowList);
-											newFlowList.add(matchString);
-										}
-
-										portFlows.add(matchString);
-
-										Long flowOriginalPacketCount;
-										if ((flowOriginalPacketCount = flowStat
-												.get(matchString)) != null) {
-											flowStat.put(matchString,
-													flowOriginalPacketCount
-															+ packetCount);
-										} else {
-											flowStat.put(matchString,
-													packetCount);
-										}
-										Long originalPortCount;
-										if ((originalPortCount = portPacketCount
-												.get(loadedPort)) != null) {
-
-											portPacketCount
-													.put(loadedPort,
-															(originalPortCount + packetCount));
-
-										} else {
-
-											portPacketCount.put(loadedPort,
-													packetCount);
-
-										}
-
-										totalPacketCount += packetCount;
-
-									}
-
-								}
+		
+								//call db to populate flowstats structures here 
+								
 
 								logger.info("total packet count {}",
 										totalPacketCount);
@@ -993,6 +901,113 @@ public class FlowscaleFlowUpdate {
 		return "flowUpdate";
 	}
 
+	private static void removeDownPorts(FlowscaleController flowscaleController, long datapathId, ArrayList<Short> loadedPorts){
+		
+		for (int i =0; i < flowscaleController.getSwitchDevices().get(datapathId).getPortStates().size(); i++){
+			OFPhysicalPort checkedPorts = flowscaleController.getSwitchDevices().get(datapathId).getPortStates().get(i);	
+
+		if (loadedPorts.contains(checkedPorts
+				.getPortNumber())) {
+
+			if (checkedPorts.getState() % 2 != 0) {
+
+				loadedPorts.remove(new Short(checkedPorts
+						.getPortNumber()));
+
+			}
+
+		}
+
+	}
+		
+		
+	}
+	
+	private static void getFlowStatsFromDB(ResultSet flowStatRs, ArrayList<Short> loadedPorts, HashMap<String,Short> flowToPortHashMap,
+			HashMap<Short,ArrayList<String>>portToFlowHashMap, HashMap<String,Long> flowStat, HashMap<Short,Long> portPacketCount,  Long totalPacketCount){
+
+		while (flowStatRs.next()) {
+
+			String matchString = flowStatRs
+					.getString(2);
+			String action = flowStatRs.getString(3);
+			long packetCount = flowStatRs.getLong(4);
+
+			
+			if(!(matchString.contains("nw_src") || matchString.contains("nw_dst"))){
+				
+				//skip saving of flow if not layer 3
+				continue;
+			}
+			
+			Short loadedPort = 0;
+
+			String[] actions = action.split(",");
+			try {
+				loadedPort = Short
+						.parseShort(actions[0]);
+
+			} catch (NumberFormatException nfe) {
+
+				continue;
+
+			}
+
+			if (loadedPorts.contains(loadedPort)) {
+				flowToPortHashMap.put(matchString,
+						loadedPort);
+
+				// increment here
+				ArrayList<String> portFlows = new ArrayList<String>();
+				if (portToFlowHashMap.get(loadedPort) != null) {
+
+					portFlows = portToFlowHashMap
+							.get(loadedPort);
+
+				} else {
+					ArrayList<String> newFlowList = new ArrayList<String>();
+					portToFlowHashMap.put(loadedPort,
+							newFlowList);
+					newFlowList.add(matchString);
+				}
+
+				portFlows.add(matchString);
+
+				Long flowOriginalPacketCount;
+				if ((flowOriginalPacketCount = flowStat
+						.get(matchString)) != null) {
+					flowStat.put(matchString,
+							flowOriginalPacketCount
+									+ packetCount);
+				} else {
+					flowStat.put(matchString,
+							packetCount);
+				}
+				Long originalPortCount;
+				if ((originalPortCount = portPacketCount
+						.get(loadedPort)) != null) {
+
+					portPacketCount
+							.put(loadedPort,
+									(originalPortCount + packetCount));
+
+				} else {
+
+					portPacketCount.put(loadedPort,
+							packetCount);
+
+				}
+
+				totalPacketCount += packetCount;
+
+			}
+
+		}
+		
+		
+	}
+	
+	
 }
 
 class FlowPercentComparator implements Comparator<Object> {
