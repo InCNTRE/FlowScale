@@ -1,7 +1,7 @@
 # Compiled source #
 ###################
 *.class
-*context.xml
+context.xml
 *.jar
 *.war
 bin
