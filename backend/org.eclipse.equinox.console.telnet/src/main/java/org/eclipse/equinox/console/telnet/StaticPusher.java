@@ -1,10 +1,14 @@
 package org.eclipse.equinox.console.telnet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.openflow.protocol.OFMatch;
 import org.openflow.protocol.OFFlowMod;
 import org.openflow.protocol.OFType;
+import org.openflow.protocol.action.OFAction;
+import org.openflow.protocol.action.OFActionOutput;
+import org.openflow.protocol.action.OFActionType;
 import org.openflow.util.HexString;
 
 import grnoc.net.util.ipaddress.IPv4Address;
@@ -86,11 +90,22 @@ public class StaticPusher {
 			oFFlowMod.setBufferId(-1);
 			oFFlowMod
 					.setPriority(Short.parseShort(cliArguments.get("priority")));
-			oFFlowMod.setIdleTimeout((Short.parseShort( cliArguments.get("idle_timoeut"))));
+			oFFlowMod.setIdleTimeout((Short.parseShort( cliArguments.get("idle_timeout"))));
 			oFFlowMod.setHardTimeout((Short.parseShort(cliArguments.get("hard_timeout"))));
 
 			
 			
+			ArrayList<OFAction> flowActions = new ArrayList<OFAction>();
+			
+			if(cliArguments.get("actions") != null){
+			Short  actions = Short.parseShort(cliArguments.get("actions"));
+			OFActionOutput actionOutput = new OFActionOutput();
+			actionOutput.setPort(actions);
+			
+			
+			flowActions.add(actionOutput);
+			oFFlowMod.setActions(flowActions);
+			}
 			
 			IOFSwitch sw = ibeaconProvider.getSwitches().get(
 					HexString.toLong(cliArguments.get("switch")));
