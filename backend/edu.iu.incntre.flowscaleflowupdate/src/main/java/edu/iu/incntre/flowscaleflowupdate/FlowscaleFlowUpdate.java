@@ -897,7 +897,7 @@ public class FlowscaleFlowUpdate {
 	}
 
 	public String getName() {
-
+//name of bundle
 		return "flowUpdate";
 	}
 
