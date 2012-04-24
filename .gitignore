@@ -1,9 +1,1 @@
-# Compiled source #
-###################
-*.class
-context.xml
-*.jar
-*.war
-bin
-*.target
 
