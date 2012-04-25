@@ -35,29 +35,7 @@ public class LoadFlow {
 		
 	}
 	
-	@Override
-	public boolean equals(Object o){
 	
-		if(o instanceof String){
-		
-		String otherFlow = (String)o;
-		
-		if(otherFlow.equals(this.flowString)){
-			
-			return true;
-		}
-		
-		return false;
-		
-		}else if ( o instanceof Short ){
-			Short seekedPort =  (Short)o;
-			return ports.contains(seekedPort);
-						
-			
-		}
-		
-		return false;
-	}
 	
 	
 	
