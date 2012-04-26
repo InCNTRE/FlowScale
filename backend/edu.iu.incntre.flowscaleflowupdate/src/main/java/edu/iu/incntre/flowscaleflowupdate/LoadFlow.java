@@ -1,19 +1,24 @@
 package edu.iu.incntre.flowscaleflowupdate;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 
 public class LoadFlow {
 
 	
 	private String flowString;
-	private Double flowPercent;
-	private LinkedHashSet<Short> ports;
+	private double flowPercent;
+	private short loadedPort;
+	private long packetCount;
+
 	public LoadFlow(String flowString){
 		
 		
 		this.flowString = flowString;
 		
 		
+	}
+	public LoadFlow(String flowString, short loadedPort){
+		this.loadedPort = loadedPort;
 	}
 	
 	
@@ -34,10 +39,43 @@ public class LoadFlow {
 		
 		
 	}
+	public short getLoadedPort(){
+		return this.loadedPort;
+	}
+	
+	public void setLoadedPort(short loadedPort){
+		this.loadedPort = loadedPort;
+	}
+	
+	public void setPacketCount(double packetCount){
+		
+		this.packetCount = packetCount;
+		
+	}
+	
+	public long getPacketCount(){
+		return this.packetCount;
+	}
 	
 	
-	
-	
+	@Override
+	public boolean equals(Object otherObject){
+		
+		if (!(otherObject instanceof String)){
+			return false;
+		}
+		
+		String otherObjectString =  (String)otherObject;
+		
+		if(otherObjectString.equals(this.flowPercent)){
+			return true;
+		}else {
+			return false;
+		}
+		
+		
+		
+	}
 	
 	
 }

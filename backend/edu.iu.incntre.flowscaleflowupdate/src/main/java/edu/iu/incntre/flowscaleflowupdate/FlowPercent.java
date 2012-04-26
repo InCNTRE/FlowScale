@@ -3,13 +3,13 @@ package edu.iu.incntre.flowscaleflowupdate;
 public class FlowPercent {
 
 	
-	private String flow;
+	private String flowString;
 	private Double flowPercent;
 	
 	public FlowPercent(String flow, Double flowPercent){
 		
 		
-		this.flow = flow;
+		this.flowString = flow;
 		this.flowPercent = flowPercent;
 		
 		
@@ -25,9 +25,9 @@ public class FlowPercent {
 		
 	}
 	
-	public String getFlow(){
+	public String getFlowString(){
 		
-		return this.flow;
+		return this.flowString;
 		
 		
 	}
@@ -37,7 +37,7 @@ public class FlowPercent {
 		
 		String otherFlow = (String)o;
 		
-		if(otherFlow.equals(this.flow)){
+		if(otherFlow.equals(this.flowString)){
 			
 			return true;
 		}
