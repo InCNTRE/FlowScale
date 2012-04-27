@@ -1,4 +1,3 @@
-
 package edu.iu.incntre.flowscaleflowupdate;
 
 import grnoc.net.util.ipaddress.IPv4Address;
@@ -14,39 +13,19 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.openflow.protocol.OFFlowMod;
 import org.openflow.protocol.OFMatch;
 import org.openflow.protocol.OFPhysicalPort;
-import org.openflow.protocol.OFType;
 import org.openflow.protocol.action.OFAction;
 import org.openflow.protocol.action.OFActionOutput;
-import org.openflow.protocol.statistics.OFStatistics;
 import org.openflow.util.HexString;
-
-import net.beaconcontroller.core.IOFSwitch;
-
 import edu.iu.incntre.flowscale.FlowscaleController;
-import edu.iu.incntre.flowscale.Group;
 import edu.iu.incntre.flowscale.IPAddress;
-import edu.iu.incntre.flowscale.OFRule;
 import edu.iu.incntre.flowscale.SwitchDevice;
-import edu.iu.incntre.flowscale.exception.NoSwitchException;
-import edu.iu.incntre.flowscale.util.JSONConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,23 +209,27 @@ public class FlowscaleFlowUpdate {
 
 								HashMap<Short, ArrayList<String>> portToFlowHashMap = new HashMap<Short, ArrayList<String>>();
 
-								//HashMap<String, Short> flowToPortHashMap = new HashMap<String, Short>();
-								//HashMap<String, Double> flowPercentage = new HashMap<String, Double>();
-								//HashMap<String, Long> flowStat = new HashMap<String, Long>();
-								
+								// HashMap<String, Short> flowToPortHashMap =
+								// new HashMap<String, Short>();
+								// HashMap<String, Double> flowPercentage = new
+								// HashMap<String, Double>();
+								// HashMap<String, Long> flowStat = new
+								// HashMap<String, Long>();
+
 								HashMap<Short, Double> portPercentages = new HashMap<Short, Double>();
-								
+
 								ArrayList<Short> belowPercentPorts = new ArrayList<Short>();
 								ArrayList<Short> abovePercentPorts = new ArrayList<Short>();
 								ArrayList<OFFlowMod> flowMods = new ArrayList<OFFlowMod>();
-								//ArrayList<FlowPercent> flowPercentArrayList = new ArrayList<FlowPercent>();
-								 long totalPacketCount =0;
+								// ArrayList<FlowPercent> flowPercentArrayList =
+								// new ArrayList<FlowPercent>();
+								long totalPacketCount = 0;
 
-								TreeSet<LoadFlow> switchFlows = new TreeSet<LoadFlow>(new LoadFlowComparator()) ;
-								
-								
+								TreeSet<LoadFlow> switchFlows = new TreeSet<LoadFlow>(
+										new LoadFlowComparator());
+
 								try {
-									
+
 									// call db to populate flowstats structures
 									// here
 
@@ -256,8 +239,6 @@ public class FlowscaleFlowUpdate {
 									totalPacketCount = getTotalPacketCount(switchFlows);
 									/* return totalPacketCount; */
 
-									
-									
 									logger.debug("total packet count {}",
 											totalPacketCount);
 
@@ -265,11 +246,10 @@ public class FlowscaleFlowUpdate {
 									// percent arraylist and below percent
 									// arraylist
 
-								//	setPortsPercentage(totalPacketCount,
-									//		portPacketCount, portPercentages,
-										//	belowPercentPorts,
-											//abovePercentPorts);
-									
+									// setPortsPercentage(totalPacketCount,
+									// portPacketCount, portPercentages,
+									// belowPercentPorts,
+									// abovePercentPorts);
 
 									// get flow percentages, iterate over all
 									// flow stats to get flow percentage
@@ -277,12 +257,9 @@ public class FlowscaleFlowUpdate {
 									setFlowsPercentage(switchFlows,
 											totalPacketCount);
 
-								
-									
-
 									// sort flow percent by ascending order
-									//Collections.sort(switchFlows,
-									//		new FlowPercentComparator());
+									// Collections.sort(switchFlows,
+									// new FlowPercentComparator());
 
 									// print debug messages
 
@@ -293,58 +270,56 @@ public class FlowscaleFlowUpdate {
 												switchFlow.getFlowString(),
 												switchFlow.getFlowPercent());
 										logger.debug("its port is {}",
-												switchFlow.getLoadedPort() );
+												switchFlow.getLoadedPort());
 
 									}
 
 									// now get Percentage of each action
 
-								/*	for (Short port : belowPercentPorts) {
-
-										logger.debug(
-												"port below balance {} and percent is {}",
-												port, percentages.get(port));
-
-									}
-									for (Short port : abovePercentPorts) {
-
-										logger.debug(
-												"port above balance {} and percent is {} ",
-												port, percentages.get(port));
-
-									}
-*/
+									/*
+									 * for (Short port : belowPercentPorts) {
+									 * 
+									 * logger.debug(
+									 * "port below balance {} and percent is {}"
+									 * , port, percentages.get(port));
+									 * 
+									 * } for (Short port : abovePercentPorts) {
+									 * 
+									 * logger.debug(
+									 * "port above balance {} and percent is {} "
+									 * , port, percentages.get(port));
+									 * 
+									 * }
+									 */
 									// end print debug messages
 
 									// start the hot swapping
 
-									HashMap<Short, TreeSet<String>> newFlows ;
+									HashMap<Short, TreeSet<String>> newFlows;
 									// sort above percent ports by descending
 									// order
-								//	Collections
-									//		.sort(abovePercentPorts,
-										//			new HighPortComparator(
-											//				percentages));
+									// Collections
+									// .sort(abovePercentPorts,
+									// new HighPortComparator(
+									// percentages));
 
-								//	for (Short highPort : abovePercentPorts) {
-									//	logger.debug(
-										//		"sorted port is {} and percentage is {}",
-											//	highPort,
-												//percentages.get(highPort));
-								//	}
+									// for (Short highPort : abovePercentPorts)
+									// {
+									// logger.debug(
+									// "sorted port is {} and percentage is {}",
+									// highPort,
+									// percentages.get(highPort));
+									// }
 
 									// instantiate checkedFlows to not include
 									// them in the host swapping process (both
 									// directions)
 
-								
-
 									// call hot swapping method
-									newFlows = hotSwap(switchFlows);
+									newFlows = hotSwap(totalPacketCount,
+											switchFlows);
 
 									// print debug messages after hot swapping
-
-							
 
 									for (Short increasedPorts : newFlows
 											.keySet()) {
@@ -354,8 +329,8 @@ public class FlowscaleFlowUpdate {
 
 											logger.debug(
 													"new flow {} in port {}",
-													changedFlowString, increasedPorts);
-										
+													changedFlowString,
+													increasedPorts);
 
 										}
 
@@ -387,8 +362,7 @@ public class FlowscaleFlowUpdate {
 								}
 
 								// set percentages for every port;
-								logger.debug(
-										" flow mod  size is {} ",
+								logger.debug(" flow mod  size is {} ",
 										flowMods.size());
 
 								flowscaleController.injectFlows(flowMods,
@@ -424,14 +398,6 @@ public class FlowscaleFlowUpdate {
 	public void shutDown() {
 	}
 
-
-
-
-
-
-
-
-
 	private Short getMinPort(ArrayList<Short> lowPorts,
 			HashMap<Short, Double> portPercentages) {
 
@@ -462,204 +428,200 @@ public class FlowscaleFlowUpdate {
 
 		return "flowUpdate";
 	}
-	
-	private long getTotalPacketCount(TreeSet<LoadFlow> switchFlows){
-		
+
+	private long getTotalPacketCount(TreeSet<LoadFlow> switchFlows) {
+
 		Iterator<LoadFlow> iterator = switchFlows.iterator();
-		long totalPacketCount =0;
-		while(iterator.hasNext()){
-			
+		long totalPacketCount = 0;
+		while (iterator.hasNext()) {
+
 			totalPacketCount += iterator.next().getPacketCount();
-			
+
 		}
 		return totalPacketCount;
-		
+
 	}
 
-	
-private void getPortsPercentages(long totalPacketCount, TreeSet<LoadFlow> switchFlows,
-		HashMap<Short, Double> portPercentages,
-		ArrayList<Short> belowPercentPorts,
-		ArrayList<Short> abovePercentPorts) {
+	private void getPortsPercentages(long totalPacketCount,
+			TreeSet<LoadFlow> switchFlows,
+			HashMap<Short, Double> portPercentages,
+			TreeSet<Short> belowPercentPorts, TreeSet<Short> abovePercentPorts) {
 
-	//get port counts 
-	HashMap<Short,Long> portPacketCount = new HashMap<Short,Long>();
-	Iterator<LoadFlow> loadFlowsIterator = switchFlows.iterator();
-	LoadFlow loadFlow  ;
-	while(loadFlowsIterator.hasNext()){
-		loadFlow =  loadFlowsIterator.next();
-		if(portPacketCount.get(loadFlow.getLoadedPort()) == null){
-			portPacketCount.put(loadFlow.getLoadedPort(), 0L);
-		}
-		portPacketCount.put(loadFlow.getLoadedPort(), portPacketCount.get(loadFlow.getLoadedPort())  + loadFlow.getPacketCount() )  ;
-		
-	}
-	
-	// obtain percentage for each port and assign if
-	for (Short port : portPacketCount.keySet()) {
-		Double percentageValue = new Double(0);
-		// if totalPacketCount =0 is 0 do not divide (avoid arithmetic
-		// exception)
-		if (totalPacketCount == 0) {
-			portPercentages.put(port, percentageValue);
-		} else {
-
-			percentageValue = (double) ((double) portPacketCount.get(port)
-					/ (double) totalPacketCount * 100);
-			logger.debug("port packet count for port {} is {}", port,
-					portPacketCount.get(port));
-
-			portPercentages.put(port, new Double(percentageValue));
-
-		}
-		if (percentageValue <= optimalPercentage) {
-			belowPercentPorts.add(port);
-
-		} else {
-
-			abovePercentPorts.add(port);
+		// get port counts
+		HashMap<Short, Long> portPacketCount = new HashMap<Short, Long>();
+		Iterator<LoadFlow> loadFlowsIterator = switchFlows.iterator();
+		LoadFlow loadFlow;
+		while (loadFlowsIterator.hasNext()) {
+			loadFlow = loadFlowsIterator.next();
+			if (portPacketCount.get(loadFlow.getLoadedPort()) == null) {
+				portPacketCount.put(loadFlow.getLoadedPort(), 0L);
+			}
+			portPacketCount.put(
+					loadFlow.getLoadedPort(),
+					portPacketCount.get(loadFlow.getLoadedPort())
+							+ loadFlow.getPacketCount());
 
 		}
 
+		// obtain percentage for each port and assign if
+		for (Short port : portPacketCount.keySet()) {
+			Double percentageValue = new Double(0);
+			// if totalPacketCount =0 is 0 do not divide (avoid arithmetic
+			// exception)
+			if (totalPacketCount == 0) {
+				portPercentages.put(port, percentageValue);
+			} else {
+
+				percentageValue = (double) ((double) portPacketCount.get(port)
+						/ (double) totalPacketCount * 100);
+				logger.debug("port packet count for port {} is {}", port,
+						portPacketCount.get(port));
+
+				portPercentages.put(port, new Double(percentageValue));
+
+			}
+			if (percentageValue <= optimalPercentage) {
+				belowPercentPorts.add(port);
+
+			} else {
+
+				abovePercentPorts.add(port);
+
+			}
+
+		}
+
+		logger.debug("port packet count list {}", portPacketCount.toString());
+		logger.debug("percentage list {}", portPercentages.toString());
+
 	}
-	
-	logger.debug("port packet count list {}",
-			portPacketCount.toString());
-	logger.debug("percentage list {}",
-			portPercentages.toString());
 
-}
+	private HashMap<Short, TreeSet<String>> hotSwap(long totalPacketCount,
+			TreeSet<LoadFlow> switchFlows) {
 
-
-
-	private HashMap<Short,TreeSet<String>> hotSwap(TreeSet<LoadFlow> switchFlows) {
-
-		HashMap<Short,Double> portPercentages = new HashMap<Short,Double>();
+		HashMap<Short, Double> portPercentages = new HashMap<Short, Double>();
 		TreeSet<LoadFlow> checkedFlows = new TreeSet<LoadFlow>();
-		TreeSet<Short>  abovePercentPorts = new TreeSet<Short>();
+		TreeSet<Short> abovePercentPorts = new TreeSet<Short>();
 		TreeSet<Short> belowPercentPorts = new TreeSet<Short>();
-		
-		 getPortsPercentages(switchFlows, portPercentages,abovePercentPorts,belowPercentPorts);
-		
-		HashMap<Short,TreeSet<String>> newFlows = new HashMap<Short,TreeSet<String>>();
-		
+
+		getPortsPercentages(totalPacketCount, switchFlows, portPercentages,
+				abovePercentPorts, belowPercentPorts);
+
+		HashMap<Short, TreeSet<String>> newFlows = new HashMap<Short, TreeSet<String>>();
+
 		for (Short highPort : abovePercentPorts) {
 
 			for (LoadFlow loadFlow : switchFlows) {
 
-				//first a few validations on whether the flow can be swapped
+				// first a few validations on whether the flow can be swapped
 				logger.debug("trying to move flows from high port {}", highPort);
-				//flow must have the same action as port being checked
-				if (!(loadFlow.getLoadedPort() == highPort )) {
+				// flow must have the same action as port being checked
+				if (!(loadFlow.getLoadedPort() == highPort)) {
 					logger.debug("flow {} does not belong to high port  {}",
 							loadFlow.getFlowString(), highPort);
 					continue;
 				}
-				//make sure the flow is not of negligible value 
+				// make sure the flow is not of negligible value
 				if (loadFlow.getFlowPercent().doubleValue() < 0.05) {
 					logger.debug(
 							"flow {} has percent {} which is  equal to 0 anyway",
 							loadFlow.getFlowString(), loadFlow.getFlowPercent());
 					continue;
 				}
-				//check that this flow has not been moved before, since we are moving both source and destination
-				//this may be possible 
+				// check that this flow has not been moved before, since we are
+				// moving both source and destination
+				// this may be possible
 				if (checkedFlows.contains(loadFlow)) {
 					logger.debug("flow {} is already in the checked list ",
 							loadFlow.getFlowString());
 					continue;
 				}
-				
 
+				double flowPercentageValue = loadFlow.getFlowPercent();
 
-			
-					double flowPercentageValue = loadFlow.getFlowPercent();
+				Short lowPort = belowPercentPorts.first();
 
-					Short lowPort = belowPercentPorts.first();
-				
+				logger.debug("check if port {} with percentage {} can receive",
+						lowPort, portPercentages.get(lowPort));
 
-					
-						logger.debug(
-								"check if port {} with percentage {} can receive",
-								lowPort, portPercentages.get(lowPort));
+				String otherDirectFlow = "";
 
-						String otherDirectFlow = "";
+				if (loadFlow.getFlowString().indexOf("nw_src") != -1) {
+					otherDirectFlow = loadFlow.getFlowString().replace(
+							"nw_src", "nw_dst");
 
-						if (loadFlow.getFlowString().indexOf("nw_src") != -1) {
-							otherDirectFlow = loadFlow.getFlowString().replace(
-									"nw_src", "nw_dst");
+				} else if (loadFlow.getFlowString().indexOf("nw_dst") != -1) {
+					otherDirectFlow = loadFlow.getFlowString().replace(
+							"nw_dst", "nw_src");
 
-						} else if (loadFlow.getFlowString().indexOf("nw_dst") != -1) {
-							otherDirectFlow = loadFlow.getFlowString().replace(
-									"nw_dst", "nw_src");
+				}
 
-						}
+				double totalNeededPercentage = (double) flowPercentageValue
+						+ (double) (this.getFlowByString(otherDirectFlow,
+								switchFlows).getFlowPercent());
 
-						double totalNeededPercentage = (double) flowPercentageValue
-								+ (double) (this.getFlowByString(otherDirectFlow,switchFlows).getFlowPercent()); 
-			
+				if (((totalNeededPercentage < (optimalPercentage - portPercentages
+						.get(lowPort))) || ((portPercentages.get(highPort) - portPercentages
+						.get(lowPort)) >= (double) (optimalPercentage / 2)))
+						&& totalNeededPercentage < ((double) optimalPercentage / 2)) {
 
-						if (((totalNeededPercentage < (optimalPercentage - portPercentages
-								.get(lowPort))) || ((portPercentages.get(highPort) - portPercentages
-								.get(lowPort)) >= (double) (optimalPercentage / 2)))
-								&& totalNeededPercentage < ((double) optimalPercentage / 2)) {
+					// add to newFlows
+					logger.info(
+							"success in moving from high port {} with flow {}",
+							highPort, loadFlow.getFlowString());
+					if (newFlows.get(lowPort) == null) {
 
-							// add to newFlows
-							logger.info(
-									"success in moving from high port {} with flow {}",
-									highPort, loadFlow.getFlowString());
-							if (newFlows.get(lowPort) == null) {
+						TreeSet<String> updatedFlows = new TreeSet<String>();
+						newFlows.put(lowPort, updatedFlows);
 
-								TreeSet<String> updatedFlows = new TreeSet<String>();
-								newFlows.put(lowPort, updatedFlows);
+					}
 
-							}
+					newFlows.get(lowPort).add(loadFlow.getFlowString());
 
-							newFlows.get(lowPort).add(loadFlow.getFlowString());
+					checkedFlows.add(this.getFlowByString(otherDirectFlow,
+							switchFlows));
+					checkedFlows.add(loadFlow);
 
-							checkedFlows.add(this.getFlowByString(otherDirectFlow,switchFlows));
-							checkedFlows.add(loadFlow);
+					// subtract flow percentage
+					// from
+					// high load port
 
-							// subtract flow percentage
-							// from
-							// high load port
+					double portPercentage = portPercentages.get(highPort);
+					portPercentages
+							.put(highPort,
+									(double) ((double) portPercentage
+											- (double) flowPercentageValue - (double) this
+											.getFlowByString(otherDirectFlow,
+													switchFlows)
+											.getFlowPercent()));
 
-							double portPercentage = portPercentages.get(highPort);
-							portPercentages
-									.put(highPort,
-											(double) ((double) portPercentage
-													- (double) flowPercentageValue -
-													(double) this.getFlowByString(otherDirectFlow,switchFlows).getFlowPercent() ));
+					// add flow percentage to
+					// low load
+					// port
+					double lowPortPercentage = portPercentages.get(lowPort);
+					portPercentages
+							.put(lowPort,
+									(double) ((double) lowPortPercentage
+											+ (double) flowPercentageValue + (double) this
+											.getFlowByString(otherDirectFlow,
+													switchFlows)
+											.getFlowPercent()));
 
-							// add flow percentage to
-							// low load
-							// port
-							double lowPortPercentage = portPercentages.get(lowPort);
-							portPercentages
-									.put(lowPort,
-											(double) ((double) lowPortPercentage
-													+ (double) flowPercentageValue + (double)
-													this.getFlowByString(otherDirectFlow,switchFlows).getFlowPercent()));
+					logger.info("port {} new percentage is {}", lowPort,
+							portPercentages.get(lowPort));
 
-							logger.info("port {} new percentage is {}",
-									lowPort, portPercentages.get(lowPort));
+					if (portPercentages.get(highPort) <= optimalPercentage) {
 
-							if (portPercentages.get(highPort) <= optimalPercentage) {
+						break;
 
-								break;
-							
+					}
 
-							}
+					if (portPercentages.get(lowPort) >= optimalPercentage) {
+						belowPercentPorts.remove(lowPort);
+					}
 
-							if (portPercentages.get(lowPort) >= optimalPercentage) {
-								belowPercentPorts.remove(lowPort);
-							}
+				}
 
-						}
-
-					
-
-				
 			}
 		}
 		return newFlows;
@@ -881,22 +843,21 @@ private void getPortsPercentages(long totalPacketCount, TreeSet<LoadFlow> switch
 
 	}
 
-	private void setFlowsPercentage(TreeSet<LoadFlow> switchFlows, long totalPacketCount) {
-		
+	private void setFlowsPercentage(TreeSet<LoadFlow> switchFlows,
+			long totalPacketCount) {
+
 		Iterator<LoadFlow> iterator = switchFlows.iterator();
 		LoadFlow current;
-		while(iterator.hasNext()){
-			current =iterator.next();
-			current.setFlowPercent((double)(current.getPacketCount()/totalPacketCount));
-			
+		while (iterator.hasNext()) {
+			current = iterator.next();
+			current.setFlowPercent((double) (current.getPacketCount() / totalPacketCount));
+
 		}
 
 	}
 
-	
 	private void getFlowsFromDB(long datapathId, long queryTime,
-			ArrayList<Short> loadedPorts,
-			TreeSet<LoadFlow> switchFlows			)
+			ArrayList<Short> loadedPorts, TreeSet<LoadFlow> switchFlows)
 			throws SQLException {
 
 		String flowStatQuery = "SELECT datapath_id, match_string, action, packet_count FROM flow_stats where datapath_id = ? AND  timestamp >= ?";
@@ -907,7 +868,7 @@ private void getPortsPercentages(long totalPacketCount, TreeSet<LoadFlow> switch
 		flowStatPs.setLong(2, queryTime - (intervalTime * 1000));
 
 		flowStatRs = flowStatPs.executeQuery();
-		
+
 		logger.debug(
 				"query : SELECT datapath_id, match_string, action, packet_count FROM flow_stats where datapath_id = {} AND  timestamp >= {} ",
 				datapathId, queryTime - (intervalTime * 1000));
@@ -939,53 +900,52 @@ private void getPortsPercentages(long totalPacketCount, TreeSet<LoadFlow> switch
 
 			if (loadedPorts.contains(loadedPort)) {
 				LoadFlow newLoadFlow = new LoadFlow(matchString, loadedPort);
-		
-			
 
-				// add new flow here, or if exist increment packet count 
-	
+				// add new flow here, or if exist increment packet count
+
 				LoadFlow tempLoadFlow;
-				if(switchFlows.contains(newLoadFlow)){
-					 tempLoadFlow = getFlowByString(matchString,switchFlows);
-					tempLoadFlow.setPacketCount(tempLoadFlow.getPacketCount() + packetCount);
-					
-				}else {
+				if (switchFlows.contains(newLoadFlow)) {
+					tempLoadFlow = getFlowByString(matchString, switchFlows);
+					tempLoadFlow.setPacketCount(tempLoadFlow.getPacketCount()
+							+ packetCount);
+
+				} else {
 					newLoadFlow.setPacketCount(packetCount);
 				}
 			}
 		}
 
-		
-
 	}
-	private LoadFlow getFlowByString(String findString, TreeSet<LoadFlow> switchFlows){
-		
-		
+
+	private LoadFlow getFlowByString(String findString,
+			TreeSet<LoadFlow> switchFlows) {
+
 		Iterator<LoadFlow> it = switchFlows.iterator();
 		LoadFlow checkedLoadFlow;
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			checkedLoadFlow = it.next();
-			if(checkedLoadFlow.getFlowString().equals(findString)){
+			if (checkedLoadFlow.getFlowString().equals(findString)) {
 				return it.next();
 			}
-			
+
 		}
 		return null;
 	}
-	
-	private TreeSet<LoadFlow> getFlowSetByPort(short port, TreeSet<LoadFlow> switchFlows){
+
+	private TreeSet<LoadFlow> getFlowSetByPort(short port,
+			TreeSet<LoadFlow> switchFlows) {
 		TreeSet<LoadFlow> flowsByPort = new TreeSet<LoadFlow>();
 		Iterator<LoadFlow> it = switchFlows.iterator();
 		LoadFlow checkedLoadFlow;
-		while(it.hasNext()){
-			checkedLoadFlow =it.next();
-			if(checkedLoadFlow.getLoadedPort() == port){
-				
+		while (it.hasNext()) {
+			checkedLoadFlow = it.next();
+			if (checkedLoadFlow.getLoadedPort() == port) {
+
 			}
 		}
 		return flowsByPort;
 	}
-	
+
 }
 
 class LoadFlowComparator implements Comparator<Object> {
@@ -1068,5 +1028,3 @@ class LowPortComparator implements Comparator<Object> {
 	}
 
 }
-
-

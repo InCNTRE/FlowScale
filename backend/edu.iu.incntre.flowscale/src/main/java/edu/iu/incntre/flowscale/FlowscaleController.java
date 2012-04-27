@@ -59,12 +59,11 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	private String username, password, connectionString, dbDriverString;
 
-	private ArrayList<XConnect> xConnectList = new ArrayList<XConnect>();
+	
 	private ArrayList<SwitchDevice> connectedSwitches = new ArrayList<SwitchDevice>();
 	private String mirroringRules;
 	private int defaultRulePriority;
 	private short mirrorPriority;
-	private String flowMirrorPorts;
 	private HashMap<Long,Integer> maximumFlowsToPushHashMap = new HashMap<Long,Integer>();
 	HashMap<Long, HashMap<Short,Short>> switchFlowMirrorPortsHashMap ;
 
@@ -195,8 +194,7 @@ public class FlowscaleController implements IOFSwitchListener,
 		if (switchDevice == null) {
 			logger.info("switch {} device is not in list exiting..." , HexString.toHexString(sw.getId()));
 			return;
-			// switchDevice = new SwitchDevice();
-			// switchDevice.setDatapathId(sw.getId());
+		
 
 		}
 
@@ -402,7 +400,7 @@ public class FlowscaleController implements IOFSwitchListener,
 	}
 
 	public void setFlowMirrorPorts(String flowMirrorPorts){
-		this.flowMirrorPorts = flowMirrorPorts;
+	
 		
 		
 		 switchFlowMirrorPortsHashMap = new HashMap<Long, HashMap<Short,Short>>();
@@ -648,8 +646,8 @@ public class FlowscaleController implements IOFSwitchListener,
 					
 					if (rule.getMatch().equals(ofFlowMod.getMatch())){
 						logger.trace("rule match {} is equal to offlowmod match {}",rule.getMatch().toString(),ofFlowMod.getMatch().toString());
-					//	rule.getActions().clear();
-					//	rule.setActions(ofFlowMod.getActions());
+						rule.getActions().clear();
+						rule.setActions(ofFlowMod.getActions());
 						
 					}
 			
