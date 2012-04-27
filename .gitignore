@@ -4,6 +4,6 @@
 *context.xml
 *.jar
 *.war
-bin
+*/bin/*
 
 

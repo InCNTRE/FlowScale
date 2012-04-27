@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+  <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+    <property name="ignoreResourceNotFound" value="true" />
+    <property name="locations" value="file:./flowscale.properties"/>
+  </bean>
+
+
+  <bean id="flowscaleController" class="edu.iu.incntre.flowscale.FlowscaleController"
+    init-method="startUp" destroy-method="shutDown">
+    <property name="beaconProvider" ref="beaconProvider"/>
+	<property name="username" value="username" />
+	<property name="password" value="password" />
+	<property name="connectionString" value="db-connection-string" />
+	<property name="dbDriverString" value="database-driver" />
+	<property name="defaultRulePriority" value="5" />
+	<property name="mirrorPriority" value="0" />
+	<!--property name="mirroringRules" value="18-25,41;19-27,41;20-31,43;21-33,43;22-35,45;23-37,45;24-39,47" /-->
+	<property name="flowMirrorPorts" value="00640817f4338f00:31,38;32,39;33,40;34,41;35,42;36,43;37,44-1:11,14;12,15;13,16" />
+	<property name="maximumFlowsToPush" value="0" />
+
+</bean>
+  
+</beans>
