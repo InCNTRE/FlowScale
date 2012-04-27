@@ -47,7 +47,7 @@ public class LoadFlow {
 		this.loadedPort = loadedPort;
 	}
 	
-	public void setPacketCount(double packetCount){
+	public void setPacketCount(long packetCount){
 		
 		this.packetCount = packetCount;
 		
