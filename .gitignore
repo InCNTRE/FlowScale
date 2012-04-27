@@ -5,6 +5,8 @@
 *.jar
 *.war
 */bin/*
-main.target
-
-
+*controller.xml
+*database.xml
+.gitignore
+*/flowscale_ui/img/*
+.gitignore

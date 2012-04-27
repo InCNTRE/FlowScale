@@ -1,3 +1,0 @@
-<config>
-  <connection  hostname="http://flowscale-controller.uiso.iu.edu" port="6633" />
-</config>

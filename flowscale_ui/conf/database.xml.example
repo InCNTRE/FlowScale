@@ -1,3 +1,0 @@
-<config>
-  <credentials username="flowscale_user" password="choose a pw here" database_name="webui" hostname="localhost" port="3306" />
-</config>
