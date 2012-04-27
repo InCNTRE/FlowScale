@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.52, for redhat-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.62, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: webui
+-- Host: localhost    Database: flowscale_db
 -- ------------------------------------------------------
--- Server version	5.1.52
+-- Server version	5.1.62-0ubuntu0.10.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,21 +30,31 @@ CREATE TABLE `flow_group` (
   `priority` smallint(6) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `maximum_flows` int(10) DEFAULT NULL,
+  `network_protocol` int(11) DEFAULT NULL,
+  `transport_direction` int(11) DEFAULT NULL,
   PRIMARY KEY (`group_id`),
   KEY `input_switch` (`input_switch`),
   KEY `group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=161 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=468 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `flow_group`
+-- Table structure for table `flow_stats`
 --
 
-LOCK TABLES `flow_group` WRITE;
-/*!40000 ALTER TABLE `flow_group` DISABLE KEYS */;
-INSERT INTO `flow_group` VALUES (160,'123456abcdef','123456abcdef','ipv4',100,3,1);
-/*!40000 ALTER TABLE `flow_group` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `flow_stats`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `flow_stats` (
+  `datapath_id` bigint(30) NOT NULL DEFAULT '0',
+  `timestamp` bigint(20) NOT NULL DEFAULT '0',
+  `match_string` varchar(100) NOT NULL DEFAULT '',
+  `action` varchar(30) DEFAULT NULL,
+  `packet_count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`datapath_id`,`timestamp`,`match_string`),
+  KEY `timestamp` (`timestamp`) USING HASH
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `group_port`
@@ -62,16 +72,6 @@ CREATE TABLE `group_port` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `group_port`
---
-
-LOCK TABLES `group_port` WRITE;
-/*!40000 ALTER TABLE `group_port` DISABLE KEYS */;
-INSERT INTO `group_port` VALUES (160,1,4),(160,0,3);
-/*!40000 ALTER TABLE `group_port` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `group_type`
 --
 
@@ -84,16 +84,6 @@ CREATE TABLE `group_type` (
   PRIMARY KEY (`group_type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `group_type`
---
-
-LOCK TABLES `group_type` WRITE;
-/*!40000 ALTER TABLE `group_type` DISABLE KEYS */;
-INSERT INTO `group_type` VALUES (1,'IP Address'),(2,'TCP Port'),(3,'Ethernet Type'),(4,'ANY');
-/*!40000 ALTER TABLE `group_type` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `group_values`
@@ -110,14 +100,52 @@ CREATE TABLE `group_values` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `group_values`
+-- Table structure for table `port_mirrors`
 --
 
-LOCK TABLES `group_values` WRITE;
-/*!40000 ALTER TABLE `group_values` DISABLE KEYS */;
-INSERT INTO `group_values` VALUES (160,'0800');
-/*!40000 ALTER TABLE `group_values` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `port_mirrors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `port_mirrors` (
+  `datapath_id` varchar(30) NOT NULL,
+  `port` int(10) DEFAULT NULL,
+  `mirror_port` int(10) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `port_stats`
+--
+
+DROP TABLE IF EXISTS `port_stats`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `port_stats` (
+  `datapath_id` bigint(30) NOT NULL DEFAULT '0',
+  `timestamp` bigint(20) NOT NULL DEFAULT '0',
+  `port` int(4) NOT NULL DEFAULT '0',
+  `packets_received` bigint(20) DEFAULT NULL,
+  `packets_transmitted` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`datapath_id`,`timestamp`,`port`),
+  KEY `timestamp_index` (`timestamp`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `port_status`
+--
+
+DROP TABLE IF EXISTS `port_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `port_status` (
+  `datapath_id` varchar(30) DEFAULT NULL,
+  `timestamp` bigint(20) NOT NULL,
+  `pord_id` int(4) NOT NULL,
+  `port_address` varchar(20) NOT NULL,
+  `port_status` int(1) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `switch`
@@ -140,16 +168,6 @@ CREATE TABLE `switch` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `switch`
---
-
-LOCK TABLES `switch` WRITE;
-/*!40000 ALTER TABLE `switch` DISABLE KEYS */;
-INSERT INTO `switch` VALUES ('123456abcdef','E8:9A:8F:3C:','156.56.5.43','pronto3780',' ');
-/*!40000 ALTER TABLE `switch` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `switch_port`
 --
 
@@ -165,16 +183,6 @@ CREATE TABLE `switch_port` (
   KEY `port_address` (`port_address`,`switch_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `switch_port`
---
-
-LOCK TABLES `switch_port` WRITE;
-/*!40000 ALTER TABLE `switch_port` DISABLE KEYS */;
-INSERT INTO `switch_port` VALUES (1,'00:AA:DD','123456abcdef'),(2,'00:AA:DD','123456abcdef'),(3,'00:AA:DD','123456abcdef');
-/*!40000 ALTER TABLE `switch_port` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `x_connect`
@@ -194,15 +202,6 @@ CREATE TABLE `x_connect` (
   KEY `port_2_id` (`port_2_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `x_connect`
---
-
-LOCK TABLES `x_connect` WRITE;
-/*!40000 ALTER TABLE `x_connect` DISABLE KEYS */;
-/*!40000 ALTER TABLE `x_connect` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -213,4 +212,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-11-09 21:24:30
+-- Dump completed on 2012-04-27 10:50:38
