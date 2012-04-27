@@ -1,0 +1,3 @@
+<config>
+  <connection  hostname="http://localhost" port="6633" />
+</config>

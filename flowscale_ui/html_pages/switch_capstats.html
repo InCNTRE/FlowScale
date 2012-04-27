@@ -1,0 +1,14 @@
+
+
+<H1>Pronto Switch Status</H1>
+
+<table>
+[% FOREACH portImage IN content %] 
+
+
+<tr><td>[% portImage.port_id%]</td> <td> <img src="img/[% portImage.image_name %]" /></td></tr>
+[% portImage.error %]
+
+[% END %]
+
+</table>

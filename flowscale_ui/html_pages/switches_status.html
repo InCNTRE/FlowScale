@@ -1,0 +1,29 @@
+
+
+<form method="GET" action="index.cgi" />
+<input type="hidden" id="action" name="action" value="switch_graph" />
+	
+	<select id="switch_selection" name="switch_selection" >
+
+
+
+[% FOREACH switch IN content %] 
+
+<option value="[% switch.datapath_id %]">[% switch.switch_name %]</option>
+[% switch %]
+
+
+[% END %]
+
+
+		
+	</select>
+Real Time Date ranges : (yyyy-mm-dd HH:MM:SS)
+<input id="date_range_1" name="date_range_1" type-="text">
+<input id="date_range_2" type="text" name="date_range_2">
+
+
+		
+	
+<input type="submit" value="GO" />
+</form>

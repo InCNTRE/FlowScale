@@ -1,0 +1,61 @@
+[% INCLUDE js_pages/full_stats.js %]
+
+
+<div id="switches" name="switches">
+	
+	<select id="switch_selection" onchange="add_ports_for_switch()">
+
+	<option value=""></option>
+[% FOREACH switch IN content %] 
+
+<option value="[% switch.datapath_id %]">[% switch.switch_name %]</option>
+[% switch %]
+
+
+[% END %]
+
+		
+		
+	</select>
+	
+</div>
+
+	<form id="form_selection_type" name="form_selection_type">
+	<input type="radio" id="type_selection" name="type_selection" value="cluster" onclick="add_ports_for_switch()" /> Capstats
+	<input type="radio" id="type_selection" name="type_selection" value="controller"  onclick="add_ports_for_switch()" /> Controller
+	<input type="radio" id="type_selection" name="type_selection" value="flows" /> Flows <br />
+	
+	<input type="radio" id="time_type" name="time_type" value="10_minutes" /> last 10 minutes 
+	<input type="radio" id="time_type" name="time_type" value="30_minutes" /> last 30 minusts
+	<input type="radio" id="time_type" name="time_type" value="hour" /> last hour
+	<input type="radio" id="time_type" name="time_type" value="date_range" /> date_range
+<br />
+	<input type="radio" id="combination_type" name="combination_type" value="aggregate" /> Aggregate 
+	<input type="radio" id="combination_type" name="combination_type" value="side_by_side" /> Side by Side 
+	<input type="radio" id="packet_type" name="packet_type" value="transmitted" /> Transmitted 
+	<input type="radio" id="packet_type" name="packet_type" value="received" /> Received
+<br />
+	<input type="checkbox" name="real_time" value="real_time" /> Real Time
+	Date ranges : (yyyy-mm-dd HH:MM:SS)<input type-="text" id="date_range_1" name="date_range_1" />
+	<input type="text" id="date_range_2" name="date_range_2" />
+
+
+	</form>
+</div>
+<div id="ports"> </div>
+
+	<button id="graph_button">
+			Graph
+		</button>
+
+	<button id="flow_button">Flows </button>
+
+<div id="graph_section" >
+	<!--div id="traffic_graphs" style="width:500px;height:400px"></div-->
+
+
+</div>
+
+<div id="flow_div">  </div>
+
+<div id="ggg" style="width:500px;height:1000px"></div>

@@ -1,0 +1,29 @@
+[% INCLUDE js_pages/flow_test.js %]	
+
+<form name="flow_form"> 
+<select id="switch_selection" onchange="load_tables()">
+
+	<option value=""></option>
+[% FOREACH switch IN content %] 
+
+<option value="[% switch.datapath_id %]">[% switch.switch_name %]</option>
+[% switch %]
+
+
+[% END %]
+
+		
+		
+	</select>
+
+
+<label for="flow_numbers"> # of Flows </label>
+<input type="text" id="flow_number" name="flow_number" size="20" />
+
+</form>
+
+
+<button id="inject_flows_button"> Inject! </button>
+
+
+<button id="delete_flows_button"> flush table! </button>
