@@ -6,9 +6,9 @@ public class LoadFlow {
 
 	
 	private String flowString;
-	private double flowPercent;
+	private double flowPercent = 0f;
 	private short loadedPort;
-	private long packetCount;
+	private long packetCount = 0;
 
 	public LoadFlow(String flowString){
 		
@@ -18,6 +18,7 @@ public class LoadFlow {
 		
 	}
 	public LoadFlow(String flowString, short loadedPort){
+		this.flowString = flowString;
 		this.loadedPort = loadedPort;
 	}
 	
@@ -61,13 +62,13 @@ public class LoadFlow {
 	@Override
 	public boolean equals(Object otherObject){
 		
-		if (!(otherObject instanceof String)){
+		if (!(otherObject instanceof LoadFlow)){
 			return false;
 		}
 		
-		String otherObjectString =  (String)otherObject;
+		LoadFlow otherObjectLoadFlow =  (LoadFlow)otherObject;
 		
-		if(otherObjectString.equals(this.flowPercent)){
+		if(otherObjectLoadFlow.getFlowString().equals(this.flowString)  && this.loadedPort == otherObjectLoadFlow.getLoadedPort()){
 			return true;
 		}else {
 			return false;
@@ -76,6 +77,10 @@ public class LoadFlow {
 		
 		
 	}
-	
+	@Override
+	public String toString(){
+		
+		return this.flowString +" "+this.loadedPort;
+	}
 	
 }

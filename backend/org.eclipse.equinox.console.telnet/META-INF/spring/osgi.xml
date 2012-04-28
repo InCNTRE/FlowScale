@@ -11,14 +11,7 @@
     interface="net.beaconcontroller.core.IBeaconProvider">
   </osgi:reference>
   
-<<<<<<< HEAD
 
-=======
-   <osgi:reference id="flowscaleController" cardinality="1..1"
-    interface="edu.iu.incntre.flowscale.FlowscaleController">
-  </osgi:reference>
-  
->>>>>>> 3aa41fd1626ce3514696671782750388764a4dbf
   <osgi:service id="Activator" ref="commandInterface"
     interface="org.eclipse.equinox.console.telnet.Activator">
   </osgi:service>
