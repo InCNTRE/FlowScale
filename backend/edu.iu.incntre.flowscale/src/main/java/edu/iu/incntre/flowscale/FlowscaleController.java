@@ -48,9 +48,9 @@ import org.json.simple.JSONObject;
 import edu.iu.incntre.flowscale.exception.NoDatabaseException;
 import edu.iu.incntre.flowscale.exception.NoSwitchException;
 
-
-
 /**
+ * This class is the main controller and communicates with the switch
+ * 
  * @author Ali Khalfan (akhalfan@indiana.edu)
  */
 
@@ -64,17 +64,14 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	private String username, password, connectionString, dbDriverString;
 
-	
 	private ArrayList<SwitchDevice> connectedSwitches = new ArrayList<SwitchDevice>();
 	private String mirroringRules;
 	private int defaultRulePriority;
 	private short mirrorPriority;
-	private HashMap<Long,Integer> maximumFlowsToPushHashMap = new HashMap<Long,Integer>();
-	HashMap<Long, HashMap<Short,Short>> switchFlowMirrorPortsHashMap ;
+	private HashMap<Long, Integer> maximumFlowsToPushHashMap = new HashMap<Long, Integer>();
+	HashMap<Long, HashMap<Short, Short>> switchFlowMirrorPortsHashMap;
 
 	private int maximumFlowsToPush;
-	
-	
 
 	public static Logger logger = LoggerFactory
 			.getLogger(FlowscaleController.class);
@@ -85,44 +82,43 @@ public class FlowscaleController implements IOFSwitchListener,
 	public Command receive(IOFSwitch sw, OFMessage msg) {
 		// TODO Auto-generated method stub
 
-		
-		
-		if(msg.getType() == OFType.BARRIER_REPLY){
+		if (msg.getType() == OFType.BARRIER_REPLY) {
 
-			logger.info("received barrier info from switch {} with xid {}", sw.getId(),
-					msg.getXid());
-			
-			if(msg.getXid() ==2 ){
-			SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
-			logger.debug("ports on initiation {}", sw.getFeaturesReply().getPorts());
+			logger.info("received barrier info from switch {} with xid {}",
+					sw.getId(), msg.getXid());
 
-			switchDevice.setPhysicalPorts(sw.getFeaturesReply().getPorts());
+			if (msg.getXid() == 2) {
+				SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
+				logger.debug("ports on initiation {}", sw.getFeaturesReply()
+						.getPorts());
 
-			controllerSwitches.put(sw.getId(), switchDevice);
+				switchDevice.setPhysicalPorts(sw.getFeaturesReply().getPorts());
 
-			for (Integer groupId : groupList.keySet()) {
-				Group group = groupList.get(groupId);
+				controllerSwitches.put(sw.getId(), switchDevice);
 
-				if (sw.getId() == group.getOutputSwitchDatapathId()) {
+				for (Integer groupId : groupList.keySet()) {
+					Group group = groupList.get(groupId);
 
-				
-					try {
-						group.switchUpAlert(sw);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						logger.error("{}",e);
+					if (sw.getId() == group.getOutputSwitchDatapathId()) {
+
+						try {
+							group.switchUpAlert(sw);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							logger.error("{}", e);
+						}
+
 					}
 
 				}
 
-			}
-
-			logger.info("switch {} added", HexString.toHexString(sw.getId()));
-			connectedSwitches.add(switchDevice);
+				logger.info("switch {} added",
+						HexString.toHexString(sw.getId()));
+				connectedSwitches.add(switchDevice);
 
 			}
 		}
-		
+
 		if (msg.getType() == OFType.PACKET_IN) {
 
 			return Command.CONTINUE;
@@ -137,12 +133,14 @@ public class FlowscaleController implements IOFSwitchListener,
 
 			OFPortStatus ps = (OFPortStatus) msg;
 
-			logger.info("port {}, with h/w address {} sent a port update message", ps.getDesc()
-					.getPortNumber(), HexString.toHexString(ps.getDesc()
-					.getHardwareAddress()));
+			logger.info(
+					"port {}, with h/w address {} sent a port update message",
+					ps.getDesc().getPortNumber(),
+					HexString.toHexString(ps.getDesc().getHardwareAddress()));
 
-			logger.info("Status of port is {}", (ps.getDesc().getState() %2 ==0 ) ? "up" : "down");
-			
+			logger.info("Status of port is {}",
+					(ps.getDesc().getState() % 2 == 0) ? "up" : "down");
+
 			if (OFPortReason.values()[ps.getReason()] == OFPortReason.OFPPR_MODIFY) {
 
 				updateGroupsWithPortStatus(sw, ps.getDesc().getPortNumber(),
@@ -154,7 +152,7 @@ public class FlowscaleController implements IOFSwitchListener,
 
 			SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
 
-			if (switchDevice != null){
+			if (switchDevice != null) {
 				switchDevice.updatePort(ps);
 
 			}
@@ -163,6 +161,14 @@ public class FlowscaleController implements IOFSwitchListener,
 		return null;
 	}
 
+	/**
+	 * once a port is updated , all groups that have this port as value must be
+	 * invoked inorder to updated any flow associated with the particular port
+	 * 
+	 * @param sw
+	 * @param portNum
+	 * @param physicalPort
+	 */
 	private void updateGroupsWithPortStatus(IOFSwitch sw, short portNum,
 			OFPhysicalPort physicalPort) {
 		logger.trace("updating groups with port number {} on switch {} ",
@@ -188,44 +194,49 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	@Override
 	public void addedSwitch(IOFSwitch sw) {
-		
+
 		logger.info("in added switch method");
-		
+
 		// TODO Auto-generated method stub
 		try {
-			
-			logger.debug("controller switches are {}",controllerSwitches);
-		SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
-		if (switchDevice == null) {
-			logger.info("switch {} device is not in list exiting..." , HexString.toHexString(sw.getId()));
-			return;
-		
 
-		}
+			logger.debug("controller switches are {}", controllerSwitches);
+			SwitchDevice switchDevice = controllerSwitches.get(sw.getId());
+			if (switchDevice == null) {
+				logger.info("switch {} device is not in list exiting...",
+						HexString.toHexString(sw.getId()));
+				return;
 
-		if (connectedSwitches.contains(switchDevice)) {
-			logger.info("switch is already connected exiting ");
-			return;
-		}
+			}
 
-		// initiate switch
+			if (connectedSwitches.contains(switchDevice)) {
+				logger.info("switch is already connected exiting ");
+				return;
+			}
 
-		initiateSwitch(sw);
+			// initiate switch
 
-		switchDevice.setOpenFlowSwitch(sw);
-		
+			initiateSwitch(sw);
+
+			switchDevice.setOpenFlowSwitch(sw);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.info("adding group exception {}",e);
+			logger.info("adding group exception {}", e);
 		}
-		
-		
+
 	}
 
+	/**
+	 * method invoked after the switch is connected to the controller and
+	 * default reles are pushed to the switch in addition, the group rules
+	 * associated with this switch are inserted
+	 * 
+	 * @param sw
+	 *            IOFSwitch
+	 */
 	public void initiateSwitch(IOFSwitch sw) {
 
-		
-		
 		try {
 
 			// 1) delete all flows
@@ -249,57 +260,55 @@ public class FlowscaleController implements IOFSwitchListener,
 			ofDefaultDropRule.setActions(emptyActions);
 			ArrayList<OFFlowMod> mirroringOFFlowMods = new ArrayList<OFFlowMod>();
 			// 3) insert mirroring rules for UISO flowscale
-			if (mirroringRules == null){
+			if (mirroringRules == null) {
 				logger.info("no mirroring rules configured");
-			}else{
-			String[] mirrorValues = mirroringRules.split(";");
+			} else {
+				String[] mirrorValues = mirroringRules.split(";");
 
-			// loop over comma separated value
+				// loop over comma separated value
 
-			
+				OFFlowMod mirrorFlowMod;
+				OFMatch mirrorMatch;
+				ArrayList<OFAction> mirrorOutput;
+				OFActionOutput mirrorAction;
+				for (String mirrorValue : mirrorValues) {
 
-			OFFlowMod mirrorFlowMod;
-			OFMatch mirrorMatch;
-			ArrayList<OFAction> mirrorOutput;
-			OFActionOutput mirrorAction;
-			for (String mirrorValue : mirrorValues) {
+					String[] mirrorIndex = mirrorValue.split("-");
 
-				String[] mirrorIndex = mirrorValue.split("-");
+					short inputPort = Short.parseShort(mirrorIndex[0]);
 
-				short inputPort = Short.parseShort(mirrorIndex[0]);
+					String[] mirrorPortValues = mirrorIndex[1].split(",");
 
-				String[] mirrorPortValues = mirrorIndex[1].split(",");
+					// add the flows
 
-				// add the flows
+					mirrorFlowMod = new OFFlowMod();
+					mirrorMatch = new OFMatch();
+					mirrorMatch.setWildcards(OFMatch.OFPFW_ALL
+							^ OFMatch.OFPFW_IN_PORT);
+					mirrorMatch.setInputPort(inputPort);
+					mirrorFlowMod.setMatch(mirrorMatch);
 
-				mirrorFlowMod = new OFFlowMod();
-				mirrorMatch = new OFMatch();
-				mirrorMatch.setWildcards(OFMatch.OFPFW_ALL
-						^ OFMatch.OFPFW_IN_PORT);
-				mirrorMatch.setInputPort(inputPort);
-				mirrorFlowMod.setMatch(mirrorMatch);
-				
-				mirrorFlowMod.setIdleTimeout((short) 0);
-				mirrorFlowMod.setHardTimeout((short) 0);
-				mirrorFlowMod.setPriority(mirrorPriority);
-				
-				mirrorOutput = new ArrayList<OFAction>();
+					mirrorFlowMod.setIdleTimeout((short) 0);
+					mirrorFlowMod.setHardTimeout((short) 0);
+					mirrorFlowMod.setPriority(mirrorPriority);
 
-				for (String mirrorPortValue : mirrorPortValues) {
+					mirrorOutput = new ArrayList<OFAction>();
 
-					mirrorAction = new OFActionOutput();
-					mirrorAction.setPort(Short.parseShort(mirrorPortValue));
+					for (String mirrorPortValue : mirrorPortValues) {
 
-					mirrorOutput.add(mirrorAction);
+						mirrorAction = new OFActionOutput();
+						mirrorAction.setPort(Short.parseShort(mirrorPortValue));
+
+						mirrorOutput.add(mirrorAction);
+
+					}
+
+					mirrorFlowMod.setActions(mirrorOutput);
+					mirrorFlowMod.setBufferId(-1);
+
+					mirroringOFFlowMods.add(mirrorFlowMod);
 
 				}
-				
-				mirrorFlowMod.setActions(mirrorOutput);
-				mirrorFlowMod.setBufferId(-1);
-
-				mirroringOFFlowMods.add(mirrorFlowMod);
-
-			}
 			}
 
 			// finally, insert above flows to the switch
@@ -309,22 +318,21 @@ public class FlowscaleController implements IOFSwitchListener,
 			ofDefaultDropRule.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH));
 			logger.debug("adding default rule {}", ofDefaultDropRule.toString());
 			sw.getOutputStream().write(ofDefaultDropRule);
-			
-			
-			for(OFFlowMod mirrorFlowModValue : mirroringOFFlowMods){
-				
-				logger.debug("adding mirror rules {}", mirrorFlowModValue.toString());
+
+			for (OFFlowMod mirrorFlowModValue : mirroringOFFlowMods) {
+
+				logger.debug("adding mirror rules {}",
+						mirrorFlowModValue.toString());
 				sw.getOutputStream().write(mirrorFlowModValue);
-				
-				
+
 			}
-			
+
 			OFBarrierRequest ofbr = new OFBarrierRequest();
-			
+
 			ofbr.setXid(2);
-		
+
 			sw.getOutputStream().write(ofbr);
-			
+
 			sw.getOutputStream().flush();
 
 		} catch (Exception e) {
@@ -372,23 +380,22 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	}
 
-	public void setMaximumFlowsToPush(int maximumFlowsToPush){
-		
-		if (maximumFlowsToPush == 0){
-			
+	public void setMaximumFlowsToPush(int maximumFlowsToPush) {
+
+		if (maximumFlowsToPush == 0) {
+
 			this.maximumFlowsToPush = Integer.MAX_VALUE;
-			
-		}else{
+
+		} else {
 			this.maximumFlowsToPush = maximumFlowsToPush;
 		}
-		
-		
+
 	}
-	
-	public int getMaximumFlowsToPush(){
+
+	public int getMaximumFlowsToPush() {
 		return this.maximumFlowsToPush;
 	}
-	
+
 	public void setBeaconProvider(IBeaconProvider beaconProvider) {
 		this.ibeaconProvider = beaconProvider;
 	}
@@ -404,53 +411,51 @@ public class FlowscaleController implements IOFSwitchListener,
 		this.mirrorPriority = mirrorPriority;
 	}
 
-	public void setFlowMirrorPorts(String flowMirrorPorts){
-	
-		
-		
-		 switchFlowMirrorPortsHashMap = new HashMap<Long, HashMap<Short,Short>>();
-		
-		String [] switchMirrorConfig =  flowMirrorPorts.split("-");
-		
-		for(String switchMirrorConfigValue : switchMirrorConfig){
-			
-			String [] switchSplitter =  switchMirrorConfigValue.split(":");
-			
-			
+	/**
+	 * read config file and get the miorroing ports and store them in a HashMap
+	 * , to be used whenever a flow is inserted with the mirrored port, it's
+	 * mirroring port is also inserted
+	 * 
+	 * @param flowMirrorPorts
+	 */
+	public void setFlowMirrorPorts(String flowMirrorPorts) {
+
+		switchFlowMirrorPortsHashMap = new HashMap<Long, HashMap<Short, Short>>();
+
+		String[] switchMirrorConfig = flowMirrorPorts.split("-");
+
+		for (String switchMirrorConfigValue : switchMirrorConfig) {
+
+			String[] switchSplitter = switchMirrorConfigValue.split(":");
+
 			long switchDatapathId = HexString.toLong(switchSplitter[0]);
-			
-			HashMap<Short,Short> mirrors = new HashMap<Short,Short>();
-			
+
+			HashMap<Short, Short> mirrors = new HashMap<Short, Short>();
+
 			String[] mirrorPorts = switchSplitter[1].split(";");
-			
-			for (String mirrorPortsValue : mirrorPorts){
-				
-				String [] flowMirrors = mirrorPortsValue.split(",");
-				mirrors.put(Short.parseShort(flowMirrors[0]), Short.parseShort(flowMirrors[1]));
-				
+
+			for (String mirrorPortsValue : mirrorPorts) {
+
+				String[] flowMirrors = mirrorPortsValue.split(",");
+				mirrors.put(Short.parseShort(flowMirrors[0]),
+						Short.parseShort(flowMirrors[1]));
+
 			}
-			
+
 			switchFlowMirrorPortsHashMap.put(switchDatapathId, mirrors);
 		}
-		
-		
-				
-	}
-	
 
-	
+	}
+
 	public void setMirroringRules(String mirroringRules) {
 		this.mirroringRules = mirroringRules;
 	}
 
-	
-	public HashMap<Long, HashMap<Short,Short>> getSwitchFlowMirrorPortsHashMap(){
-		
-		return this.switchFlowMirrorPortsHashMap;
-		
-	}
-	
+	public HashMap<Long, HashMap<Short, Short>> getSwitchFlowMirrorPortsHashMap() {
 
+		return this.switchFlowMirrorPortsHashMap;
+
+	}
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -473,44 +478,40 @@ public class FlowscaleController implements IOFSwitchListener,
 	public void startUp() {
 
 		logger.info("starting controller ");
-			DatabaseUtility db = new DatabaseUtility();
-			db.setConnection(username, password, connectionString,
-					dbDriverString);
+		DatabaseUtility db = new DatabaseUtility();
+		db.setConnection(username, password, connectionString, dbDriverString);
 
-			logger.info("initiating controller");
-			//adding listeners 
-			ibeaconProvider.addOFMessageListener(OFType.PACKET_IN, this);
-			ibeaconProvider.addOFMessageListener(OFType.FEATURES_REPLY, this);
-			ibeaconProvider.addOFMessageListener(OFType.ECHO_REQUEST, this);
-			ibeaconProvider.addOFMessageListener(OFType.ERROR, this);
-			ibeaconProvider.addOFMessageListener(OFType.PORT_MOD, this);
-			ibeaconProvider.addOFMessageListener(OFType.PORT_STATUS, this);
-			ibeaconProvider.addOFMessageListener(OFType.BARRIER_REPLY, this);
-			logger.info("adding switch listener");
-			ibeaconProvider.addOFSwitchListener(this);
+		logger.info("initiating controller");
+		// adding listeners
+		ibeaconProvider.addOFMessageListener(OFType.PACKET_IN, this);
+		ibeaconProvider.addOFMessageListener(OFType.FEATURES_REPLY, this);
+		ibeaconProvider.addOFMessageListener(OFType.ECHO_REQUEST, this);
+		ibeaconProvider.addOFMessageListener(OFType.ERROR, this);
+		ibeaconProvider.addOFMessageListener(OFType.PORT_MOD, this);
+		ibeaconProvider.addOFMessageListener(OFType.PORT_STATUS, this);
+		ibeaconProvider.addOFMessageListener(OFType.BARRIER_REPLY, this);
+		logger.info("adding switch listener");
+		ibeaconProvider.addOFSwitchListener(this);
 
-			try {
-				this.controllerSwitches = db.populateSwitchesFromDatabase(this);
-				this.groupList = db.populateGroupsFromDatabase(this);
-				logger.debug("controller switches are {}", controllerSwitches);
-			} catch (NoDatabaseException e) {
-				
-				// TODO Auto-generated catch block
-				logger.error("No Database loaded, please update your configuration and rerun the FlowScale");
-				ibeaconProvider.notify();
-			}
-			
+		try {
+			this.controllerSwitches = db.populateSwitchesFromDatabase(this);
+			this.groupList = db.populateGroupsFromDatabase(this);
+			logger.debug("controller switches are {}", controllerSwitches);
+		} catch (NoDatabaseException e) {
 
-			logger.debug("groupList has {}", groupList);
+			// TODO Auto-generated catch block
+			logger.error("No Database loaded, please update your configuration and rerun the FlowScale");
+			ibeaconProvider.notify();
+		}
 
-			for (Integer groupId : groupList.keySet()) {
-				Group group = groupList.get(groupId);
+		logger.debug("groupList has {}", groupList);
 
-			}
-			
-			
-			logger.info("controller instance is {}", this.toString());
-	
+		for (Integer groupId : groupList.keySet()) {
+			Group group = groupList.get(groupId);
+
+		}
+
+		logger.info("controller instance is {}", this.toString());
 
 	}
 
@@ -539,6 +540,12 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	}
 
+	/**
+	 * insterface to add switches , usually called from flowscalehttplistener
+	 * 
+	 * @see handle method in flowscalehttplistener
+	 * @param datapathIdString
+	 */
 	public void addSwitchFromInterface(String datapathIdString) {
 
 		long datapathId = HexString.toLong(datapathIdString);
@@ -567,6 +574,27 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	}
 
+	/**
+	 * Method called from flowscalehttplistener (may be called also from cli) in
+	 * order to create a new group not that this method will NOT store the deta
+	 * in the database at the time being, that will be done by the calling
+	 * interface itself
+	 * 
+	 * @param groupIdString
+	 * @param groupName
+	 * @param inputSwitchDatapathIdString
+	 * @param outputSwitchDatapathIdString
+	 * @param inputPortListString
+	 * @param outputPortListString
+	 * @param typeString
+	 * @param priorityString
+	 * @param valuesString
+	 * @param maximumFlowsAllowedString
+	 * @param networkProtocolString
+	 * @param transportDirectionString
+	 * @return a string that will be presented in JSON format to be interpreted
+	 *         by the interface
+	 */
 	public String addGroupFromInterface(String groupIdString, String groupName,
 			String inputSwitchDatapathIdString,
 			String outputSwitchDatapathIdString, String inputPortListString,
@@ -592,6 +620,15 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	}
 
+	/**
+	 * method to edit group, avoid for now
+	 * 
+	 * @param groupIdString
+	 * @param editTypeString
+	 * @param updateValueString
+	 * @return JSON string to be interpreted by the interface
+	 * @deprecated
+	 */
 	public String editGroupFromInterface(String groupIdString,
 			String editTypeString, String updateValueString) {
 
@@ -601,6 +638,13 @@ public class FlowscaleController implements IOFSwitchListener,
 		return null;
 	}
 
+	/**
+	 * Method used to delete a group and remove its flows from the switches,
+	 * note that this method will NOT deal with the database
+	 * 
+	 * @param groupIdString
+	 * @return JSON string to be interpreted by interface
+	 */
 	public String deleteGroupFromInterface(String groupIdString) {
 
 		logger.debug(groupList.toString());
@@ -614,77 +658,94 @@ public class FlowscaleController implements IOFSwitchListener,
 
 	}
 
-	public List <OFStatistics> getSwitchStatisticsFromInterface(String datapathIdString,
-			String typeString) throws NoSwitchException, IOException, InterruptedException, ExecutionException, TimeoutException {
+	/**
+	 * get statistics from switch based on type specified from interface
+	 * 
+	 * @param datapathIdString
+	 * @param typeString
+	 * @return List<OFStatistics> statistics from switch
+	 * @throws NoSwitchException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws TimeoutException
+	 */
+	public List<OFStatistics> getSwitchStatisticsFromInterface(
+			String datapathIdString, String typeString)
+			throws NoSwitchException, IOException, InterruptedException,
+			ExecutionException, TimeoutException {
 
 		long datapathId = HexString.toLong(datapathIdString);
 
 		SwitchDevice switchDevice = controllerSwitches.get(datapathId);
-		if (switchDevice == null){
+		if (switchDevice == null) {
 			throw new NoSwitchException(datapathIdString);
 		}
-		List <OFStatistics> ofst = switchDevice.getStatistics(typeString);
+		List<OFStatistics> ofst = switchDevice.getStatistics(typeString);
 
-		return  ofst;
+		return ofst;
 
 	}
 
-	
-	
-	public void injectFlows(ArrayList<OFFlowMod> ofFlowMods, long datapathId){
+	/**
+	 * called by the hot swapping bundle :flowscaleflowupdate , will have the
+	 * modified flows to swap from high loaded ports to low ones
+	 * 
+	 * @param ofFlowMods
+	 *            flows that are passed by the flowscaleflowupdate bundle
+	 * @param datapathId
+	 *            id of concerned switch that we desire to hotswap flows
+	 */
+	public void injectFlows(ArrayList<OFFlowMod> ofFlowMods, long datapathId) {
 		logger.info("injecting flows in controller");
 		IOFSwitch sw = this.ibeaconProvider.getSwitches().get(datapathId);
-		if (sw == null){
+		if (sw == null) {
 			logger.error("no switch {} exists", datapathId);
 			return;
 		}
-		for(OFFlowMod ofFlowMod : ofFlowMods){
-			
-			for(Integer groupKey : groupList.keySet()){
-				
+		for (OFFlowMod ofFlowMod : ofFlowMods) {
+
+			for (Integer groupKey : groupList.keySet()) {
+
 				Group group = groupList.get(groupKey);
-				
-				
-				ArrayList<OFRule> groupRules = (ArrayList<OFRule>) group.getGroupRules();
-				
-				for(OFRule rule : groupRules){
-					
-					if (rule.getMatch().equals(ofFlowMod.getMatch()) && group.getOutputSwitchDatapathId() == datapathId){
-						logger.trace("rule match {} is equal to offlowmod match {}",rule.getMatch().toString(),ofFlowMod.getMatch().toString());
+
+				ArrayList<OFRule> groupRules = (ArrayList<OFRule>) group
+						.getGroupRules();
+
+				for (OFRule rule : groupRules) {
+
+					if (rule.getMatch().equals(ofFlowMod.getMatch())
+							&& group.getOutputSwitchDatapathId() == datapathId) {
+						logger.trace(
+								"rule match {} is equal to offlowmod match {}",
+								rule.getMatch().toString(), ofFlowMod
+										.getMatch().toString());
 						rule.getActions().clear();
 						rule.setActions(ofFlowMod.getActions());
-						
+
 					}
-			
-					
-					
+
 				}
-				
+
 			}
-			
+
 			logger.info("injecting flow {}", ofFlowMod);
 			try {
 				sw.getOutputStream().write(ofFlowMod);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				logger.error("{}",e);
+				logger.error("{}", e);
 			}
-			
-			
-		
-			
+
 		}
-		
+
 		try {
 			sw.getOutputStream().flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("{}",e);
+			logger.error("{}", e);
 		}
-		
-		
+
 	}
-	
-	
-	
+
 }
