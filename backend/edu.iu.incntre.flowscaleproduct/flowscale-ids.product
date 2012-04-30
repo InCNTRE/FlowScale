@@ -3,7 +3,6 @@
 
 <product name="Flowscale Controller" uid="flowscale-controller" version="0.5.0" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -16,12 +15,11 @@
 -Dosgi.noShutdown=true
 -Dequinox.ds.print=true
 -Dderby.system.home=/Users/akhalfan/Documents/NOC/flowscale_db
--Dlogback.configurationFile=/Users/akhalfan/Documents/NOC/logback.xml</vmArgs>
+-Dlogback.configurationFile=/home/akhalfan/logback.xml</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
    <windowImages/>
-
 
    <launcher name="flowscale-controller">
       <solaris/>
@@ -29,7 +27,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.0</linux>

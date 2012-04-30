@@ -499,7 +499,7 @@ public class FlowscaleFlowUpdate {
 
 				}
 				LoadFlow otherDirectionLoadFlow = this.getFlowByString(otherDirectFlow, switchFlows);
-				logger.info("other direction load flow is {}",otherDirectionLoadFlow);
+				logger.debug("other direction load flow is {}",otherDirectionLoadFlow);
 				double totalNeededPercentage = (double) flowPercentageValue
 						+ (double) (otherDirectionLoadFlow.getFlowPercent());
 
@@ -551,7 +551,7 @@ public class FlowscaleFlowUpdate {
 													switchFlows)
 											.getFlowPercent()));
 
-					logger.info("port {} new percentage is {}", lowPort,
+					logger.debug("port {} new percentage is {}", lowPort,
 							portPercentages.get(lowPort));
 
 					if (portPercentages.get(highPort) <= optimalPercentage) {
@@ -569,6 +569,7 @@ public class FlowscaleFlowUpdate {
 
 			}
 		}
+		logger.debug("port percentages after hot swap {}",portPercentages);
 		return newFlows;
 	}
 
@@ -864,10 +865,10 @@ public class FlowscaleFlowUpdate {
 
 				} else {
 					
-					logger.info("adding flow {}", tempLoadFlow);
+					logger.debug("adding flow {}", tempLoadFlow);
 					
 					tempLoadFlow.setPacketCount(packetCount);
-					logger.info("adding of switch flow is {}",switchFlows.add(tempLoadFlow));;
+					logger.debug("adding of switch flow is {}",switchFlows.add(tempLoadFlow));;
 				}
 				
 			}
