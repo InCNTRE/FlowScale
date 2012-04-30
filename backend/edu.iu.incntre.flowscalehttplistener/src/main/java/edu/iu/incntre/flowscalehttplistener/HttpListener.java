@@ -1,3 +1,8 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package edu.iu.incntre.flowscalehttplistener;
 
 import java.io.IOException;
@@ -27,7 +32,8 @@ import edu.iu.incntre.flowscale.FlowscaleController;
 import edu.iu.incntre.flowscale.exception.NoSwitchException;
 import edu.iu.incntre.flowscale.util.JSONConverter;
 
-/**
+/** This class is an Http interface, it is a listener to Http requests directed to
+ * the port it is listening to, mainly can handle REST or other calls 
  * @author Ali Khalfan (akhalfan@indiana.edu)
  */
 
@@ -63,9 +69,14 @@ public class HttpListener implements Handler {
 
 		this.jettyListenerPort = port;
 	}
+	
 
 	@Override
-	public void handle(String arg0, HttpServletRequest request,
+	/** 
+	 * method will call other other methods based on the Http Message most 
+	 * methods call other bundles 
+	 */
+		public void handle(String arg0, HttpServletRequest request,
 			HttpServletResponse response, int arg3) throws IOException,
 			ServletException {
 		// TODO Auto-generated method stub

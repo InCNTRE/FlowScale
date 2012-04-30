@@ -1,3 +1,8 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package edu.iu.incntre.flowscale;
 
 import org.openflow.protocol.OFBarrierRequest;

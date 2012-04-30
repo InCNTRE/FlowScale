@@ -51,22 +51,19 @@ public class StatCollector {
 	private String datapathIdStrings;
 
 	private Connection conn;
-	private Statement stat;
+
 	private String databaseDriver;
 	private String databaseClass;
 	protected Thread statThread;
 
-
-	
-	private HashMap<Long,HashMap<Long,Long>> tempPortStatTransmittedHashMap = new HashMap<Long,HashMap<Long,Long>>();
-	private HashMap<Long,HashMap<Long,Long>> tempPortStatReceivedHashMap = new HashMap<Long, HashMap<Long,Long>>();
-	private HashMap<Long,HashMap<String,Long>> tempFlowStatHashMap = new HashMap<Long,HashMap<String,Long>>();
+	private HashMap<Long, HashMap<Long, Long>> tempPortStatTransmittedHashMap = new HashMap<Long, HashMap<Long, Long>>();
+	private HashMap<Long, HashMap<Long, Long>> tempPortStatReceivedHashMap = new HashMap<Long, HashMap<Long, Long>>();
+	private HashMap<Long, HashMap<String, Long>> tempFlowStatHashMap = new HashMap<Long, HashMap<String, Long>>();
 	private String dbUsername;
 	private String dbPassword;
-	
+
 	private Calendar calendar;
-	
-	
+
 	public void setIsQuery(boolean isQuery) {
 
 		this.isQuery = isQuery;
@@ -93,6 +90,7 @@ public class StatCollector {
 	public void setDatabaseClass(String databaseClass) {
 		this.databaseClass = databaseClass;
 	}
+
 	public void setDbUsername(String dbUsername) {
 		this.dbUsername = dbUsername;
 	}
@@ -105,7 +103,7 @@ public class StatCollector {
 	public void killThread() {
 
 		this.statThread = null;
-		//startUp();
+		// startUp();
 	}
 
 	public void startUp() {
@@ -121,7 +119,7 @@ public class StatCollector {
 				Class.forName(databaseClass);
 				conn = DriverManager.getConnection(databaseDriver, dbUsername,
 						dbPassword);
-				stat = conn.createStatement();
+				
 			} catch (ClassNotFoundException e2) {
 
 				logger.error("{}", e2);
@@ -138,182 +136,217 @@ public class StatCollector {
 
 				@Override
 				public void run() {
-					try{
-					logger.trace("Starting Thread ..");
-					logger.trace("Getting flows from switch every {} seconds",
-							intervalTime);
-
-					List<OFStatistics> portStats;
-					List<OFStatistics> flowStats;
-					List<OFPhysicalPort> portStatus;
-					SwitchDevice swd = null;
-					String[] datapathIdStringElements = datapathIdStrings.split(",");
-					try{
-					
-					while (statThread != null) {
-						 calendar = Calendar.getInstance();
-						logger.trace("getting flows from switches");
-						for (String datapathIdString : datapathIdStringElements) {
-							
-							try {
-								
-							
-							logger.info("Getting flows from switch {}",
-									datapathIdString);
-
-							swd = flowscaleController.getSwitchDevices().get(
-									HexString.toLong(datapathIdString));
-							if (swd == null) {
-								logger.info("switch does not exist, is it connected?");
-								continue;
-							}
-
-							try {
-								portStats = flowscaleController
-										.getSwitchStatisticsFromInterface(
-												datapathIdString, "port");
-
-								flowStats = flowscaleController
-										.getSwitchStatisticsFromInterface(
-												datapathIdString, "flow");
-
-								portStatus = flowscaleController
-										.getSwitchDevices()
-										.get(HexString.toLong(datapathIdString))
-										.getPortStates();
-
-								if (flowStats != null && portStats != null) {
-
-									String flowStatsJSON = JSONConverter
-											.toStat(flowStats, "flow")
-											.toJSONString();
-									String portStatsJSON = JSONConverter
-											.toStat(portStats, "port")
-											.toJSONString();
-									String portStatusJSON = JSONConverter
-											.toPortStatus(portStatus)
-											.toJSONString();
-
-									
-									//initialize or set hashmaps
-									
-									HashMap<Long,Long> tempPortStatTransmitted;
-									HashMap<Long,Long> tempPortStatReceived;
-									HashMap<String,Long> tempFlowStat;
-									
-									long datapathId = HexString.toLong(datapathIdString);
-									if(tempPortStatTransmittedHashMap.get(datapathId) == null){
-									
-										tempPortStatTransmitted = new HashMap<Long,Long>();
-										tempPortStatTransmittedHashMap.put(datapathId, tempPortStatTransmitted);
-									}else{
-										tempPortStatTransmitted = tempPortStatTransmittedHashMap.get(datapathId);
-										
-									}
-									
-									
-									if(tempPortStatReceivedHashMap.get(datapathId) == null){
-										tempPortStatReceived = new HashMap<Long,Long>();
-										tempPortStatReceivedHashMap.put(datapathId, tempPortStatReceived);
-									}else{
-										tempPortStatReceived = tempPortStatReceivedHashMap.get(datapathId);
-									}
-									if(tempFlowStatHashMap.get(datapathId) == null){
-										tempFlowStat = new HashMap<String,Long>();
-										tempFlowStatHashMap.put(datapathId,tempFlowStat);
-									}else{
-										
-										tempFlowStat = tempFlowStatHashMap.get(datapathId);
-									}
-									
-									
-									
-									
-									
-									
-									
-									storeSwitchDetails(
-											HexString.toLong(datapathIdString),
-											portStatsJSON, flowStatsJSON,
-											portStatusJSON, tempPortStatTransmitted,tempPortStatReceived,tempFlowStat );
-								} else {
-									logger.error(
-											"Switch {} returned a null result possibility because the switch is not connected to the controller",
-											datapathIdString);
-								}
-							} catch (NoSwitchException e1) {
-								// TODO Auto-generated catch block
-								logger.error(
-										"Switch {} is not connected aborting",
-										datapathIdString);
-							} catch (IOException e1) {
-								logger.error("IOException {}", e1);
-
-							} catch (InterruptedException e1) {
-								logger.error("Thread Interrupted {}", e1);
-								killThread();
-							} catch (ExecutionException e1) {
-								logger.error("Execution Exception {}", e1);
-							} catch (TimeoutException e1) {
-								logger.error("Switch Timeout Exception {}", e1);
-								killThread();
-
-							}
-
-						
-
-							}catch(Exception e){
-								logger.error("unchecked exception here {}",e);
-								
-								killThread();
-								shutDown();
-								Thread.yield();
-								
-						
-							}
-							
-							
-							
-						}
-						
-						
-						try {		
-
-							Thread.sleep(intervalTime);
-
-						} catch (InterruptedException e) {
-
-							logger.error("{}", e);
-
-							break;
-						}
-
-					}
-					}catch(Exception e){
-						logger.error("exception in while {}",e);
-						shutDown();
-						
-					}
-					
 					try {
-						conn.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						logger.error("{}", e);
+						logger.trace("Starting Thread ..");
+						logger.trace(
+								"Getting flows from switch every {} seconds",
+								intervalTime);
+
+						List<OFStatistics> portStats;
+						List<OFStatistics> flowStats;
+						List<OFPhysicalPort> portStatus;
+						SwitchDevice swd = null;
+						String[] datapathIdStringElements = datapathIdStrings.split(",");
+						try {
+
+							while (statThread != null) {
+								calendar = Calendar.getInstance();
+								logger.trace("getting flows from switches");
+								for (String datapathIdString : datapathIdStringElements) {
+
+									try {
+
+										logger.info(
+												"Getting flows from switch {}",
+												datapathIdString);
+
+										swd = flowscaleController
+												.getSwitchDevices()
+												.get(HexString
+														.toLong(datapathIdString));
+										if (swd == null) {
+											logger.info("switch does not exist, is it connected?");
+											continue;
+										}
+
+										try {
+											portStats = flowscaleController
+													.getSwitchStatisticsFromInterface(
+															datapathIdString,
+															"port");
+
+											flowStats = flowscaleController
+													.getSwitchStatisticsFromInterface(
+															datapathIdString,
+															"flow");
+
+											portStatus = flowscaleController
+													.getSwitchDevices()
+													.get(HexString
+															.toLong(datapathIdString))
+													.getPortStates();
+
+											if (flowStats != null
+													&& portStats != null) {
+
+												String flowStatsJSON = JSONConverter
+														.toStat(flowStats,
+																"flow")
+														.toJSONString();
+												String portStatsJSON = JSONConverter
+														.toStat(portStats,
+																"port")
+														.toJSONString();
+												String portStatusJSON = JSONConverter
+														.toPortStatus(
+																portStatus)
+														.toJSONString();
+
+												// initialize or set hashmaps
+
+												HashMap<Long, Long> tempPortStatTransmitted;
+												HashMap<Long, Long> tempPortStatReceived;
+												HashMap<String, Long> tempFlowStat;
+
+												long datapathId = HexString
+														.toLong(datapathIdString);
+												if (tempPortStatTransmittedHashMap
+														.get(datapathId) == null) {
+
+													tempPortStatTransmitted = new HashMap<Long, Long>();
+													tempPortStatTransmittedHashMap
+															.put(datapathId,
+																	tempPortStatTransmitted);
+												} else {
+													tempPortStatTransmitted = tempPortStatTransmittedHashMap
+															.get(datapathId);
+
+												}
+
+												if (tempPortStatReceivedHashMap
+														.get(datapathId) == null) {
+													tempPortStatReceived = new HashMap<Long, Long>();
+													tempPortStatReceivedHashMap
+															.put(datapathId,
+																	tempPortStatReceived);
+												} else {
+													tempPortStatReceived = tempPortStatReceivedHashMap
+															.get(datapathId);
+												}
+												if (tempFlowStatHashMap
+														.get(datapathId) == null) {
+													tempFlowStat = new HashMap<String, Long>();
+													tempFlowStatHashMap.put(
+															datapathId,
+															tempFlowStat);
+												} else {
+
+													tempFlowStat = tempFlowStatHashMap
+															.get(datapathId);
+												}
+
+												storeSwitchDetails(
+														HexString
+																.toLong(datapathIdString),
+														portStatsJSON,
+														flowStatsJSON,
+														portStatusJSON,
+														tempPortStatTransmitted,
+														tempPortStatReceived,
+														tempFlowStat);
+											} else {
+												logger.error(
+														"Switch {} returned a null result possibility because the switch is not connected to the controller",
+														datapathIdString);
+											}
+										} catch (NoSwitchException e1) {
+											// TODO Auto-generated catch block
+											logger.error(
+													"Switch {} is not connected aborting",
+													datapathIdString);
+										} catch (IOException e1) {
+											logger.error("IOException {}", e1);
+
+										} catch (InterruptedException e1) {
+											logger.error(
+													"Thread Interrupted {}", e1);
+											killThread();
+										} catch (ExecutionException e1) {
+											logger.error(
+													"Execution Exception {}",
+													e1);
+										} catch (TimeoutException e1) {
+											logger.error(
+													"Switch Timeout Exception {}",
+													e1);
+											killThread();
+
+										}
+
+									} catch (Exception e) {
+										logger.error(
+												"unchecked exception here {}",
+												e);
+
+										killThread();
+										shutDown();
+										Thread.yield();
+
+									}
+
+								}
+
+								try {
+
+									Thread.sleep(intervalTime);
+
+								} catch (InterruptedException e) {
+
+									logger.error("{}", e);
+
+									break;
+								}
+
+							}
+						} catch (Exception e) {
+							logger.error("exception in while {}", e);
+							shutDown();
+
+						}
+
+						try {
+							conn.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							logger.error("{}", e);
+						}
+
+					} catch (Exception generalException) {
+						logger.error("General Exception throws {} ",
+								generalException);
+
 					}
-				
-				}	catch(Exception generalException){
-						logger.error("General Exception throws {} ", generalException);
-				
 				}
-				}
+/**
+ * insert details into database, 3 tables will be populated: flow_stats, port_stats ,and port_status
+ * 
+ * @param datapathId
+ * @param portStats
+ * @param flowStats
+ * @param portStatus
+ * @param tempPortStatTransmitted
+ * @param tempPortStatReceived
+ * @param tempFlowStat
+ */
 				private void storeSwitchDetails(long datapathId,
-						String portStats, String flowStats, String portStatus  , HashMap<Long,Long> tempPortStatTransmitted, HashMap<Long,Long> tempPortStatReceived, HashMap<String,Long> tempFlowStat) {
+						String portStats, String flowStats, String portStatus,
+						HashMap<Long, Long> tempPortStatTransmitted,
+						HashMap<Long, Long> tempPortStatReceived,
+						HashMap<String, Long> tempFlowStat) {
 
 					Object obj = JSONValue.parse(portStats);
 					JSONArray jsonArray = (JSONArray) obj;
 
-					
 					for (int i = 0; i < jsonArray.size(); i++) {
 
 						JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -321,16 +354,13 @@ public class StatCollector {
 								.get("transmit_packets");
 						long receivedPackets = (Long) jsonObject
 								.get("receive_packets");
-						
-						
-						
-						long portId = (Long) jsonObject.get("port_id");
-						
-						
-						//logger.info("the port is {}", portId);
-						//logger.info("{} packets transmitted and {} packets received", receivedPackets,transmittedPackets);
 
-						
+						long portId = (Long) jsonObject.get("port_id");
+
+						// logger.info("the port is {}", portId);
+						// logger.info("{} packets transmitted and {} packets received",
+						// receivedPackets,transmittedPackets);
+
 						PreparedStatement prep = null;
 						try {
 							prep = null;
@@ -479,11 +509,12 @@ public class StatCollector {
 						long portId = (Long) jsonObject.get("port_id");
 						String portAddress = (String) jsonObject
 								.get("port_address");
-						try{
-						 portStatusValue = (byte) (Integer
-								.parseInt(jsonObject.get("state").toString()) % 2);
-						}catch(NumberFormatException nfe ){
-							logger.error("{}",nfe);
+						try {
+							portStatusValue = (byte) (Integer
+									.parseInt(jsonObject.get("state")
+											.toString()) % 2);
+						} catch (NumberFormatException nfe) {
+							logger.error("{}", nfe);
 							continue;
 						}
 						PreparedStatement prep = null;
@@ -517,12 +548,9 @@ public class StatCollector {
 						}
 
 					}
-				
-				
+
 				}
 
-				
-				
 			}, "Switch Stat Collector");
 			statThread.start();
 
@@ -533,9 +561,9 @@ public class StatCollector {
 	public void shutDown() {
 
 		statThread.interrupt();
-		statThread =null;
+		statThread = null;
 		this.notify();
-		
+
 	}
 
 	public String getName() {

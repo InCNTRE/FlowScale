@@ -1,4 +1,15 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package edu.iu.incntre.flowscale;
+
+/**
+ * This class is an abstraction for an openflow rule that will be inserted to the switch, this class is associated 
+ * to group on a one-to-many basis
+ * @author Ali Khalfan (akhalfan@indiana.edu)
+ */
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +48,11 @@ public class OFRule {
     public ArrayList<OFAction> getActions() {
         return actions;
     }
+    /**
+     * To facilitating mirroring, this method adds the specified mirroring port to the rule
+     * (see documentation on how mirroring works)
+     * @param port
+     */
     public void setMirrorPort(int port){
     	OFActionOutput mirrorAction = new OFActionOutput();
     	mirrorAction.setPort((short)port);

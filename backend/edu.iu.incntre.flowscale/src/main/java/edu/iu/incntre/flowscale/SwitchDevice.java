@@ -1,3 +1,8 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package edu.iu.incntre.flowscale;
 
 import java.io.IOException;
@@ -37,7 +42,8 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.regex.PatternSyntaxException;
 
-/**
+/** This class is an abstraction of an openflow switch for FlowScale. It provides functionality 
+ * needed for FlowScale that may not exist in IDFSwitch (consider inheriting IOFSwitch in the future)
  * @author Ali Khalfan (akhlafan@indiana.edu)
  * 
  */
@@ -48,7 +54,7 @@ public class SwitchDevice {
 	private String macAddress;
 	private long datapathId;
 	private ArrayList<OFRule> switchRules = new ArrayList<OFRule>();
-	private ArrayList<SwitchPort> ports = new ArrayList<SwitchPort>();
+
 	private IOFSwitch openFlowSwitch;
 	private List<OFPhysicalPort> portList;
 	private List<Short> outputPortsUp = new ArrayList<Short>();
@@ -110,6 +116,11 @@ public class SwitchDevice {
 
 	}
 
+	/**
+	 * When a switch reports an update within a port FlowscaleController calls this method, charged with
+	 * updating the status of the ports in the port list to convey the new status of the port 
+	 * @param ps
+	 */
 	public void updatePort(OFPortStatus ps) {
 
 		
@@ -161,7 +172,11 @@ public class SwitchDevice {
 		return this.portList;
 
 	}
-
+/** 
+ * Set the IOFSwitch object for easy retrieval since SwitchDevice will be associated with other objects in the FlowScale package
+ * 
+ * @param sw IOFSwitch object
+ */
 	public void setOpenFlowSwitch(IOFSwitch sw) {
 
 		this.openFlowSwitch = sw;
@@ -176,7 +191,17 @@ public class SwitchDevice {
 
 
 
-
+/**
+ *  This method will be used to retrieve different statisitcs from the switch as returned by OFPT_STATS_REPLY,
+ *  this method encapsulates the more specific private methods 
+ * @param type
+ * @return List<OFStatistics> returns whatever OFStatistics are requests (aggregate, table, Flow or Port , 
+ * @throws IOException
+ * @throws InterruptedException
+ * @throws ExecutionException
+ * @throws TimeoutException
+ * @throws NoSwitchException
+ */
 	  List<OFStatistics> getStatistics(String type) throws IOException, InterruptedException, ExecutionException, TimeoutException, NoSwitchException {
 
 		
@@ -199,7 +224,18 @@ public class SwitchDevice {
 	
 
 
-
+/**
+ * Similar to getStatistics , but to be callsed from the FloscaleController (instead of the HttpListener), specifically to retreive flows
+ * the reason for this method is for objects that need non-json data (e.g. FlowscaleStatCollector) - consider integrating this method 
+ * with the one above and entirely removing this method 
+ * 
+ * @return
+ * @throws NoSwitchException
+ * @throws IOException
+ * @throws InterruptedException
+ * @throws ExecutionException
+ * @throws TimeoutException
+ */
 	public List<OFStatistics> getFlowStatisticsForLoader()
 			throws NoSwitchException, IOException, InterruptedException,
 			ExecutionException, TimeoutException {
@@ -233,7 +269,15 @@ public class SwitchDevice {
 	
 	
 	
-	
+	/** 
+	 * getPortStatistics is a private method only called by getStatistics
+	 * @return  List<OFStatistics>
+	 * @throws NoSwitchException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws TimeoutException
+	 */
 	private  List<OFStatistics> getPortStatistics() throws NoSwitchException, IOException, InterruptedException, ExecutionException, TimeoutException {
 
 		
@@ -263,10 +307,18 @@ public class SwitchDevice {
 				
 
 	}
-
+/**
+ * a private method to retrieve the table statistics from the switch , this method is only called by getStatistics
+ * @return List<OFStatistics>
+ * @throws IOException
+ * @throws InterruptedException
+ * @throws ExecutionException
+ * @throws TimeoutException
+ * @throws NoSwitchException
+ */
 	private List<OFStatistics> getTableStatistics() throws IOException, InterruptedException, ExecutionException, TimeoutException, NoSwitchException {
 
-		JSONArray jsonArray = new JSONArray();
+		
 
 		Future<List<OFStatistics>> futureTable;
 		IOFSwitch iofSwitch = this.openFlowSwitch;
@@ -291,7 +343,16 @@ public class SwitchDevice {
 	
 	
 	
-	
+	/**
+	 * This method is used to retrieve to Flows from the switch this method is only called getStatistics 
+	 * 
+	 * @return List<OFStatistics>
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws TimeoutException
+	 * @throws NoSwitchException
+	 */
 	
 	private List<OFStatistics>getFlowStatistics() throws IOException, InterruptedException, ExecutionException, TimeoutException, NoSwitchException {
 
@@ -323,9 +384,18 @@ public class SwitchDevice {
 
 	}
 
+	/**
+	 * 
+	 * @return List<OFStatistics>
+	 * @throws NoSwitchException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws TimeoutException
+	 */
 	private List<OFStatistics> getAggregateStatistics() throws NoSwitchException , IOException, InterruptedException, ExecutionException, TimeoutException {
 
-		JSONArray jsonArray = new JSONArray();
+	
 
 		Future<List<OFStatistics>> future;
 		IOFSwitch iofSwitch = this.openFlowSwitch;

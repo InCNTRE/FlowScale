@@ -1,11 +1,27 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package edu.iu.incntre.flowscale;
-
-import org.openflow.util.HexString;
-
+/** 
+ * This class is a utility class fo IPv4 and subnets ,
+ * has methods that maybe used on subnets , might consider merging this class with grnoc.net.util.IPv4Address
+ * 
+ * @author Ali Khalfan (akhalfan@indiana.edu)
+ *
+ */
 public class IPAddressUtility{
 
 
-
+/**
+ * Increment subnet based on how subnets are to be divided
+ * e.g. 192.168.0.0/24 will incremented will be 
+ * 192.168.1.0/24  
+ * @param ip
+ * @param subnet
+ * @return the incremented subnet in integer form 
+ */
     public static int incrementSubnet(int ip,int subnet){
 
             int newIP = 0;
@@ -19,17 +35,15 @@ public class IPAddressUtility{
 
     }
 
-  /*  public static void main(String []args){
-
-            int ip1 = Integer.parseInt(args[0]);
-            int subnet1 = Integer.parseInt(args[1]);
-            int ip2 = Integer.parseInt(args[2]);
-            int subnet2 = Integer.parseInt(args[3]);
-
-            int newIP = IPAddress.incrementSubnet(ip1,subnet1);
-            System.out.println(newIP);
-    }
-*/
+/** 
+ * check if one subnet is in range of the other, useful , for dividing subnet into chunks
+ * @see generateIpRules
+ * @param ip1
+ * @param subnet1
+ * @param ip2
+ * @param subnet2
+ * @return boolean of whether IP in range or not 
+ */
     public static boolean checkIfInRange(int ip1,int subnet1,int ip2,int subnet2){
 
             if(subnet2 < subnet1)
@@ -44,6 +58,11 @@ public class IPAddressUtility{
             return false;
     }
     
+    /**
+     * convert int ip value to dotted ip address format 
+     * @param ipValue
+     * @return
+     */
     public static String toIPString(int ipValue){
     	
     	FlowscaleController.logger.info("ip address is {}", ipValue);

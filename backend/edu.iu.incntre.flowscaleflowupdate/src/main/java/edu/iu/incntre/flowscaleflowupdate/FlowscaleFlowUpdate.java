@@ -1,7 +1,11 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package edu.iu.incntre.flowscaleflowupdate;
 
 import grnoc.net.util.ipaddress.IPv4Address;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -75,6 +79,10 @@ public class FlowscaleFlowUpdate {
 
 	}
 
+	/** 
+	 * read loaded ports from config file
+	 * @param loadedPortsString
+	 */
 	public void setLoadedPorts(String loadedPortsString) {
 
 		String[] splitByDatapath = loadedPortsString.split("-");
@@ -108,6 +116,12 @@ public class FlowscaleFlowUpdate {
 		this.dbPassword = dbPassword;
 
 	}
+	
+	/** 
+	 * starts up the bundle and creates a new thread that continuously 
+	 * reads the database 
+	 * 
+	 */
 
 	public void startUp() {
 
@@ -115,7 +129,7 @@ public class FlowscaleFlowUpdate {
 			Class.forName(databaseClass);
 			conn = DriverManager.getConnection(databaseDriver, dbUsername,
 					dbPassword);
-		
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			logger.error("{}", e);
@@ -201,7 +215,6 @@ public class FlowscaleFlowUpdate {
 								optimalPercentage = (double) (100 / loadedPorts
 										.size());
 
-				
 								ArrayList<OFFlowMod> flowMods = new ArrayList<OFFlowMod>();
 								// ArrayList<FlowPercent> flowPercentArrayList =
 								// new ArrayList<FlowPercent>();
@@ -230,12 +243,11 @@ public class FlowscaleFlowUpdate {
 											totalPacketCount);
 
 									// sort flow percent by ascending order
-									 Collections.sort(switchFlows,new LoadFlowComparator());
+									Collections.sort(switchFlows,
+											new LoadFlowComparator());
 
 									// print debug messages
 
-						
-									
 									for (LoadFlow switchFlow : switchFlows) {
 
 										logger.debug(
@@ -247,14 +259,12 @@ public class FlowscaleFlowUpdate {
 
 									}
 
-								
 									// end print debug messages
 
 									// start the hot swapping
 
 									HashMap<Short, TreeSet<String>> newFlows;
-								
-								
+
 									// call hot swapping method
 									newFlows = hotSwap(totalPacketCount,
 											switchFlows);
@@ -368,7 +378,12 @@ public class FlowscaleFlowUpdate {
 
 		return "flowUpdate";
 	}
-
+/**
+ * takes the list of switchFlows and gets their total packets 
+ * @param switchFlows
+ * @return total packet count of the list of LoadFlow
+ */
+	
 	private long getTotalPacketCount(ArrayList<LoadFlow> switchFlows) {
 
 		Iterator<LoadFlow> iterator = switchFlows.iterator();
@@ -382,10 +397,20 @@ public class FlowscaleFlowUpdate {
 
 	}
 
+	/**
+	 * retrieves the percentage of every port and populates the data structure on whether the 
+	 * ports are above or below the optimal percentage 
+	 * @param totalPacketCount used to calculate the percentage 
+	 * @param switchFlows the list of LoadFlow which hosts the flows and their packet count
+	 * @param portPercentages will be populated with each port and their percentages 
+	 * @param belowPercentPorts will be populated with all ports less than the optimal percentage or equal 
+	 * @param abovePercentPorts will be populated with all ports greater than the optimal percentage  
+	 */
 	private void getPortsPercentages(long totalPacketCount,
 			ArrayList<LoadFlow> switchFlows,
 			HashMap<Short, Double> portPercentages,
-			ArrayList<Short> belowPercentPorts, ArrayList<Short> abovePercentPorts) {
+			ArrayList<Short> belowPercentPorts,
+			ArrayList<Short> abovePercentPorts) {
 
 		// get port counts
 		HashMap<Short, Long> portPacketCount = new HashMap<Short, Long>();
@@ -436,6 +461,15 @@ public class FlowscaleFlowUpdate {
 
 	}
 
+	/**
+	 * The main method concertned with moving flows from high load ports to ones 
+	 * with lower loads 
+	 * 
+	 * @param totalPacketCount
+	 * @param switchFlows
+	 * @return the new flows that will be injected to the switch to acheive proper load balancing after 
+	 * running the hotswapping algorithm 
+	 */
 	private HashMap<Short, TreeSet<String>> hotSwap(long totalPacketCount,
 			ArrayList<LoadFlow> switchFlows) {
 
@@ -444,14 +478,14 @@ public class FlowscaleFlowUpdate {
 		ArrayList<Short> abovePercentPorts = new ArrayList<Short>();
 		ArrayList<Short> belowPercentPorts = new ArrayList<Short>();
 
-		
 		getPortsPercentages(totalPacketCount, switchFlows, portPercentages,
 				belowPercentPorts, abovePercentPorts);
 
 		HashMap<Short, TreeSet<String>> newFlows = new HashMap<Short, TreeSet<String>>();
 
-		Collections.sort(abovePercentPorts,new HighPortComparator(portPercentages));
-		
+		Collections.sort(abovePercentPorts, new HighPortComparator(
+				portPercentages));
+
 		for (Short highPort : abovePercentPorts) {
 
 			for (LoadFlow loadFlow : switchFlows) {
@@ -482,7 +516,8 @@ public class FlowscaleFlowUpdate {
 
 				double flowPercentageValue = loadFlow.getFlowPercent();
 
-				Short lowPort = this.getMinPort(belowPercentPorts, portPercentages);
+				Short lowPort = this.getMinPort(belowPercentPorts,
+						portPercentages);
 
 				logger.debug("check if port {} with percentage {} can receive",
 						lowPort, portPercentages.get(lowPort));
@@ -498,12 +533,13 @@ public class FlowscaleFlowUpdate {
 							"nw_dst", "nw_src");
 
 				}
-				LoadFlow otherDirectionLoadFlow = this.getFlowByString(otherDirectFlow, switchFlows);
-				logger.debug("other direction load flow is {}",otherDirectionLoadFlow);
+				LoadFlow otherDirectionLoadFlow = this.getFlowByString(
+						otherDirectFlow, switchFlows);
+				logger.debug("other direction load flow is {}",
+						otherDirectionLoadFlow);
 				double totalNeededPercentage = (double) flowPercentageValue
 						+ (double) (otherDirectionLoadFlow.getFlowPercent());
 
-	
 				if (((totalNeededPercentage < (optimalPercentage - portPercentages
 						.get(lowPort))) || ((portPercentages.get(highPort) - portPercentages
 						.get(lowPort)) >= (double) (optimalPercentage / 2)))
@@ -565,14 +601,22 @@ public class FlowscaleFlowUpdate {
 					}
 
 				}
-				logger.debug("can't move flow {} to low port {}", loadFlow.getFlowString(), lowPort);
+				logger.debug("can't move flow {} to low port {}",
+						loadFlow.getFlowString(), lowPort);
 
 			}
 		}
-		logger.debug("port percentages after hot swap {}",portPercentages);
+		logger.debug("port percentages after hot swap {}", portPercentages);
 		return newFlows;
 	}
-
+/**
+ * remove any port that is down so that the hot swapping algorithm 
+ * will not direct flows to offline port 
+ * 
+ * @param flowscaleController
+ * @param datapathId
+ * @param loadedPorts
+ */
 	private static void removeDownPorts(
 			FlowscaleController flowscaleController, long datapathId,
 			ArrayList<Short> loadedPorts) {
@@ -595,7 +639,12 @@ public class FlowscaleFlowUpdate {
 		}
 
 	}
-
+/**
+ * convert the flows from string formats to an openflowj format 
+ * @param newFlows
+ * @param mirroredPorts
+ * @param flowMods
+ */
 	private static void convertFlowsToOpenflowJ(
 			HashMap<Short, TreeSet<String>> newFlows,
 			HashMap<Short, Short> mirroredPorts, ArrayList<OFFlowMod> flowMods) {
@@ -789,6 +838,14 @@ public class FlowscaleFlowUpdate {
 
 	}
 
+	/**
+	 * 
+	 * This method iterates over the list of LoadFlows and sets the percentages of each LoadFlow object based on the packet count 
+	 *  
+	 * @param switchFlows
+	 * @param totalPacketCount
+	 * 
+	 */
 	private void setFlowsPercentage(ArrayList<LoadFlow> switchFlows,
 			long totalPacketCount) {
 
@@ -796,17 +853,29 @@ public class FlowscaleFlowUpdate {
 		LoadFlow current;
 		while (iterator.hasNext()) {
 			current = iterator.next();
-			if (totalPacketCount ==0){
-				current.setFlowPercent((double)0d);
-			}else{
-				logger.debug("flow has packet counts of {} and total packet count is {}",current.getPacketCount(),totalPacketCount);
-			current.setFlowPercent((double) ((double)current.getPacketCount() / (double)totalPacketCount) * 100);
+			if (totalPacketCount == 0) {
+				current.setFlowPercent((double) 0d);
+			} else {
+				logger.debug(
+						"flow has packet counts of {} and total packet count is {}",
+						current.getPacketCount(), totalPacketCount);
+				current.setFlowPercent((double) ((double) current
+						.getPacketCount() / (double) totalPacketCount) * 100);
 			}
 
 		}
 
 	}
-
+/**
+ * reads database and returns the flows for a given time interval
+ *  (e.g last 5 minutes) if there is more than one entry for a flow then 
+ *  the packet counts will be accumulated. each flow will only be represented once in the list
+ * @param datapathId switch's datapathId used to query the database by datapath id
+ * @param queryTime how far to query
+ * @param loadedPorts only look for flows containing the loaded ports 
+ * @param switchFlows object used to store all the LoadFlows, for every flow an object will be instantiated 
+ * @throws SQLException
+ */
 	private void getFlowsFromDB(long datapathId, long queryTime,
 			ArrayList<Short> loadedPorts, ArrayList<LoadFlow> switchFlows)
 			throws SQLException {
@@ -838,8 +907,9 @@ public class FlowscaleFlowUpdate {
 			}
 
 			Short loadedPort = 0;
-			logger.debug("obtained  flow {} with packet count {}", matchString,packetCount);
-			
+			logger.debug("obtained  flow {} with packet count {}", matchString,
+					packetCount);
+
 			String[] actions = action.split(",");
 			try {
 				loadedPort = Short.parseShort(actions[0]);
@@ -849,52 +919,57 @@ public class FlowscaleFlowUpdate {
 				continue;
 
 			}
-			logger.debug("and port is {}",loadedPort);
+			logger.debug("and port is {}", loadedPort);
 			if (loadedPorts.contains(loadedPort)) {
-				
 
 				// add new flow here, or if exist increment packet count
 				LoadFlow tempLoadFlow = new LoadFlow(matchString, loadedPort);
-			
-				
-					LoadFlow loadFlowInstance = getFlowByString(matchString, switchFlows);
-					if (loadFlowInstance != null ) {
-					logger.debug("tempLoad Flow is {}",loadFlowInstance);
-					loadFlowInstance.setPacketCount(loadFlowInstance.getPacketCount()
-							+ packetCount);
+
+				LoadFlow loadFlowInstance = getFlowByString(matchString,
+						switchFlows);
+				if (loadFlowInstance != null) {
+					logger.debug("tempLoad Flow is {}", loadFlowInstance);
+					loadFlowInstance.setPacketCount(loadFlowInstance
+							.getPacketCount() + packetCount);
 
 				} else {
-					
+
 					logger.debug("adding flow {}", tempLoadFlow);
-					
+
 					tempLoadFlow.setPacketCount(packetCount);
-					logger.debug("adding of switch flow is {}",switchFlows.add(tempLoadFlow));;
+					logger.debug("adding of switch flow is {}",
+							switchFlows.add(tempLoadFlow));
+					;
 				}
-				
+
 			}
 		}
 
 	}
-
+/**
+ * 
+ * @param findString the String that will be used to retrieve e.g. "OFMatch[dl_type=0x800,nw_dst=192.168.0.0/21]"
+ * @param switchFlows
+ * @return LoadFlow object that contains the particular String as an attribute or null if that object is not found 
+ */
 	private LoadFlow getFlowByString(String findString,
 			ArrayList<LoadFlow> switchFlows) {
-logger.debug("trying to locate flow {}",findString);
+		logger.debug("trying to locate flow {}", findString);
 		Iterator<LoadFlow> it = switchFlows.iterator();
 		LoadFlow checkedLoadFlow;
-		logger.debug("switch flow size {}" , switchFlows.size());
-		while (it.hasNext() ) {
-			
+		logger.debug("switch flow size {}", switchFlows.size());
+		while (it.hasNext()) {
+
 			checkedLoadFlow = it.next();
-		
-			if (checkedLoadFlow.getFlowString().equals(findString) ) {
+
+			if (checkedLoadFlow.getFlowString().equals(findString)) {
 				return checkedLoadFlow;
 			}
 
 		}
-		logger.debug("flow not found" );
+		logger.debug("flow not found");
 		return null;
 	}
-
 
 }
 
@@ -905,22 +980,21 @@ class LoadFlowComparator implements Comparator<Object> {
 
 		Double percent1 = ((LoadFlow) flow1).getFlowPercent();
 		Double percent2 = ((LoadFlow) flow2).getFlowPercent();
-		
+
 		Short port1 = ((LoadFlow) flow1).getLoadedPort();
-		Short  port2 = ((LoadFlow) flow2).getLoadedPort();
-		
+		Short port2 = ((LoadFlow) flow2).getLoadedPort();
+
 		String flowString1 = ((LoadFlow) flow1).toString();
 		String flowString2 = ((LoadFlow) flow2).toString();
 
-		if(flowString1.equals(flowString2) && port1 == port2 ) {
+		if (flowString1.equals(flowString2) && port1 == port2) {
 			return 0;
-		}
-		else if (!flowString1.equals(flowString2) && percent1 > percent2) {
+		} else if (!flowString1.equals(flowString2) && percent1 > percent2) {
 			return 1;
 		} else if (!flowString1.equals(flowString2) & percent1 < percent2) {
 			return -1;
 		} else {
-			return 1 ;
+			return 1;
 		}
 
 	}

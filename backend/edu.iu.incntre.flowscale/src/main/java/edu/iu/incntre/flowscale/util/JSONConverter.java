@@ -1,3 +1,8 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package edu.iu.incntre.flowscale.util;
 
 import java.util.List;
@@ -17,10 +22,19 @@ import org.openflow.util.HexString;
 
 import edu.iu.incntre.flowscale.FlowscaleController;
 
+/**
+ * Uility class to convert structure in openflowj to json 
+ * @author Ali Khalfan
+ *
+ */
 public class JSONConverter {
 
 	
-	
+	/** 
+	 * convert from status of OFPhysicalPort to JSONArray
+	 * @param portList
+	 * @return JSONArray of an ArrayList<OFPhysicalPort>
+	 */
 	
 	public static JSONArray toPortStatus(List<OFPhysicalPort> portList){
 		
@@ -57,7 +71,11 @@ public class JSONConverter {
 		
 	}
 	
-	
+	/**
+	 * convert List<OFStatistics> to JSONArray
+	 * @param ofs
+	 * @return JSONArray
+	 */
 	public static JSONArray toTableStat(List<OFStatistics> ofs){
 		
 		JSONArray jsonArray = new JSONArray();
@@ -88,7 +106,12 @@ public class JSONConverter {
 		
 	}
 		
-
+/** 
+ * convert from general List<OFStatistics> 
+ * @param ofs
+ * @param type
+ * @return JSONArray of a List 
+ */
 public static JSONArray toStat(List<OFStatistics> ofs, String type){
 	
 	JSONArray jsonArray = new JSONArray();
@@ -141,7 +164,11 @@ public static JSONArray toStat(List<OFStatistics> ofs, String type){
 		
 	}
 		
-	
+	/**
+	 * convert a list of flows to JSONArray
+	 * @param ofs
+	 * @return JSONArray of flows 
+	 */
 	public static JSONArray toFlowStat(List<OFStatistics> ofs){
 		JSONArray jsonArray = new JSONArray();
 		
@@ -209,7 +236,12 @@ public static JSONArray toStat(List<OFStatistics> ofs, String type){
 		
 	}
 	
-	
+	/**
+	 * convert from aggregate stats to JSONArray
+	 * 
+	 * @param ofs
+	 * @return JSONArray of aggregate stats 
+	 */
 	public static JSONArray toAggregateStat(List<OFStatistics> ofs){
 		JSONArray jsonArray = new JSONArray();
 		

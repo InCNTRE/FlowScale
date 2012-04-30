@@ -1,3 +1,7 @@
+/** 
+ * Copyright 2012 InCNTRE, This file is released under Apache 2.0 license except for component libraries under different licenses
+http://www.apache.org/licenses/LICENSE-2.0
+ */
 package edu.iu.incntre.flowscale;
 
 import grnoc.net.util.ipaddress.IPv4Address;
@@ -64,7 +68,13 @@ public class Group {
 		
 		
 	}
-	
+	/**
+	 * this method is invoked everytime a switch connects to the controller and the switch is registred with 
+	 * the controller , it will update the list of ports and push the default rules to the switch plus the group
+	 * rules 
+	 * @param sw
+	 * @throws Exception
+	 */
 	public void switchUpAlert(IOFSwitch sw) throws Exception{
 
 		List<OFPhysicalPort> physicalPorts = sw.getFeaturesReply().getPorts();
@@ -84,18 +94,40 @@ public class Group {
 
 		}
 
-		FlowscaleController.logger.debug("output ports up after addeing is {}",
+		FlowscaleController.logger.debug("output ports up after adding is {}",
 				outputPortsUp.size());
 
 		pushRules();
 	}
-
+/**
+ * clear all group rules associated with this switch
+ * @param sw
+ */
 	public void switchDownAlert(IOFSwitch sw) {
 
 		this.groupRules.clear();
 
 	}
 
+	/**
+	 * This method will add the group to the list of group objects, method will be invoked when a group is added 
+	 * from the web user interface or when FlowscaleController is instantiated and retrieves the details from the 
+	 * database 
+	 * 
+	 * @param groupIdString
+	 * @param groupName
+	 * @param inputSwitchDatapathIdString
+	 * @param outputSwitchDatapathIdString
+	 * @param inputPortListString
+	 * @param outputPortListString
+	 * @param typeString
+	 * @param priorityString
+	 * @param valuesString
+	 * @param maximumFlowsAllowedString
+	 * @param networkProtocolString
+	 * @param transportDirectionString
+	 */
+	
 	public void addGroupDetails(String groupIdString, String groupName,
 			String inputSwitchDatapathIdString,
 			String outputSwitchDatapathIdString, String inputPortListString,
@@ -180,6 +212,11 @@ public class Group {
 
 	}
 
+	/**
+	 * This method is called by pushRules()
+	 * @see pushRules()
+	 * @throws ArithmeticException
+	 */
 	private void generateRules() throws ArithmeticException {
 		FlowscaleController.logger.trace("in generating rules with type {}",
 				type);
@@ -208,7 +245,16 @@ public class Group {
 
 		// generate rules from values given
 	}
-
+/**
+ * This private method is called whenever the group inserted is an IP rule (usually 
+ * the majority of rules), it break the IP subnets in chunks based on how many flows 
+ * are specified , current method of assigning chunks of smaller IP subnets to ports is 
+ * being done in a round-robin fashion , it is possible to change this to random assignment 
+ * creating a random integer and retrieving a port from the ouputPortsUp list using that random 
+ * index
+ *  
+ * @throws ArithmeticException
+ */
 	private void generateIPRules() throws ArithmeticException {
 
 		FlowscaleController.logger.debug(" up ports are {}", outputPortsUp);
@@ -223,7 +269,7 @@ public class Group {
 			ipAddressValues = generateIPandSubnets(ipAndSubnet,
 					flowForEachValue / 2);
 
-			int i = 0;
+			
 
 			int actionPort = 0;
 			short rulePriority = this.priority;
@@ -234,10 +280,7 @@ public class Group {
 					actionPort = -1;
 				} else {
 					try {
-						java.util.Random generator = new java.util.Random();
-
-						int randomIndex = generator.nextInt(outputPortsUp
-								.size());
+				
 
 						actionPort = this.outputPortsUp.get(portCounter
 								% outputPortsUp.size());
@@ -320,7 +363,14 @@ public class Group {
 		}
 
 	}
-
+	
+/**
+ * 	utility method for breaking the IP subnet into more chunks of subnets based on how many flows are allowed - consider having 
+ * this in the utilities package 
+ * @param ipAndSubnet
+ * @param flowForEachValue
+ * @return
+ */
 	private ArrayList<IPAddress> generateIPandSubnets(String[] ipAndSubnet,
 			int flowForEachValue) {
 		ArrayList<IPAddress> ipAddressValues = new ArrayList<IPAddress>();
@@ -344,7 +394,7 @@ public class Group {
 		int originalNumberOfFlows = (int) Math.pow(2, oldByteValue);
 		if (originalNumberOfFlows < numberOfValues) {
 			numberOfValues = originalNumberOfFlows;
-
+			
 		}
 
 		IPv4Address ipv4Address = new IPv4Address(ipAndSubnet[0]);
@@ -370,7 +420,11 @@ public class Group {
 		return ipAddressValues;
 
 	}
-
+/**
+ * utility method will instantiate an OFRule with a TransportPort rule  
+ * @param protocol
+ * @param direction
+ */
 	private void generateTransportPortRules(byte protocol, byte direction) {
 
 		// loop round robin through output ports
@@ -439,6 +493,10 @@ public class Group {
 
 	}
 
+	/**
+	 *  private utility method in order to instantiate an OFRule
+	 *  that contains an OFMatch for ethertypes 
+	 */
 	private void generateEtherRules() {
 
 		int i = 0;
@@ -478,7 +536,11 @@ public class Group {
 		}
 
 	}
-
+/** 
+ * this method reads the list of OFRules and pushes them to the switch,
+ * if the rules do no exist, then the generateRules() is called and the 
+ * list of OFRules is generated 
+ */
 	public void pushRules() {
 		if (this.groupRules == null || this.groupRules.size() == 0)
 			try {
@@ -606,7 +668,14 @@ public class Group {
 		}
 
 	}
-
+	
+	/**
+	 *  interface to edit a group, currently it may not be safe to call
+	 *  this method since it is not thoroughly tested , especially the 
+	 *  part where flows are modified to the switch 
+	 * @param updateType
+	 * @param updateValue
+	 */
 	public void editGroup(String updateType, String updateValue) {
 
 		String[] updateValues = updateValue.split(",");
@@ -622,11 +691,11 @@ public class Group {
 
 				if (command[0].equals("remove")) {
 
-					removeRules(command[1], command[2]);
+				//	removeRules(command[1], command[2]);
 
 				} else if (command[0].equals("add")) {
 
-					addRules(command[1], command[2]);
+					//addRules(command[1], command[2]);
 				}
 			}
 
@@ -653,6 +722,10 @@ public class Group {
 
 	}
 
+	/** 
+	 * remove thsi group, an interface where the group can be removed from a 
+	 * web user interface or a cli, and delete the rules from the switch 
+	 */
 	public void removeGroup() {
 
 		deleteAllRules();
@@ -691,7 +764,17 @@ public class Group {
 		}
 
 	}
-
+/**
+ * This method is invoked by the controller when an update comes in from the 
+ * the switch to the controller , the method is charged with updating the rules 
+ * in the switch if there is a rule pointing to the updated port, thus 
+ * conducting load balancing 
+ * 
+ * @param sw IOFSwitch that caused this alert and its port update 
+ * @param portNum the port number that has been update
+ * @param physicalPort
+ * @param reason the reason for the update
+ */
 	public void alert(IOFSwitch sw, short portNum, OFPhysicalPort physicalPort,
 			OFPortReason reason) {
 		OFFlowMod updateFlow = new OFFlowMod();
@@ -895,13 +978,8 @@ actionList.add(ofActionOutput);
 
 	}
 
-	private void removeRules(String value, String option) {
 
-	}
-
-	private void addRules(String value, String option) {
-
-	}
+//list of setters and getters 
 
 	public int getMaximumFlowsAllowed() {
 		return maximumFlowsAllowed;
