@@ -109,7 +109,7 @@ public class StatCollector {
 	public void startUp() {
 
 		logger.trace("Startup of StatCollector");
-
+		try{
 		if (isQuery) {
 
 			// initiate sqlite database
@@ -555,7 +555,9 @@ public class StatCollector {
 			statThread.start();
 
 		}
-
+		}catch(Exception e){
+			logger.error("general excecption thrown {}", e);
+		}
 	}
 
 	public void shutDown() {

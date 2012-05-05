@@ -716,12 +716,13 @@ public class FlowscaleController implements IOFSwitchListener,
 
 					if (rule.getMatch().equals(ofFlowMod.getMatch())
 							&& group.getOutputSwitchDatapathId() == datapathId) {
-						logger.trace(
-								"rule match {} is equal to offlowmod match {}",
+						logger.info(
+								"rule equal",
 								rule.getMatch().toString(), ofFlowMod
 										.getMatch().toString());
 						rule.getActions().clear();
 						rule.setActions(ofFlowMod.getActions());
+						logger.info("new rule is {} and port is {}", rule.getMatch(), rule.getActions().get(0));
 
 					}
 
