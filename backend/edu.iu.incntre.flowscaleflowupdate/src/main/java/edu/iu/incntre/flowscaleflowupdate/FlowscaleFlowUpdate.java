@@ -79,8 +79,9 @@ public class FlowscaleFlowUpdate {
 
 	}
 
-	/** 
+	/**
 	 * read loaded ports from config file
+	 * 
 	 * @param loadedPortsString
 	 */
 	public void setLoadedPorts(String loadedPortsString) {
@@ -116,10 +117,10 @@ public class FlowscaleFlowUpdate {
 		this.dbPassword = dbPassword;
 
 	}
-	
-	/** 
-	 * starts up the bundle and creates a new thread that continuously 
-	 * reads the database 
+
+	/**
+	 * starts up the bundle and creates a new thread that continuously reads the
+	 * database
 	 * 
 	 */
 
@@ -378,12 +379,14 @@ public class FlowscaleFlowUpdate {
 
 		return "flowUpdate";
 	}
-/**
- * takes the list of switchFlows and gets their total packets 
- * @param switchFlows
- * @return total packet count of the list of LoadFlow
- */
-	
+
+	/**
+	 * takes the list of switchFlows and gets their total packets
+	 * 
+	 * @param switchFlows
+	 * @return total packet count of the list of LoadFlow
+	 */
+
 	private long getTotalPacketCount(ArrayList<LoadFlow> switchFlows) {
 
 		Iterator<LoadFlow> iterator = switchFlows.iterator();
@@ -398,13 +401,22 @@ public class FlowscaleFlowUpdate {
 	}
 
 	/**
-	 * retrieves the percentage of every port and populates the data structure on whether the 
-	 * ports are above or below the optimal percentage 
-	 * @param totalPacketCount used to calculate the percentage 
-	 * @param switchFlows the list of LoadFlow which hosts the flows and their packet count
-	 * @param portPercentages will be populated with each port and their percentages 
-	 * @param belowPercentPorts will be populated with all ports less than the optimal percentage or equal 
-	 * @param abovePercentPorts will be populated with all ports greater than the optimal percentage  
+	 * retrieves the percentage of every port and populates the data structure
+	 * on whether the ports are above or below the optimal percentage
+	 * 
+	 * @param totalPacketCount
+	 *            used to calculate the percentage
+	 * @param switchFlows
+	 *            the list of LoadFlow which hosts the flows and their packet
+	 *            count
+	 * @param portPercentages
+	 *            will be populated with each port and their percentages
+	 * @param belowPercentPorts
+	 *            will be populated with all ports less than the optimal
+	 *            percentage or equal
+	 * @param abovePercentPorts
+	 *            will be populated with all ports greater than the optimal
+	 *            percentage
 	 */
 	private void getPortsPercentages(long totalPacketCount,
 			ArrayList<LoadFlow> switchFlows,
@@ -462,13 +474,13 @@ public class FlowscaleFlowUpdate {
 	}
 
 	/**
-	 * The main method concertned with moving flows from high load ports to ones 
-	 * with lower loads 
+	 * The main method concertned with moving flows from high load ports to ones
+	 * with lower loads
 	 * 
 	 * @param totalPacketCount
 	 * @param switchFlows
-	 * @return the new flows that will be injected to the switch to acheive proper load balancing after 
-	 * running the hotswapping algorithm 
+	 * @return the new flows that will be injected to the switch to acheive
+	 *         proper load balancing after running the hotswapping algorithm
 	 */
 	private HashMap<Short, TreeSet<String>> hotSwap(long totalPacketCount,
 			ArrayList<LoadFlow> switchFlows) {
@@ -609,14 +621,15 @@ public class FlowscaleFlowUpdate {
 		logger.debug("port percentages after hot swap {}", portPercentages);
 		return newFlows;
 	}
-/**
- * remove any port that is down so that the hot swapping algorithm 
- * will not direct flows to offline port 
- * 
- * @param flowscaleController
- * @param datapathId
- * @param loadedPorts
- */
+
+	/**
+	 * remove any port that is down so that the hot swapping algorithm will not
+	 * direct flows to offline port
+	 * 
+	 * @param flowscaleController
+	 * @param datapathId
+	 * @param loadedPorts
+	 */
 	private static void removeDownPorts(
 			FlowscaleController flowscaleController, long datapathId,
 			ArrayList<Short> loadedPorts) {
@@ -639,12 +652,14 @@ public class FlowscaleFlowUpdate {
 		}
 
 	}
-/**
- * convert the flows from string formats to an openflowj format 
- * @param newFlows
- * @param mirroredPorts
- * @param flowMods
- */
+
+	/**
+	 * convert the flows from string formats to an openflowj format
+	 * 
+	 * @param newFlows
+	 * @param mirroredPorts
+	 * @param flowMods
+	 */
 	private static void convertFlowsToOpenflowJ(
 			HashMap<Short, TreeSet<String>> newFlows,
 			HashMap<Short, Short> mirroredPorts, ArrayList<OFFlowMod> flowMods) {
@@ -840,8 +855,9 @@ public class FlowscaleFlowUpdate {
 
 	/**
 	 * 
-	 * This method iterates over the list of LoadFlows and sets the percentages of each LoadFlow object based on the packet count 
-	 *  
+	 * This method iterates over the list of LoadFlows and sets the percentages
+	 * of each LoadFlow object based on the packet count
+	 * 
 	 * @param switchFlows
 	 * @param totalPacketCount
 	 * 
@@ -856,9 +872,7 @@ public class FlowscaleFlowUpdate {
 			if (totalPacketCount == 0) {
 				current.setFlowPercent((double) 0d);
 			} else {
-				logger.debug(
-						"flow has packet counts of {} and total packet count is {}",
-						current.getPacketCount(), totalPacketCount);
+
 				current.setFlowPercent((double) ((double) current
 						.getPacketCount() / (double) totalPacketCount) * 100);
 			}
@@ -866,16 +880,24 @@ public class FlowscaleFlowUpdate {
 		}
 
 	}
-/**
- * reads database and returns the flows for a given time interval
- *  (e.g last 5 minutes) if there is more than one entry for a flow then 
- *  the packet counts will be accumulated. each flow will only be represented once in the list
- * @param datapathId switch's datapathId used to query the database by datapath id
- * @param queryTime how far to query
- * @param loadedPorts only look for flows containing the loaded ports 
- * @param switchFlows object used to store all the LoadFlows, for every flow an object will be instantiated 
- * @throws SQLException
- */
+
+	/**
+	 * reads database and returns the flows for a given time interval (e.g last
+	 * 5 minutes) if there is more than one entry for a flow then the packet
+	 * counts will be accumulated. each flow will only be represented once in
+	 * the list
+	 * 
+	 * @param datapathId
+	 *            switch's datapathId used to query the database by datapath id
+	 * @param queryTime
+	 *            how far to query
+	 * @param loadedPorts
+	 *            only look for flows containing the loaded ports
+	 * @param switchFlows
+	 *            object used to store all the LoadFlows, for every flow an
+	 *            object will be instantiated
+	 * @throws SQLException
+	 */
 	private void getFlowsFromDB(long datapathId, long queryTime,
 			ArrayList<Short> loadedPorts, ArrayList<LoadFlow> switchFlows)
 			throws SQLException {
@@ -907,7 +929,7 @@ public class FlowscaleFlowUpdate {
 			}
 
 			Short loadedPort = 0;
-			logger.debug("obtained  flow {} with packet count {}", matchString,
+			logger.trace("obtained  flow {} with packet count {}", matchString,
 					packetCount);
 
 			String[] actions = action.split(",");
@@ -928,16 +950,22 @@ public class FlowscaleFlowUpdate {
 				LoadFlow loadFlowInstance = getFlowByString(matchString,
 						switchFlows);
 				if (loadFlowInstance != null) {
-					logger.debug("tempLoad Flow is {}", loadFlowInstance);
-					loadFlowInstance.setPacketCount(loadFlowInstance
-							.getPacketCount() + packetCount);
+					if (loadFlowInstance.getLoadedPort() != loadedPort) {
+						switchFlows.remove(loadFlowInstance);
+						tempLoadFlow.setPacketCount(packetCount);
+						switchFlows.add(tempLoadFlow);
+					} else {
+						logger.trace("tempLoad Flow is {}", loadFlowInstance);
+						loadFlowInstance.setPacketCount(loadFlowInstance
+								.getPacketCount() + packetCount);
+					}
 
 				} else {
 
-					logger.debug("adding flow {}", tempLoadFlow);
+					logger.trace("adding flow {}", tempLoadFlow);
 
 					tempLoadFlow.setPacketCount(packetCount);
-					logger.debug("adding of switch flow is {}",
+					logger.trace("adding of switch flow is {}",
 							switchFlows.add(tempLoadFlow));
 					;
 				}
@@ -946,18 +974,22 @@ public class FlowscaleFlowUpdate {
 		}
 
 	}
-/**
- * 
- * @param findString the String that will be used to retrieve e.g. "OFMatch[dl_type=0x800,nw_dst=192.168.0.0/21]"
- * @param switchFlows
- * @return LoadFlow object that contains the particular String as an attribute or null if that object is not found 
- */
+
+	/**
+	 * 
+	 * @param findString
+	 *            the String that will be used to retrieve e.g.
+	 *            "OFMatch[dl_type=0x800,nw_dst=192.168.0.0/21]"
+	 * @param switchFlows
+	 * @return LoadFlow object that contains the particular String as an
+	 *         attribute or null if that object is not found
+	 */
 	private LoadFlow getFlowByString(String findString,
 			ArrayList<LoadFlow> switchFlows) {
-		logger.debug("trying to locate flow {}", findString);
+		logger.trace("trying to locate flow {}", findString);
 		Iterator<LoadFlow> it = switchFlows.iterator();
 		LoadFlow checkedLoadFlow;
-		logger.debug("switch flow size {}", switchFlows.size());
+		logger.trace("switch flow size {}", switchFlows.size());
 		while (it.hasNext()) {
 
 			checkedLoadFlow = it.next();

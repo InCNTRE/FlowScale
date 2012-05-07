@@ -61,21 +61,21 @@ public class Group {
 
 	}
 
-	public List<OFRule> getGroupRules(){
-		
-		
+	public List<OFRule> getGroupRules() {
+
 		return this.groupRules;
-		
-		
+
 	}
+
 	/**
-	 * this method is invoked everytime a switch connects to the controller and the switch is registred with 
-	 * the controller , it will update the list of ports and push the default rules to the switch plus the group
-	 * rules 
+	 * this method is invoked everytime a switch connects to the controller and
+	 * the switch is registred with the controller , it will update the list of
+	 * ports and push the default rules to the switch plus the group rules
+	 * 
 	 * @param sw
 	 * @throws Exception
 	 */
-	public void switchUpAlert(IOFSwitch sw) throws Exception{
+	public void switchUpAlert(IOFSwitch sw) throws Exception {
 
 		List<OFPhysicalPort> physicalPorts = sw.getFeaturesReply().getPorts();
 
@@ -85,9 +85,9 @@ public class Group {
 					&& this.outputPorts.contains(ofp.getPortNumber())) {
 				FlowscaleController.logger.debug("added port {}",
 						ofp.getPortNumber());
-				
-				if(!(outputPortsUp.contains(new Short(ofp.getPortNumber())))){
-				outputPortsUp.add(ofp.getPortNumber());
+
+				if (!(outputPortsUp.contains(new Short(ofp.getPortNumber())))) {
+					outputPortsUp.add(ofp.getPortNumber());
 				}
 
 			}
@@ -99,10 +99,12 @@ public class Group {
 
 		pushRules();
 	}
-/**
- * clear all group rules associated with this switch
- * @param sw
- */
+
+	/**
+	 * clear all group rules associated with this switch
+	 * 
+	 * @param sw
+	 */
 	public void switchDownAlert(IOFSwitch sw) {
 
 		this.groupRules.clear();
@@ -110,9 +112,10 @@ public class Group {
 	}
 
 	/**
-	 * This method will add the group to the list of group objects, method will be invoked when a group is added 
-	 * from the web user interface or when FlowscaleController is instantiated and retrieves the details from the 
-	 * database 
+	 * This method will add the group to the list of group objects, method will
+	 * be invoked when a group is added from the web user interface or when
+	 * FlowscaleController is instantiated and retrieves the details from the
+	 * database
 	 * 
 	 * @param groupIdString
 	 * @param groupName
@@ -127,7 +130,7 @@ public class Group {
 	 * @param networkProtocolString
 	 * @param transportDirectionString
 	 */
-	
+
 	public void addGroupDetails(String groupIdString, String groupName,
 			String inputSwitchDatapathIdString,
 			String outputSwitchDatapathIdString, String inputPortListString,
@@ -161,9 +164,9 @@ public class Group {
 					outputPortListString);
 			for (String s : outputPortsString) {
 				try {
-				if (!(outputPorts.contains(new Short(Short.parseShort(s)) ))){
-					outputPorts.add(Short.parseShort(s));
-				}
+					if (!(outputPorts.contains(new Short(Short.parseShort(s))))) {
+						outputPorts.add(Short.parseShort(s));
+					}
 				} catch (NumberFormatException numbe) {
 					FlowscaleController.logger.error("{}", numbe);
 					continue;
@@ -197,9 +200,10 @@ public class Group {
 			for (OFPhysicalPort physical : physicals) {
 				if (physical.getState() % 2 == 0
 						&& outputPorts.contains(physical.getPortNumber()))
-			
-					if(!(outputPortsUp.contains(new Short(physical.getPortNumber())))){
-					outputPortsUp.add(physical.getPortNumber());
+
+					if (!(outputPortsUp.contains(new Short(physical
+							.getPortNumber())))) {
+						outputPortsUp.add(physical.getPortNumber());
 					}
 
 			}
@@ -214,6 +218,7 @@ public class Group {
 
 	/**
 	 * This method is called by pushRules()
+	 * 
 	 * @see pushRules()
 	 * @throws ArithmeticException
 	 */
@@ -245,16 +250,17 @@ public class Group {
 
 		// generate rules from values given
 	}
-/**
- * This private method is called whenever the group inserted is an IP rule (usually 
- * the majority of rules), it break the IP subnets in chunks based on how many flows 
- * are specified , current method of assigning chunks of smaller IP subnets to ports is 
- * being done in a round-robin fashion , it is possible to change this to random assignment 
- * creating a random integer and retrieving a port from the ouputPortsUp list using that random 
- * index
- *  
- * @throws ArithmeticException
- */
+
+	/**
+	 * This private method is called whenever the group inserted is an IP rule
+	 * (usually the majority of rules), it break the IP subnets in chunks based
+	 * on how many flows are specified , current method of assigning chunks of
+	 * smaller IP subnets to ports is being done in a round-robin fashion , it
+	 * is possible to change this to random assignment creating a random integer
+	 * and retrieving a port from the ouputPortsUp list using that random index
+	 * 
+	 * @throws ArithmeticException
+	 */
 	private void generateIPRules() throws ArithmeticException {
 
 		FlowscaleController.logger.debug(" up ports are {}", outputPortsUp);
@@ -269,8 +275,6 @@ public class Group {
 			ipAddressValues = generateIPandSubnets(ipAndSubnet,
 					flowForEachValue / 2);
 
-			
-
 			int actionPort = 0;
 			short rulePriority = this.priority;
 			int portCounter = 0;
@@ -280,7 +284,6 @@ public class Group {
 					actionPort = -1;
 				} else {
 					try {
-				
 
 						actionPort = this.outputPortsUp.get(portCounter
 								% outputPortsUp.size());
@@ -301,7 +304,6 @@ public class Group {
 				OFMatch ofMatchSource = new OFMatch();
 				ofMatchSource.setDataLayerType((short) 0x0800);
 
-				
 				ofMatchSource.setNetworkSource(ipAddress.getIpAddressValue());
 
 				short maskingBits = (short) (ipAddress.getSubnet() - 1);
@@ -331,7 +333,7 @@ public class Group {
 				// set destination rule:
 				OFRule ofRuleDestination = new OFRule();
 				OFMatch ofMatchDestination = new OFMatch();
-				
+
 				ofMatchDestination.setDataLayerType((short) 0x0800);
 				ofMatchDestination.setNetworkDestination(ipAddress
 						.getIpAddressValue());
@@ -363,14 +365,16 @@ public class Group {
 		}
 
 	}
-	
-/**
- * 	utility method for breaking the IP subnet into more chunks of subnets based on how many flows are allowed - consider having 
- * this in the utilities package 
- * @param ipAndSubnet
- * @param flowForEachValue
- * @return
- */
+
+	/**
+	 * utility method for breaking the IP subnet into more chunks of subnets
+	 * based on how many flows are allowed - consider having this in the
+	 * utilities package
+	 * 
+	 * @param ipAndSubnet
+	 * @param flowForEachValue
+	 * @return
+	 */
 	private ArrayList<IPAddress> generateIPandSubnets(String[] ipAndSubnet,
 			int flowForEachValue) {
 		ArrayList<IPAddress> ipAddressValues = new ArrayList<IPAddress>();
@@ -394,7 +398,7 @@ public class Group {
 		int originalNumberOfFlows = (int) Math.pow(2, oldByteValue);
 		if (originalNumberOfFlows < numberOfValues) {
 			numberOfValues = originalNumberOfFlows;
-			
+
 		}
 
 		IPv4Address ipv4Address = new IPv4Address(ipAndSubnet[0]);
@@ -420,11 +424,13 @@ public class Group {
 		return ipAddressValues;
 
 	}
-/**
- * utility method will instantiate an OFRule with a TransportPort rule  
- * @param protocol
- * @param direction
- */
+
+	/**
+	 * utility method will instantiate an OFRule with a TransportPort rule
+	 * 
+	 * @param protocol
+	 * @param direction
+	 */
 	private void generateTransportPortRules(byte protocol, byte direction) {
 
 		// loop round robin through output ports
@@ -494,8 +500,8 @@ public class Group {
 	}
 
 	/**
-	 *  private utility method in order to instantiate an OFRule
-	 *  that contains an OFMatch for ethertypes 
+	 * private utility method in order to instantiate an OFRule that contains an
+	 * OFMatch for ethertypes
 	 */
 	private void generateEtherRules() {
 
@@ -536,11 +542,12 @@ public class Group {
 		}
 
 	}
-/** 
- * this method reads the list of OFRules and pushes them to the switch,
- * if the rules do no exist, then the generateRules() is called and the 
- * list of OFRules is generated 
- */
+
+	/**
+	 * this method reads the list of OFRules and pushes them to the switch, if
+	 * the rules do no exist, then the generateRules() is called and the list of
+	 * OFRules is generated
+	 */
 	public void pushRules() {
 		if (this.groupRules == null || this.groupRules.size() == 0)
 			try {
@@ -668,11 +675,12 @@ public class Group {
 		}
 
 	}
-	
+
 	/**
-	 *  interface to edit a group, currently it may not be safe to call
-	 *  this method since it is not thoroughly tested , especially the 
-	 *  part where flows are modified to the switch 
+	 * interface to edit a group, currently it may not be safe to call this
+	 * method since it is not thoroughly tested , especially the part where
+	 * flows are modified to the switch
+	 * 
 	 * @param updateType
 	 * @param updateValue
 	 */
@@ -691,11 +699,11 @@ public class Group {
 
 				if (command[0].equals("remove")) {
 
-				//	removeRules(command[1], command[2]);
+					// removeRules(command[1], command[2]);
 
 				} else if (command[0].equals("add")) {
 
-					//addRules(command[1], command[2]);
+					// addRules(command[1], command[2]);
 				}
 			}
 
@@ -704,7 +712,6 @@ public class Group {
 			for (String s : updateValues) {
 
 				String[] command = s.split(" ");
-				OFMatch ofMatch;
 
 				if (command[0].equals("remove")) {
 
@@ -722,9 +729,9 @@ public class Group {
 
 	}
 
-	/** 
-	 * remove thsi group, an interface where the group can be removed from a 
-	 * web user interface or a cli, and delete the rules from the switch 
+	/**
+	 * remove thsi group, an interface where the group can be removed from a web
+	 * user interface or a cli, and delete the rules from the switch
 	 */
 	public void removeGroup() {
 
@@ -764,25 +771,40 @@ public class Group {
 		}
 
 	}
-/**
- * This method is invoked by the controller when an update comes in from the 
- * the switch to the controller , the method is charged with updating the rules 
- * in the switch if there is a rule pointing to the updated port, thus 
- * conducting load balancing 
- * 
- * @param sw IOFSwitch that caused this alert and its port update 
- * @param portNum the port number that has been update
- * @param physicalPort
- * @param reason the reason for the update
- */
+
+	/**
+	 * This method is invoked by the controller when an update comes in from the
+	 * the switch to the controller , the method is charged with updating the
+	 * rules in the switch if there is a rule pointing to the updated port, thus
+	 * conducting load balancing
+	 * 
+	 * @param sw
+	 *            IOFSwitch that caused this alert and its port update
+	 * @param portNum
+	 *            the port number that has been update
+	 * @param physicalPort
+	 * @param reason
+	 *            the reason for the update
+	 */
 	public void alert(IOFSwitch sw, short portNum, OFPhysicalPort physicalPort,
 			OFPortReason reason) {
 		OFFlowMod updateFlow = new OFFlowMod();
+		OFFlowMod updateFlow2 = new OFFlowMod();
 		updateFlow.setType(OFType.FLOW_MOD);
 		updateFlow.setCommand(OFFlowMod.OFPFC_ADD);
 		updateFlow.setHardTimeout((short) 0);
 		updateFlow.setIdleTimeout((short) 0);
 		int portStatus = 0;
+
+		FlowscaleController.logger
+				.trace("current rules for group with update port");
+
+		for (OFRule rule : this.groupRules) {
+
+			flowscaleController.logger.trace("rule match is {} and port is {}",
+					rule.getMatch().toString(), rule.getActions().get(0));
+
+		}
 
 		if (physicalPort == null) {
 
@@ -817,8 +839,9 @@ public class Group {
 			FlowscaleController.logger
 					.info("a port belonging to the group output ports is up");
 
-			if(!(outputPortsUp.contains(new Short(physicalPort.getPortNumber())))){
-			outputPortsUp.add(physicalPort.getPortNumber());
+			if (!(outputPortsUp
+					.contains(new Short(physicalPort.getPortNumber())))) {
+				outputPortsUp.add(physicalPort.getPortNumber());
 			}
 			int ruleDistribution = this.outputPortsUp.size();
 
@@ -826,33 +849,63 @@ public class Group {
 
 			FlowscaleController.logger.info(
 					"Modifying flows for switch {} to add port {}",
-					HexString.toHexString(sw.getId()), physicalPort.getPortNumber());
+					HexString.toHexString(sw.getId()),
+					physicalPort.getPortNumber());
+			ArrayList<OFRule> checkedRules = new ArrayList<OFRule>();
 			for (OFRule ofRule : this.groupRules) {
+
+				if (checkedRules.contains(ofRule)) {
+					continue;
+				}
 
 				if (i % ruleDistribution == 0) {
 
 					OFActionOutput ofActionOutput = new OFActionOutput();
 					ofActionOutput.setPort(portNum);
+
+					String thisMatchString = ofRule.getMatch().toString();
+					String otherMatchString = "";
+					OFRule otherDirectionRule = null;
+					if (thisMatchString.indexOf("nw_src") != -1) {
+						otherMatchString = thisMatchString.replace("nw_src",
+								"nw_dst");
+
+					} else if (thisMatchString.indexOf("nw_dst") != -1) {
+						otherMatchString = thisMatchString.replace("nw_dst",
+								"nw_src");
+					}
+
+					if (this.type == IP_TYPE) {
+
+						for (OFRule ofRule2 : this.groupRules) {
+
+							if (ofRule2.getMatch().toString()
+									.equals(otherMatchString)) {
+								otherDirectionRule = ofRule2;
+								checkedRules.add(ofRule2);
+								break;
+							}
+
+						}
+
+					}
+
 					ArrayList<OFAction> actionList = ofRule.getActions();
 					actionList.clear();
 					HashMap<Short, Short> switchMirrors = flowscaleController
-					.getSwitchFlowMirrorPortsHashMap().get(
-							sw.getId());
-actionList.add(ofActionOutput);
-				if(switchMirrors != null){
-				Short mirrorPort = switchMirrors.get(portNum);
-				if (mirrorPort != null){
-					OFActionOutput mirrorAction = new OFActionOutput();
-					mirrorAction.setPort(mirrorPort);
-					actionList.add(mirrorAction);
-					
-				}
-				
-				}
-				
-					
-					
-					
+							.getSwitchFlowMirrorPortsHashMap().get(sw.getId());
+					actionList.add(ofActionOutput);
+					if (switchMirrors != null) {
+						Short mirrorPort = switchMirrors.get(portNum);
+						if (mirrorPort != null) {
+							OFActionOutput mirrorAction = new OFActionOutput();
+							mirrorAction.setPort(mirrorPort);
+							actionList.add(mirrorAction);
+
+						}
+
+					}
+
 					updateFlow.setMatch(ofRule.getMatch());
 					updateFlow.setBufferId(-1);
 					updateFlow.setPriority(ofRule.getPriority());
@@ -861,11 +914,51 @@ actionList.add(ofActionOutput);
 					updateFlow.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH
 							+ OFActionOutput.MINIMUM_LENGTH));
 
+					if (this.type == IP_TYPE) {
+
+						updateFlow2 = new OFFlowMod();
+
+						updateFlow2.setType(OFType.FLOW_MOD);
+						updateFlow2.setCommand(OFFlowMod.OFPFC_ADD);
+						updateFlow2.setHardTimeout((short) 0);
+						updateFlow2.setIdleTimeout((short) 0);
+
+						ArrayList<OFAction> actionList2 = otherDirectionRule
+								.getActions();
+						actionList2.clear();
+						HashMap<Short, Short> switchMirrors2 = flowscaleController
+								.getSwitchFlowMirrorPortsHashMap().get(
+										sw.getId());
+						actionList2.add(ofActionOutput);
+						if (switchMirrors2 != null) {
+							Short mirrorPort = switchMirrors2.get(portNum);
+							if (mirrorPort != null) {
+								OFActionOutput mirrorAction = new OFActionOutput();
+								mirrorAction.setPort(mirrorPort);
+								actionList2.add(mirrorAction);
+
+							}
+
+						}
+
+						updateFlow2.setMatch(otherDirectionRule.getMatch());
+						updateFlow2.setBufferId(-1);
+						updateFlow2.setPriority(otherDirectionRule
+								.getPriority());
+
+						updateFlow2.setActions(actionList2);
+						updateFlow2.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH
+								+ OFActionOutput.MINIMUM_LENGTH));
+					}
+
 					try {
 						FlowscaleController.logger.trace("modifying flow   {}",
 								updateFlow);
 
 						sw.getOutputStream().write(updateFlow);
+						if (this.type == IP_TYPE) {
+							sw.getOutputStream().write(updateFlow2);
+						}
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -882,26 +975,41 @@ actionList.add(ofActionOutput);
 		case 1:
 
 			i = 0;
-			FlowscaleController.logger.trace("outputPortUp before removal {}", outputPortsUp);
-			
+			FlowscaleController.logger.trace("outputPortUp before removal {}",
+					outputPortsUp);
+
 			outputPortsUp.remove(new Short(physicalPort.getPortNumber()));
-			FlowscaleController.logger.trace("outputPortsUp after removal {}",outputPortsUp);
-			
+			FlowscaleController.logger.trace("outputPortsUp after removal {}",
+					outputPortsUp);
+
 			FlowscaleController.logger
 					.info("port {} for switch {} is down so flows for this will be updated",
-							physicalPort.getPortNumber(), HexString.toHexString(sw.getId()));
+							physicalPort.getPortNumber(),
+							HexString.toHexString(sw.getId()));
 			int count = 0;
+
+			ArrayList<OFRule> checkedRulesonPortDown = new ArrayList<OFRule>();
+
 			for (OFRule ofRule : this.groupRules) {
+
+				if (checkedRulesonPortDown.contains(ofRule)) {
+					continue;
+				}
 
 				OFActionOutput ofActionOutput = (OFActionOutput) ofRule
 						.getActions().get(0);
 
+				FlowscaleController.logger.trace(
+						"match here is {} and port is {}", ofRule.getMatch(),
+						ofActionOutput.getPort());
+
 				if (ofActionOutput.getPort() == (short) portNum) {
-					short newPort =0;
+					short newPort = 0;
 					try {
-						 newPort = this.outputPortsUp
-						.get(i++ % outputPortsUp.size());
-						ofActionOutput.setPort( newPort);
+						newPort = this.outputPortsUp.get(i++
+								% outputPortsUp.size());
+						ofActionOutput.setPort(newPort);
+
 					} catch (ArithmeticException aeException) {
 						FlowscaleController.logger
 								.info("No group ports are up , ...no flows redirected");
@@ -909,36 +1017,95 @@ actionList.add(ofActionOutput);
 					}
 					ArrayList<OFAction> actionList = ofRule.getActions();
 					actionList.clear();
-					//add mirror ports if there are any 
-					
-			
-					
-	HashMap<Short, Short> switchMirrors = flowscaleController
-						.getSwitchFlowMirrorPortsHashMap().get(
-								sw.getId());
-	actionList.add(ofActionOutput);
-					if(switchMirrors != null){
-					Short mirrorPort = switchMirrors.get(newPort);
-					if (mirrorPort != null){
-						OFActionOutput mirrorAction = new OFActionOutput();
-						mirrorAction.setPort(mirrorPort);
-						actionList.add(mirrorAction);
-						
+					// add mirror ports if there are any
+
+					HashMap<Short, Short> switchMirrors = flowscaleController
+							.getSwitchFlowMirrorPortsHashMap().get(sw.getId());
+					actionList.add(ofActionOutput);
+					if (switchMirrors != null) {
+						Short mirrorPort = switchMirrors.get(newPort);
+						if (mirrorPort != null) {
+							OFActionOutput mirrorAction = new OFActionOutput();
+							mirrorAction.setPort(mirrorPort);
+							actionList.add(mirrorAction);
+
+						}
+
 					}
-					
+					String thisMatchString = ofRule.getMatch().toString();
+					String otherMatchString = "";
+					OFRule otherDirectionRule = null;
+					if (thisMatchString.indexOf("nw_src") != -1) {
+						otherMatchString = thisMatchString.replace("nw_src",
+								"nw_dst");
+
+					} else if (thisMatchString.indexOf("nw_dst") != -1) {
+						otherMatchString = thisMatchString.replace("nw_dst",
+								"nw_src");
 					}
-					
-					
+					if (this.type == IP_TYPE) {
+
+						for (OFRule ofRule2 : this.groupRules) {
+
+							if (ofRule2.getMatch().toString()
+									.equals(otherMatchString)) {
+								otherDirectionRule = ofRule2;
+								checkedRulesonPortDown.add(ofRule2);
+								break;
+
+							}
+
+						}
+
+					}
+
 					updateFlow.setMatch(ofRule.getMatch());
 					updateFlow.setBufferId(-1);
 					updateFlow.setPriority(this.priority);
 
 					updateFlow.setActions(actionList);
 
+					if (this.type == IP_TYPE) {
+
+						updateFlow2 = new OFFlowMod();
+						updateFlow2.setType(OFType.FLOW_MOD);
+						updateFlow2.setCommand(OFFlowMod.OFPFC_ADD);
+						updateFlow2.setHardTimeout((short) 0);
+						updateFlow2.setIdleTimeout((short) 0);
+
+						ArrayList<OFAction> actionList2 = otherDirectionRule
+								.getActions();
+						actionList2.clear();
+						HashMap<Short, Short> switchMirrors2 = flowscaleController
+								.getSwitchFlowMirrorPortsHashMap().get(
+										sw.getId());
+						actionList2.add(ofActionOutput);
+						if (switchMirrors2 != null) {
+							Short mirrorPort = switchMirrors2.get(portNum);
+							if (mirrorPort != null) {
+								OFActionOutput mirrorAction = new OFActionOutput();
+								mirrorAction.setPort(mirrorPort);
+								actionList2.add(mirrorAction);
+
+							}
+
+						}
+
+						updateFlow2.setMatch(otherDirectionRule.getMatch());
+						updateFlow2.setBufferId(-1);
+						updateFlow2.setPriority(this.priority);
+
+						updateFlow2.setActions(actionList2);
+
+					}
+
 					try {
 						FlowscaleController.logger.trace("updating flow {}",
 								updateFlow);
 						sw.getOutputStream().write(updateFlow);
+						if (type == IP_TYPE) {
+							sw.getOutputStream().write(updateFlow2);
+						}
 						if (count >= flowscaleController
 								.getMaximumFlowsToPush()) {
 							count = 0;
@@ -978,8 +1145,7 @@ actionList.add(ofActionOutput);
 
 	}
 
-
-//list of setters and getters 
+	// list of setters and getters
 
 	public int getMaximumFlowsAllowed() {
 		return maximumFlowsAllowed;

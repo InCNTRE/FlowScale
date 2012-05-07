@@ -33,6 +33,7 @@ import net.beaconcontroller.core.IOFSwitchListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -704,7 +705,7 @@ public class FlowscaleController implements IOFSwitchListener,
 			return;
 		}
 		for (OFFlowMod ofFlowMod : ofFlowMods) {
-
+			logger.info("injecting flow {}", ofFlowMod);
 			for (Integer groupKey : groupList.keySet()) {
 
 				Group group = groupList.get(groupKey);
@@ -716,13 +717,26 @@ public class FlowscaleController implements IOFSwitchListener,
 
 					if (rule.getMatch().equals(ofFlowMod.getMatch())
 							&& group.getOutputSwitchDatapathId() == datapathId) {
-						logger.info(
-								"rule equal",
-								rule.getMatch().toString(), ofFlowMod
-										.getMatch().toString());
-						rule.getActions().clear();
-						rule.setActions(ofFlowMod.getActions());
-						logger.info("new rule is {} and port is {}", rule.getMatch(), rule.getActions().get(0));
+						logger.info("rule equal", rule.getMatch().toString(),
+								ofFlowMod.getMatch().toString());
+						ArrayList<OFAction> aList = rule.getActions();
+
+						aList.clear();
+
+						short port = ((OFActionOutput) ofFlowMod.getActions()
+								.get(0)).getPort();
+						rule.setPort(port);
+
+						Short mirrorPort = 0;
+						if (switchFlowMirrorPortsHashMap.get(datapathId) != null) {
+							mirrorPort = switchFlowMirrorPortsHashMap.get(
+									datapathId).get(port);
+						}
+						if (mirrorPort != null) {
+							rule.setMirrorPort(mirrorPort);
+						}
+						logger.info("new rule is {} and port is {}",
+								rule.getMatch(), rule.getActions().get(0));
 
 					}
 
@@ -730,7 +744,6 @@ public class FlowscaleController implements IOFSwitchListener,
 
 			}
 
-			logger.info("injecting flow {}", ofFlowMod);
 			try {
 				sw.getOutputStream().write(ofFlowMod);
 			} catch (IOException e) {

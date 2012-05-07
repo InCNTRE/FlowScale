@@ -86,8 +86,21 @@ public class OFRule {
         this.priority = priority;
     }
     
-    
-    
+
+    @Override
+    public boolean equals(Object otherRule){
+    	
+    	OFRule otherRuleObject = (OFRule)otherRule;
+    	
+    	if(otherRuleObject.getMatch().toString().equals(this.match.toString() )){
+    		return true;
+    	}
+    	
+    	return false;
+    	
+    	
+    	
+    }
 }
 
 
