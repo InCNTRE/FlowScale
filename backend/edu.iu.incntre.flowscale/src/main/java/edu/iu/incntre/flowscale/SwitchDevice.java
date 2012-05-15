@@ -14,33 +14,22 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.openflow.protocol.OFFlowMod;
 import org.openflow.protocol.OFMatch;
 import org.openflow.protocol.OFPhysicalPort;
 import org.openflow.protocol.OFPort;
 import org.openflow.protocol.OFPortStatus;
 import org.openflow.protocol.OFStatisticsRequest;
 import org.openflow.protocol.OFPortStatus.OFPortReason;
-import org.openflow.protocol.statistics.OFAggregateStatisticsReply;
 import org.openflow.protocol.statistics.OFAggregateStatisticsRequest;
-import org.openflow.protocol.statistics.OFFlowStatisticsReply;
 import org.openflow.protocol.statistics.OFFlowStatisticsRequest;
-import org.openflow.protocol.statistics.OFPortStatisticsReply;
 import org.openflow.protocol.statistics.OFPortStatisticsRequest;
 import org.openflow.protocol.statistics.OFStatistics;
 import org.openflow.protocol.statistics.OFStatisticsType;
-import org.openflow.protocol.statistics.OFTableStatistics;
 import org.openflow.util.HexString;
 
 import edu.iu.incntre.flowscale.exception.NoSwitchException;
 
 import net.beaconcontroller.core.IOFSwitch;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.regex.PatternSyntaxException;
 
 /** This class is an abstraction of an openflow switch for FlowScale. It provides functionality 
  * needed for FlowScale that may not exist in IDFSwitch (consider inheriting IOFSwitch in the future)

@@ -3,12 +3,15 @@
 
 <target name="Flowscale Main Target">
 <locations>
-<location path="${resource_loc:/Beacon Libraries}" type="Profile"/>
+<location path="${resource_loc:/FlowscaleLib}" type="Directory"/>
 <location includeAllPlatforms="false" includeMode="planner" type="InstallableUnit">
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.6.0.v20100601-7H7R-7v8rtGVR34XkO3kfH3DUO07"/>
 <unit id="org.eclipse.pde.junit.runtime.standalone.feature.group" version="1.0.0.v20100610"/>
 <repository location="http://nexus.beaconcontroller.net:8081/nexus/content/repositories/nx-helios/"/>
 </location>
-<location path="${resource_loc:/FlowscaleLib}" type="Directory"/>
+<location path="${resource_loc:/Beacon Libraries}" type="Profile"/>
+<location path="/home/akhalfan/Documents/NOC/eclipse_delta_helios" type="Directory"/>
+<location path="/home/akhalfan/Documents/NOC/eclipse_delta_x86_64" type="Directory"/>
+<location path="/home/akhalfan/Documents/NOC/eclipse_delta_x86" type="Directory"/>
 </locations>
 </target>

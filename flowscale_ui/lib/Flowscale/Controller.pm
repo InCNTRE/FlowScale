@@ -189,8 +189,14 @@ sub add_switch{
 
 	my $datapath_id = $args{'datapath_id'};
 
-	$client->addHeader( 'action',     'addSwitch' );
+#	$client->addHeader( 'action',     'addSwitch' );
+#	$client->addHeader( 'datapathId', $datapath_id );
+
+	$client->addHeader( 'action',     'sensorUpdate' );
 	$client->addHeader( 'datapathId', $datapath_id );
+
+$client->addHeader('sensorId', 3);
+
 
 	$client->GET('/');
 

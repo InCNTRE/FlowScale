@@ -265,7 +265,7 @@ public class Group {
 
 		FlowscaleController.logger.debug(" up ports are {}", outputPortsUp);
 
-		int flowForEachValue = (int) (this.maximumFlowsAllowed / values.length);
+		int flowForEachValue = (this.maximumFlowsAllowed / values.length);
 		ArrayList<IPAddress> ipAddressValues = null;
 
 		for (String s : values) {
@@ -477,7 +477,7 @@ public class Group {
 
 			rule.setPort(actionPort);
 			OFMatch match = new OFMatch();
-			match.setDataLayerType((short) ETHERTYPE_IP);
+			match.setDataLayerType(ETHERTYPE_IP);
 			match.setNetworkProtocol(protocol);
 			rule.setPriority(this.priority);
 
@@ -801,7 +801,7 @@ public class Group {
 
 		for (OFRule rule : this.groupRules) {
 
-			flowscaleController.logger.trace("rule match is {} and port is {}",
+			FlowscaleController.logger.trace("rule match is {} and port is {}",
 					rule.getMatch().toString(), rule.getActions().get(0));
 
 		}
@@ -1003,7 +1003,7 @@ public class Group {
 						"match here is {} and port is {}", ofRule.getMatch(),
 						ofActionOutput.getPort());
 
-				if (ofActionOutput.getPort() == (short) portNum) {
+				if (ofActionOutput.getPort() == portNum) {
 					short newPort = 0;
 					try {
 						newPort = this.outputPortsUp.get(i++

@@ -16,24 +16,32 @@ import javax.servlet.*;
 
 import org.json.simple.JSONObject;
 
-import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.Server;
 import org.openflow.protocol.OFPhysicalPort;
+import org.openflow.protocol.OFPhysicalPort.OFPortConfig;
+import org.openflow.protocol.OFPortMod;
+import org.openflow.protocol.OFType;
 import org.openflow.protocol.statistics.OFStatistics;
 import org.openflow.util.HexString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.iu.incntre.flowscale.FlowscaleController;
+import edu.iu.incntre.flowscale.SwitchDevice;
+
+import org.openflow.protocol.OFPhysicalPort;
+import net.beaconcontroller.core.IOFSwitch;
 
 import edu.iu.incntre.flowscale.exception.NoSwitchException;
 import edu.iu.incntre.flowscale.util.JSONConverter;
 
-/** This class is an Http interface, it is a listener to Http requests directed to
- * the port it is listening to, mainly can handle REST or other calls 
+/**
+ * This class is an Http interface, it is a listener to Http requests directed
+ * to the port it is listening to, mainly can handle REST or other calls
+ * 
  * @author Ali Khalfan (akhalfan@indiana.edu)
  */
 
@@ -69,14 +77,13 @@ public class HttpListener implements Handler {
 
 		this.jettyListenerPort = port;
 	}
-	
 
 	@Override
 	/** 
 	 * method will call other other methods based on the Http Message most 
 	 * methods call other bundles 
 	 */
-		public void handle(String arg0, HttpServletRequest request,
+	public void handle(String arg0, HttpServletRequest request,
 			HttpServletResponse response, int arg3) throws IOException,
 			ServletException {
 		// TODO Auto-generated method stub
@@ -90,12 +97,12 @@ public class HttpListener implements Handler {
 		response.setContentType("text/html;charset=utf-8");
 
 		String output = "";
-
+		JSONObject obj;
 		if (request.getMethod() != "GET") {
 
 			response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 
-			JSONObject obj = new JSONObject();
+			 obj = new JSONObject();
 			obj.put("success", 0);
 			obj.put("error", "method not allowed");
 			response.getWriter().print(obj);
@@ -120,10 +127,11 @@ public class HttpListener implements Handler {
 				List<OFPhysicalPort> portList = flowscaleController
 						.getSwitchDevices().get(datapathId).getPortStates();
 
-				if(portList == null){
+				if (portList == null) {
 					logger.error("no switch connected yet ");
-				}else{
-					output = JSONConverter.toPortStatus(portList).toJSONString();
+				} else {
+					output = JSONConverter.toPortStatus(portList)
+							.toJSONString();
 				}
 			}
 
@@ -198,13 +206,13 @@ public class HttpListener implements Handler {
 						.getSwitchStatisticsFromInterface(
 								request.getHeader("datapathId"),
 								request.getHeader("type"));
-				
-				output = JSONConverter.toStat(ofs, request.getHeader("type")).toJSONString();
-				
-				
+
+				output = JSONConverter.toStat(ofs, request.getHeader("type"))
+						.toJSONString();
+
 			} catch (NoSwitchException e) {
 				// TODO Auto-generated catch block
-				logger.error("Switch is not connected",e);
+				logger.error("Switch is not connected", e);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				logger.error("Thread Interrupted {}", e);
@@ -215,12 +223,73 @@ public class HttpListener implements Handler {
 				logger.error("Request to switch timed out");
 			}
 
+		} else if (requestAction.equals("sensorUpdate")) {
+
+			String datapathIdString = request.getHeader("datapathId");
+			String sensorIdString = request.getHeader("sensorId");
+			String updateStatus = request.getHeader("updateStatus");
+logger.info("datapathId {} sensorId {}", datapathIdString,sensorIdString);
+logger.info("update status {}", updateStatus);
+
+			try {
+
+				SwitchDevice switchDevice = flowscaleController
+						.getSwitchDevices().get(
+								HexString.toLong(datapathIdString));
+
+				IOFSwitch sw = switchDevice.getOpenFlowSwitch();
+				List<OFPhysicalPort> switchPorts = switchDevice.getPortStates();
+				OFPhysicalPort updatedPort = null;
+
+				for (OFPhysicalPort ofPort : switchPorts) {
+
+					if (ofPort.getPortNumber() == Short
+							.parseShort(sensorIdString)) {
+						updatedPort = ofPort;
+						break;
+
+					}
+
+				}
+
+				updatedPort.setConfig(0);
+
+				OFPortMod portMod = new OFPortMod();
+
+				if (updateStatus.equals("down")) {
+					portMod.setConfig(OFPhysicalPort.OFPortConfig.OFPPC_PORT_DOWN
+							.getValue());
+				} else if (updateStatus.equals("up")) {
+					portMod.setConfig(0);
+				}
+
+				portMod.setMask(1);
+				portMod.setPortNumber(updatedPort.getPortNumber());
+				portMod.setHardwareAddress(updatedPort.getHardwareAddress());
+				portMod.setType(OFType.PORT_MOD);
+
+				sw.getOutputStream().write(portMod);
+				sw.getOutputStream().flush();
+				obj = new JSONObject();
+				obj.put("result", "success");
+				obj.put("desc", "sensor "+sensorIdString+" marked as "+updateStatus +
+						" on switch "+ datapathIdString);
+				response.getWriter().print(obj);
+
+			} catch (Exception e) {
+				logger.error("{}", e);
+				obj = new JSONObject();
+				obj.put("result", "failure");
+				obj.put("desc", e.toString());
+				response.getWriter().print(obj);
+			}
+
 		}
 
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		logger.debug("response output {}", output);
-
+		
 		response.getWriter().print(output);
 
 	}
@@ -238,6 +307,7 @@ public class HttpListener implements Handler {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.error("{}", e);
+
 		}
 
 	}

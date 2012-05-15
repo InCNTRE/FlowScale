@@ -3,13 +3,22 @@ package org.eclipse.equinox.console.telnet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.eclipse.osgi.framework.console.CommandInterpreter;
+
 import org.openflow.protocol.OFMatch;
 import org.openflow.protocol.OFFlowMod;
+import org.openflow.protocol.OFPhysicalPort;
+import org.openflow.protocol.OFPortMod;
 import org.openflow.protocol.OFType;
 import org.openflow.protocol.action.OFAction;
 import org.openflow.protocol.action.OFActionOutput;
 import org.openflow.protocol.action.OFActionType;
 import org.openflow.util.HexString;
+
+import edu.iu.incntre.flowscale.FlowscaleController;
+import edu.iu.incntre.flowscale.SwitchDevice;
 
 import grnoc.net.util.ipaddress.IPv4Address;
 import net.beaconcontroller.core.IBeaconProvider;
@@ -122,6 +131,70 @@ public class StaticPusher {
 
 		
 
+	}
+	
+	public static void downPort(String datapathIdString, 
+			String portString, FlowscaleController flowscaleController, CommandInterpreter ci){
+		
+		
+		long datapathId = HexString.toLong(datapathIdString);
+		short port = Short.parseShort(portString);
+		
+
+		try {
+
+			SwitchDevice switchDevice = flowscaleController
+					.getSwitchDevices().get(
+							HexString.toLong(datapathIdString));
+
+			IOFSwitch sw = switchDevice.getOpenFlowSwitch();
+			List<OFPhysicalPort> switchPorts = switchDevice.getPortStates();
+			OFPhysicalPort updatedPort = null;
+
+			for (OFPhysicalPort ofPort : switchPorts) {
+
+				if (ofPort.getPortNumber() == port) {
+					updatedPort = ofPort;
+					break;
+
+				}
+
+			}
+
+			updatedPort.setConfig(0);
+
+			OFPortMod portMod = new OFPortMod();
+
+			
+				portMod.setConfig(OFPhysicalPort.OFPortConfig.OFPPC_PORT_DOWN
+						.getValue());
+		
+
+			portMod.setMask(1);
+			portMod.setPortNumber(updatedPort.getPortNumber());
+			portMod.setHardwareAddress(updatedPort.getHardwareAddress());
+			portMod.setType(OFType.PORT_MOD);
+
+			sw.getOutputStream().write(portMod);
+			sw.getOutputStream().flush();
+			ci.print("done");
+
+		} catch (Exception e) {
+			ci.print(e.toString());
+	
+		}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 }

@@ -11,8 +11,6 @@ import org.openflow.util.HexString;
 
 import edu.iu.incntre.flowscale.exception.NoDatabaseException;
 
-import net.beaconcontroller.core.IOFSwitch;
-
 public class DatabaseUtility {
 
 	static PreparedStatement updateTotal = null;

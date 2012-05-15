@@ -33,17 +33,12 @@ import net.beaconcontroller.core.IOFSwitchListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import edu.iu.incntre.flowscale.exception.NoDatabaseException;
@@ -170,7 +165,7 @@ public class FlowscaleController implements IOFSwitchListener,
 	 * @param portNum
 	 * @param physicalPort
 	 */
-	private void updateGroupsWithPortStatus(IOFSwitch sw, short portNum,
+	public void updateGroupsWithPortStatus(IOFSwitch sw, short portNum,
 			OFPhysicalPort physicalPort) {
 		logger.trace("updating groups with port number {} on switch {} ",
 				portNum, HexString.toHexString(sw.getId()));
@@ -630,6 +625,7 @@ public class FlowscaleController implements IOFSwitchListener,
 	 * @return JSON string to be interpreted by the interface
 	 * @deprecated
 	 */
+	@Deprecated
 	public String editGroupFromInterface(String groupIdString,
 			String editTypeString, String updateValueString) {
 

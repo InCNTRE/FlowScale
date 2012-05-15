@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.equinox.console.telnet
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.equinox.console.telnet.Activator
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: edu.iu.incntre.flowscale,
  net.beaconcontroller.core,
  net.beaconcontroller.core.io,
@@ -17,3 +17,4 @@ Import-Package: edu.iu.incntre.flowscale,
  org.osgi.framework;version="1.3.0",
  org.springframework.beans.factory.config,
  grnoc.net.util.ipaddress
+Export-Package: org.eclipse.equinox.console.telnet

@@ -14,6 +14,8 @@ import org.eclipse.osgi.framework.console.ConsoleSession;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import edu.iu.incntre.flowscale.FlowscaleController;
+
 import net.beaconcontroller.core.IBeaconProvider;
 
 public class Activator implements BundleActivator ,CommandProvider{
@@ -21,6 +23,8 @@ public class Activator implements BundleActivator ,CommandProvider{
 	private short socketPort;
 	static BundleContext  context;
 	private IBeaconProvider ibeaconProvider;
+	private FlowscaleController flowscaleController;
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
@@ -33,6 +37,10 @@ public class Activator implements BundleActivator ,CommandProvider{
 	
 	public void setBeaconProvider(IBeaconProvider beaconProvider) {
 		this.ibeaconProvider = beaconProvider;
+	}
+	public void setFlowscaleController(FlowscaleController flowscaleController){
+	
+		this.flowscaleController = flowscaleController;
 	}
 	
 	public void start(BundleContext context) throws Exception {
@@ -187,6 +195,14 @@ public class Activator implements BundleActivator ,CommandProvider{
 		ci.print(StaticPusher.insertFlow(cliHashMap, ibeaconProvider));
 	}
 	
+	public void _down(CommandInterpreter ci){
+		
+		String datapathIdString = ci.nextArgument();;
+		String portString = ci.nextArgument();
+		
+		StaticPusher.downPort(datapathIdString, portString, flowscaleController,ci);
+		
+	}
 	
 	
 	public String getName(){
