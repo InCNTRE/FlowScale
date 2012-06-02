@@ -96,6 +96,7 @@ public class JSONConverter {
 			jsonObject.put("maximum_entries", st.getMaximumEntries());
 			jsonObject.put("name", st.getName());
 			jsonObject.put("table_id", st.getTableId());
+			jsonObject.put("active_count", st.getActiveCount());
 
 			jsonArray.add(jsonObject);
 
@@ -215,7 +216,7 @@ public static JSONArray toStat(List<OFStatistics> ofs, String type){
 			jsonObject.put("hard_timeout", st.getHardTimeout());
 			jsonObject.put("idle_timeout", st.getIdleTimeout());
 			jsonObject.put("match", st.getMatch().toString());
-			jsonObject.put("priority", st.getPriority());
+			jsonObject.put("priority", st.getPriority()); 
 			jsonObject.put("packet_count", st.getPacketCount());
 			jsonObject.put("byte_count", st.getByteCount());
 			jsonObject.put("table_id", st.getTableId());

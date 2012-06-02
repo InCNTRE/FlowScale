@@ -2,12 +2,13 @@ package edu.iu.incntre.flowscaleflowupdate;
 
 import java.util.HashSet;
 
-public class LoadFlow {
+public class LoadFlow implements Comparable{
 
 	private String flowString;
 	private double flowPercent = 0f;
 	private short loadedPort;
 	private long packetCount = 0;
+	private short priroity= 0;
 
 	public LoadFlow(String flowString) {
 
@@ -15,15 +16,19 @@ public class LoadFlow {
 
 	}
 
-	public LoadFlow(String flowString, short loadedPort) {
+	public LoadFlow(String flowString, short loadedPort, short priority) {
 		this.flowString = flowString;
 		this.loadedPort = loadedPort;
+		this.priroity = priority;
 	}
 
 	public Double getFlowPercent() {
 
 		return this.flowPercent;
 
+	}
+	public short getPriority(){
+		return this.priroity;
 	}
 
 	public void setFlowPercent(double flowPercent) {
@@ -75,6 +80,13 @@ public class LoadFlow {
 	public String toString() {
 
 		return this.flowString + " " + this.loadedPort;
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		// TODO Auto-generated method stub
+		LoadFlow b = (LoadFlow)arg0;
+		return this.getFlowString().compareTo(b.getFlowString());
 	}
 
 }

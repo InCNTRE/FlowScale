@@ -276,7 +276,7 @@ public class Group {
 					flowForEachValue / 2);
 
 			int actionPort = 0;
-			short rulePriority = this.priority;
+			
 			int portCounter = 0;
 			for (IPAddress ipAddress : ipAddressValues) {
 
@@ -300,6 +300,19 @@ public class Group {
 
 				// set source rule
 
+				short rulePriority =0;
+				
+				if(this.priority == 100){
+				rulePriority = flowscaleController.getSwitchDevices().
+				get(this.outputSwitchDatapathId).getSwitchPriority();
+				rulePriority = (short)(rulePriority +1);
+				flowscaleController.getSwitchDevices().
+				get(this.outputSwitchDatapathId).setSwitchPriority(rulePriority);
+				}else{
+					rulePriority = this.priority;
+					
+				}
+				
 				OFRule ofRuleSource = new OFRule();
 				OFMatch ofMatchSource = new OFMatch();
 				ofMatchSource.setDataLayerType((short) 0x0800);
@@ -749,7 +762,7 @@ public class Group {
 		for (OFRule ofRule : this.groupRules) {
 
 			flowToDelete.setMatch(ofRule.getMatch());
-			flowToDelete.setPriority(priority);
+			flowToDelete.setPriority(ofRule.getPriority());
 			flowToDelete.setLength(U16.t(OFFlowMod.MINIMUM_LENGTH));
 
 			try {
@@ -1061,7 +1074,8 @@ public class Group {
 
 					updateFlow.setMatch(ofRule.getMatch());
 					updateFlow.setBufferId(-1);
-					updateFlow.setPriority(this.priority);
+				
+					updateFlow.setPriority(ofRule.getPriority());
 
 					updateFlow.setActions(actionList);
 
@@ -1093,7 +1107,7 @@ public class Group {
 
 						updateFlow2.setMatch(otherDirectionRule.getMatch());
 						updateFlow2.setBufferId(-1);
-						updateFlow2.setPriority(this.priority);
+						updateFlow2.setPriority(otherDirectionRule.getPriority());
 
 						updateFlow2.setActions(actionList2);
 

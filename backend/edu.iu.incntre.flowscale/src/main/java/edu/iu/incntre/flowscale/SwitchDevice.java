@@ -47,6 +47,8 @@ public class SwitchDevice {
 	private IOFSwitch openFlowSwitch;
 	private List<OFPhysicalPort> portList;
 	private List<Short> outputPortsUp = new ArrayList<Short>();
+	
+	private short switchPriority =100;
 
 	public SwitchDevice() {
 
@@ -90,6 +92,14 @@ public class SwitchDevice {
 		this.macAddress = macAddress;
 	}
 
+	public void setSwitchPriority(short priority){
+		this.switchPriority = priority;
+	}
+	
+	public short getSwitchPriority(){
+		return this.switchPriority;
+	}
+	
 	public long getDatapathId() {
 		return datapathId;
 	}

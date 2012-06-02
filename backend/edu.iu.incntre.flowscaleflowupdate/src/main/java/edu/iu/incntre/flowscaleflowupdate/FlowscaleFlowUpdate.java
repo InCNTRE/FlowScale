@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.openflow.protocol.OFFlowMod;
 import org.openflow.protocol.OFMatch;
 import org.openflow.protocol.OFPhysicalPort;
+import org.openflow.protocol.OFType;
 import org.openflow.protocol.action.OFAction;
 import org.openflow.protocol.action.OFActionOutput;
 import org.openflow.util.HexString;
@@ -264,7 +265,7 @@ public class FlowscaleFlowUpdate {
 
 									// start the hot swapping
 
-									HashMap<Short, TreeSet<String>> newFlows;
+									HashMap<Short, TreeSet<LoadFlow>> newFlows;
 
 									// call hot swapping method
 									newFlows = hotSwap(totalPacketCount,
@@ -275,12 +276,12 @@ public class FlowscaleFlowUpdate {
 									for (Short increasedPorts : newFlows
 											.keySet()) {
 
-										for (String changedFlowString : newFlows
+										for (LoadFlow changedFlow : newFlows
 												.get(increasedPorts)) {
 
 											logger.debug(
 													"new flow {} in port {}",
-													changedFlowString,
+													changedFlow.getFlowString(),
 													increasedPorts);
 
 										}
@@ -308,7 +309,7 @@ public class FlowscaleFlowUpdate {
 
 								for (OFFlowMod flowMod : flowMods) {
 									logger.debug(
-											"prior to injection flow is {}",
+											"prior to injection, flow is {}",
 											flowMod);
 								}
 
@@ -482,7 +483,7 @@ public class FlowscaleFlowUpdate {
 	 * @return the new flows that will be injected to the switch to acheive
 	 *         proper load balancing after running the hotswapping algorithm
 	 */
-	private HashMap<Short, TreeSet<String>> hotSwap(long totalPacketCount,
+	private HashMap<Short, TreeSet<LoadFlow>> hotSwap(long totalPacketCount,
 			ArrayList<LoadFlow> switchFlows) {
 
 		HashMap<Short, Double> portPercentages = new HashMap<Short, Double>();
@@ -493,7 +494,7 @@ public class FlowscaleFlowUpdate {
 		getPortsPercentages(totalPacketCount, switchFlows, portPercentages,
 				belowPercentPorts, abovePercentPorts);
 
-		HashMap<Short, TreeSet<String>> newFlows = new HashMap<Short, TreeSet<String>>();
+		HashMap<Short, TreeSet<LoadFlow>> newFlows = new HashMap<Short, TreeSet<LoadFlow>>();
 
 		Collections.sort(abovePercentPorts, new HighPortComparator(
 				portPercentages));
@@ -563,12 +564,12 @@ public class FlowscaleFlowUpdate {
 							highPort, loadFlow.getFlowString());
 					if (newFlows.get(lowPort) == null) {
 
-						TreeSet<String> updatedFlows = new TreeSet<String>();
+						TreeSet<LoadFlow> updatedFlows = new TreeSet<LoadFlow>();
 						newFlows.put(lowPort, updatedFlows);
 
 					}
 
-					newFlows.get(lowPort).add(loadFlow.getFlowString());
+					newFlows.get(lowPort).add(loadFlow);
 
 					checkedFlows.add(this.getFlowByString(otherDirectFlow,
 							switchFlows));
@@ -661,18 +662,18 @@ public class FlowscaleFlowUpdate {
 	 * @param flowMods
 	 */
 	private static void convertFlowsToOpenflowJ(
-			HashMap<Short, TreeSet<String>> newFlows,
+			HashMap<Short, TreeSet<LoadFlow>> newFlows,
 			HashMap<Short, Short> mirroredPorts, ArrayList<OFFlowMod> flowMods) {
 		for (Short increasedPort : newFlows.keySet()) {
 
-			for (String changedFlow : newFlows.get(increasedPort)) {
+			for (LoadFlow changedFlow : newFlows.get(increasedPort)) {
 
 				OFMatch ofMatch = null;
 
 				Pattern pattern = Pattern
 						.compile("nw_src=([0-9]+.[0-9]+.[0-9]+.[0-9]+)/([0-9]*)");
 
-				Matcher matcher = pattern.matcher(changedFlow);
+				Matcher matcher = pattern.matcher(changedFlow.getFlowString());
 
 				while (matcher.find()) {
 					String fullValue = matcher.group()
@@ -711,12 +712,16 @@ public class FlowscaleFlowUpdate {
 					ofMatchSource.setWildcards(wildCardSource);
 					ofMatch = ofMatchSource;
 					OFFlowMod flowModRule = new OFFlowMod();
-
+					flowModRule.setCommand(OFFlowMod.OFPFC_MODIFY_STRICT);
+					flowModRule.setPriority(changedFlow.getPriority());
 					flowModRule.setHardTimeout((short) 0);
 					flowModRule.setIdleTimeout((short) 0);
+					
 					flowModRule.setBufferId(-1);
 					flowModRule.setMatch(ofMatch);
+			
 
+					
 					OFActionOutput ofAction = new OFActionOutput();
 					ofAction.setPort(increasedPort);
 					ArrayList<OFAction> actions = new ArrayList<OFAction>();
@@ -730,7 +735,7 @@ public class FlowscaleFlowUpdate {
 
 					flowModRule.setActions(actions);
 
-					flowModRule.setPriority((short) 100);
+	
 
 					flowMods.add(flowModRule);
 
@@ -747,7 +752,8 @@ public class FlowscaleFlowUpdate {
 					ofMatchDest.setWildcards(wildCardDest);
 
 					OFFlowMod flowModRule1 = new OFFlowMod();
-
+					flowModRule1.setCommand(OFFlowMod.OFPFC_MODIFY_STRICT);
+					flowModRule1.setPriority(changedFlow.getPriority());
 					flowModRule1.setHardTimeout((short) 0);
 					flowModRule1.setIdleTimeout((short) 0);
 					flowModRule1.setBufferId(-1);
@@ -755,7 +761,7 @@ public class FlowscaleFlowUpdate {
 
 					flowModRule1.setActions(actions);
 
-					flowModRule1.setPriority((short) 100);
+				
 
 					flowMods.add(flowModRule1);
 
@@ -764,7 +770,7 @@ public class FlowscaleFlowUpdate {
 				pattern = Pattern
 						.compile("nw_dst=([0-9]+.[0-9]+.[0-9]+.[0-9]+)/([0-9]*)");
 
-				matcher = pattern.matcher(changedFlow);
+				matcher = pattern.matcher(changedFlow.getFlowString());
 
 				while (matcher.find()) {
 
@@ -799,12 +805,13 @@ public class FlowscaleFlowUpdate {
 					ofMatchDestination.setWildcards(wildCardDestination);
 					ofMatch = ofMatchDestination;
 					OFFlowMod flowModRule = new OFFlowMod();
-
+					flowModRule.setCommand(OFFlowMod.OFPFC_MODIFY_STRICT);
 					flowModRule.setHardTimeout((short) 0);
 					flowModRule.setIdleTimeout((short) 0);
 					flowModRule.setBufferId(-1);
 					flowModRule.setMatch(ofMatch);
-
+					flowModRule.setPriority(changedFlow.getPriority());
+					
 					OFActionOutput ofAction = new OFActionOutput();
 					ofAction.setPort(increasedPort);
 					ArrayList<OFAction> actions = new ArrayList<OFAction>();
@@ -817,7 +824,7 @@ public class FlowscaleFlowUpdate {
 					}
 					flowModRule.setActions(actions);
 
-					flowModRule.setPriority((short) 100);
+				
 
 					flowMods.add(flowModRule);
 
@@ -833,7 +840,8 @@ public class FlowscaleFlowUpdate {
 					ofMatchSrc.setWildcards(wildCardSrc);
 
 					OFFlowMod flowModRule1 = new OFFlowMod();
-
+					flowModRule1.setCommand(OFFlowMod.OFPFC_MODIFY_STRICT);
+					flowModRule1.setPriority(changedFlow.getPriority());
 					flowModRule1.setHardTimeout((short) 0);
 					flowModRule1.setIdleTimeout((short) 0);
 					flowModRule1.setBufferId(-1);
@@ -841,7 +849,7 @@ public class FlowscaleFlowUpdate {
 
 					flowModRule1.setActions(actions);
 
-					flowModRule1.setPriority((short) 100);
+		
 
 					flowMods.add(flowModRule1);
 
@@ -902,7 +910,7 @@ public class FlowscaleFlowUpdate {
 			ArrayList<Short> loadedPorts, ArrayList<LoadFlow> switchFlows)
 			throws SQLException {
 
-		String flowStatQuery = "SELECT datapath_id, match_string, action, packet_count FROM flow_stats where datapath_id = ? AND  timestamp >= ?";
+		String flowStatQuery = "SELECT datapath_id, match_string, action, packet_count,priority FROM flow_stats where datapath_id = ? AND  timestamp >= ?";
 		PreparedStatement flowStatPs = null;
 		ResultSet flowStatRs = null;
 		flowStatPs = conn.prepareStatement(flowStatQuery);
@@ -912,7 +920,7 @@ public class FlowscaleFlowUpdate {
 		flowStatRs = flowStatPs.executeQuery();
 
 		logger.debug(
-				"query : SELECT datapath_id, match_string, action, packet_count FROM flow_stats where datapath_id = {} AND  timestamp >= {} ",
+				"query : SELECT datapath_id, match_string, action, packet_count priority FROM flow_stats where datapath_id = {} AND  timestamp >= {} ",
 				datapathId, queryTime - (intervalTime * 1000));
 
 		while (flowStatRs.next()) {
@@ -920,7 +928,8 @@ public class FlowscaleFlowUpdate {
 			String matchString = flowStatRs.getString(2);
 			String action = flowStatRs.getString(3);
 			long packetCount = flowStatRs.getLong(4);
-
+			short priority = flowStatRs.getShort(5);
+			
 			if (!(matchString.contains("nw_src") || matchString
 					.contains("nw_dst"))) {
 
@@ -945,7 +954,7 @@ public class FlowscaleFlowUpdate {
 			if (loadedPorts.contains(loadedPort)) {
 
 				// add new flow here, or if exist increment packet count
-				LoadFlow tempLoadFlow = new LoadFlow(matchString, loadedPort);
+				LoadFlow tempLoadFlow = new LoadFlow(matchString, loadedPort,priority);
 
 				LoadFlow loadFlowInstance = getFlowByString(matchString,
 						switchFlows);

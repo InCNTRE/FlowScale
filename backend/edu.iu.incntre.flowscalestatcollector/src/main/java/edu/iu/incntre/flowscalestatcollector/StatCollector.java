@@ -449,11 +449,13 @@ public class StatCollector {
 						long packets = (Long) jsonObject.get("packet_count");
 						String matchString = (String) jsonObject.get("match");
 						String action = (String) jsonObject.get("actions");
+						long priority = (Long) jsonObject.get("priority");
+						
 						PreparedStatement prep = null;
 
 						try {
 							prep = conn
-									.prepareStatement("insert into flow_stats values (?,?,?,?,?);");
+									.prepareStatement("insert  into flow_stats values (?,?,?,?,?,?);");
 							prep.setLong(1, datapathId);
 							prep.setLong(2, calendar.getTimeInMillis());
 
@@ -478,6 +480,9 @@ public class StatCollector {
 
 							prep.setString(3, matchString);
 							prep.setString(4, action);
+							
+
+							prep.setShort(6, (short)priority);
 							prep.addBatch();
 
 							conn.setAutoCommit(false);
