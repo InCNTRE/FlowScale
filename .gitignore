@@ -8,5 +8,6 @@
 *controller.xml
 *database.xml
 .gitignore
+main.target
 */flowscale_ui/img/*
 .gitignore

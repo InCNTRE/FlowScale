@@ -456,6 +456,9 @@ public class StatCollector {
 						try {
 							prep = conn
 									.prepareStatement("insert  into flow_stats values (?,?,?,?,?,?);");
+							String insertString = datapathId +","+calendar.getTimeInMillis()+","+
+							matchString+ "," + action ;
+							logger.debug("flow_stat values to insert are {}",insertString);
 							prep.setLong(1, datapathId);
 							prep.setLong(2, calendar.getTimeInMillis());
 
@@ -490,6 +493,7 @@ public class StatCollector {
 							conn.setAutoCommit(true);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
+							logger.error("error when insert flow {} in switch {}", matchString,datapathId);
 							logger.error("{}", e);
 						} finally {
 							if (prep != null) {
