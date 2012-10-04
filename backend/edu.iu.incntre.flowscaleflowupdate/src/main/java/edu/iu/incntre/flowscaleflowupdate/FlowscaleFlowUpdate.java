@@ -218,8 +218,7 @@ public class FlowscaleFlowUpdate {
 										.size());
 
 								ArrayList<OFFlowMod> flowMods = new ArrayList<OFFlowMod>();
-								// ArrayList<FlowPercent> flowPercentArrayList =
-								// new ArrayList<FlowPercent>();
+						 
 								long totalPacketCount = 0;
 
 								ArrayList<LoadFlow> switchFlows = new ArrayList<LoadFlow>();
@@ -235,7 +234,7 @@ public class FlowscaleFlowUpdate {
 									totalPacketCount = getTotalPacketCount(switchFlows);
 									/* return totalPacketCount; */
 
-									logger.debug("total packet count {}",
+									logger.info("total packet count {}",
 											totalPacketCount);
 
 									// get flow percentages, iterate over all
@@ -252,11 +251,11 @@ public class FlowscaleFlowUpdate {
 
 									for (LoadFlow switchFlow : switchFlows) {
 
-										logger.debug(
+										logger.info(
 												"flow {} has percentage {}",
 												switchFlow.getFlowString(),
 												switchFlow.getFlowPercent());
-										logger.debug("its port is {}",
+										logger.info("its port is {}",
 												switchFlow.getLoadedPort());
 
 									}
@@ -316,6 +315,8 @@ public class FlowscaleFlowUpdate {
 								// set percentages for every port;
 								logger.debug(" flow mod  size is {} ",
 										flowMods.size());
+								
+								logger.info("Number of Flows to swap is {}", flowMods.size());
 
 								flowscaleController.injectFlows(flowMods,
 										datapathId);
@@ -324,6 +325,7 @@ public class FlowscaleFlowUpdate {
 
 							try {
 
+								logger.info("Hot Swapping Completed!");
 								Thread.sleep(intervalTime * 1000);
 
 							} catch (InterruptedException e) {
@@ -548,11 +550,13 @@ public class FlowscaleFlowUpdate {
 				}
 				LoadFlow otherDirectionLoadFlow = this.getFlowByString(
 						otherDirectFlow, switchFlows);
-				logger.debug("other direction load flow is {}",
+				logger.info("other direction load flow is {}",
 						otherDirectionLoadFlow);
 				double totalNeededPercentage = (double) flowPercentageValue
 						+ (double) (otherDirectionLoadFlow.getFlowPercent());
 
+				logger.info("porstPercantages is {}", portPercentages);
+				
 				if (((totalNeededPercentage < (optimalPercentage - portPercentages
 						.get(lowPort))) || ((portPercentages.get(highPort) - portPercentages
 						.get(lowPort)) >= (double) (optimalPercentage / 2)))

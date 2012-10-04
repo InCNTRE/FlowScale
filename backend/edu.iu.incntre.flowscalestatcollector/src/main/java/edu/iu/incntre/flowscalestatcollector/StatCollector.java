@@ -103,7 +103,7 @@ public class StatCollector {
 	public void killThread() {
 
 		this.statThread = null;
-		// startUp();
+		
 	}
 
 	public void startUp() {
@@ -152,22 +152,38 @@ public class StatCollector {
 							while (statThread != null) {
 								calendar = Calendar.getInstance();
 								logger.trace("getting flows from switches");
+								
+								//check if conn is null if it is, reset connection 
+								if(conn == null){
+								conn = DriverManager.getConnection(databaseDriver, dbUsername,
+										dbPassword);
+								}
+								
+								
 								for (String datapathIdString : datapathIdStringElements) {
 
 									try {
 
-										logger.info(
-												"Getting flows from switch {}",
-												datapathIdString);
-
+									
 										swd = flowscaleController
 												.getSwitchDevices()
 												.get(HexString
 														.toLong(datapathIdString));
+										
+										
+										
 										if (swd == null) {
-											logger.info("switch does not exist, is it connected?");
+											logger.info("switch {} does not exist, is it connected?",
+													datapathIdString);
 											continue;
 										}
+										
+										
+										logger.info(
+												"Getting flows from switch {} with ID {}",
+												swd.getSwitchName(), datapathIdString);
+
+										
 
 										try {
 											portStats = flowscaleController
@@ -180,11 +196,7 @@ public class StatCollector {
 															datapathIdString,
 															"flow");
 
-											portStatus = flowscaleController
-													.getSwitchDevices()
-													.get(HexString
-															.toLong(datapathIdString))
-													.getPortStates();
+											portStatus = swd.getPortStates();
 
 											if (flowStats != null
 													&& portStats != null) {
@@ -262,8 +274,8 @@ public class StatCollector {
 										} catch (NoSwitchException e1) {
 											// TODO Auto-generated catch block
 											logger.error(
-													"Switch {} is not connected aborting",
-													datapathIdString);
+													"Switch {} with ID {} is not connected aborting",
+													swd.getSwitchName(),datapathIdString);  
 										} catch (IOException e1) {
 											logger.error("IOException {}", e1);
 
@@ -424,6 +436,11 @@ public class StatCollector {
 							conn.setAutoCommit(false);
 							prep.executeBatch();
 							conn.setAutoCommit(true);
+						}catch(SQLRecoverableException sqlRecoverableException){
+							
+							logger.error("{}", sqlRecoverableException);
+							//exit function since there is a timeout
+							return;
 						} catch (SQLException e) {
 
 							logger.error("{}", e);
@@ -541,6 +558,7 @@ public class StatCollector {
 
 							conn.setAutoCommit(false);
 							prep.executeBatch();
+							
 							conn.setAutoCommit(true);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block

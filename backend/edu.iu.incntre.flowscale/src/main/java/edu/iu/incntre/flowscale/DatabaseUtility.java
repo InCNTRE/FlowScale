@@ -195,7 +195,7 @@ public class DatabaseUtility {
 			FlowscaleController controller) throws NoDatabaseException{
 
 		HashMap<Long, SwitchDevice> switchList = new HashMap<Long, SwitchDevice>();
-		String switch_query = "select datapath_id from switch";
+		String switch_query = "select datapath_id , switch_name from switch";
 		
 		if (conn == null){
 			throw new NoDatabaseException();
@@ -207,11 +207,12 @@ public class DatabaseUtility {
 			ResultSet switchRS = switchPS.executeQuery();
 
 			long datapathId;
-
+			String switchName;
 			while (switchRS.next()) {
 
 				datapathId = HexString.toLong(switchRS.getString(1));
-				SwitchDevice switchDevice = new SwitchDevice(datapathId);
+				switchName =  switchRS.getString(2);
+				SwitchDevice switchDevice = new SwitchDevice(datapathId,switchName);
 
 				switchList.put(datapathId, switchDevice);
 

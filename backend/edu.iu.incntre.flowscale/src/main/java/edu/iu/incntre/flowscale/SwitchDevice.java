@@ -68,6 +68,11 @@ public class SwitchDevice {
 		this.datapathId = datapathId;
 	}
 
+	public SwitchDevice (long datapathId, String switchName){
+		this.datapathId = datapathId;
+		this.switchName = switchName;
+	}
+	
 	public String getSwitchName() {
 		return switchName;
 	}
