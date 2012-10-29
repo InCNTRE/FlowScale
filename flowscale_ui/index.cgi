@@ -81,7 +81,7 @@ sub main {
 
 		case "index" {
 
-			$filename           = "html_pages/flowscale2.html";
+			$filename           = "html_pages/flowscale3.html";
 			$title              = "FlowScale";
 			$breadcrumbs        = $HOME_BREADCRUMBS;
 			$current_breadcrumb = "FlowScale";

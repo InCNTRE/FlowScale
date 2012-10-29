@@ -18,7 +18,7 @@ sub new {
 
 	my %args = (
 		config =>
-'/home/akhalfan/Documents/NOC/flowscale-0.5/FlowScale/flowscale_ui/conf/controller.xml',
+'/var/www/flowscale_ui/conf/controller.xml',
 		@_,
 	);
 
@@ -189,14 +189,8 @@ sub add_switch{
 
 	my $datapath_id = $args{'datapath_id'};
 
-#	$client->addHeader( 'action',     'addSwitch' );
-#	$client->addHeader( 'datapathId', $datapath_id );
-
-	$client->addHeader( 'action',     'sensorUpdate' );
+	$client->addHeader( 'action',     'addSwitch' );
 	$client->addHeader( 'datapathId', $datapath_id );
-
-$client->addHeader('sensorId', 3);
-
 
 	$client->GET('/');
 

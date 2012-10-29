@@ -84,26 +84,26 @@ sub add_new_switch() {
 	my $ip_address  = $cgi->param('ip_address');
 	my $datapath_id = $cgi->param('datapath_id');
 
-	#my $result = $db->add_new_switch(
-	#	datapath_id => $datapath_id,
-	#	switch_name => $switch_name,
-	#	mac_address => $mac_address,
-	#	ip_address  => $ip_address,
-	#);
+	my $result = $db->add_new_switch(
+		datapath_id => $datapath_id,
+		switch_name => $switch_name,
+		mac_address => $mac_address,
+		ip_address  => $ip_address,
+	);
 
-	#if ( !defined $result ) {
-	#	$results->{'error'} = $db->get_error();
+	if ( !defined $result ) {
+		$results->{'error'} = $db->get_error();
 
-	#}
-	#else {
+	}
+	else {
 
-		#$results->{'results'} = $result;
+		$results->{'results'} = $result;
 		my $ctrl_results = $ctrl->add_switch(
 		datapath_id => $datapath_id,
 		switch_name => $switch_name,
 		mac_address => $mac_address,
 		ip_address  => $ip_address);
-	#}
+	}
 
 	#use module to add ports
 	#my $port_result = $sw->get_switch_ports(ip_address = $ip_address);

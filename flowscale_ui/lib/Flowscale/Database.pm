@@ -20,7 +20,7 @@ sub new {
 
 	my %args = (
 		config =>
-'/home/akhalfan/Documents/NOC/flowscale-0.5/FlowScale/flowscale_ui/conf/database.xml',
+'/var/www/flowscale_ui/conf/database.xml',
 		@_,
 	);
 

@@ -83,9 +83,9 @@ function load_flow_statistics(){
 	      
 	  
 		 var columns = [ 		 
-       {key: "match", label: "Match", width: 600, formatter: goFormat},
-       {key: "priority", label: "Priority", width: 40},
-        {key: "packet_count", label: "Packet Count", width: 200},
+       {key: "match", label: "Match", width: 600, formatter: goFormat,sortable:true},
+       {key: "priority", label: "Priority", width: 40,sortable:true},
+        {key: "packet_count", label: "Packet Count", width: 200,sortable:true},
          {key: "table_id", label: "Table ID", width: 40},
       {key: "actions", label: "Action", width: 150,sortable:true},
       ];

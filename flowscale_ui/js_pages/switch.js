@@ -329,7 +329,7 @@ ds.sendRequest('', {success: function(req, resp){
 }
 
 function delete_switch(e,obj){
-
+		showConfirm("Are you sure you wish to delete the switch ?", function() {
 	
 var ds =  new YAHOO.util.DataSource("webservice/admin.cgi?action=delete_switch&switch_id="+obj.id);
 
@@ -368,6 +368,10 @@ ds.sendRequest('', {success: function(req, resp){
 	
 
 
+
+	}, function() {
+	});
+	
 	
 	
 	

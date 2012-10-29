@@ -64,7 +64,7 @@ sub create_graphs{
 
 	my $rrdtime =  $time1 ;
 
-	my $rrdDir = "[path]/rrd";
+	my $rrdDir = "/home/akhalfan/rrd";
 
 
 	my $imgDir =
@@ -72,7 +72,7 @@ sub create_graphs{
 
 	my $graphSuccess;
 
-my $rrd_dir ="/[akhalfan]/rrd";
+my $rrd_dir ="/home/akhalfan/rrd";
 	my $image_names = [];
 	#foreach my $sw_ip ( sort keys %switches ) {
 		foreach my $pt_index ( sort { $a <=> $b } keys %{$port_ref}  )
@@ -290,24 +290,22 @@ $time1 = $time2 - 600;
 	$time1 = $time1 * 1000;
 	$time2 = $time2 * 1000;	
 
+	my %cred_args = (config => '/var/www/flowscale_ui/conf/database.xml', @_,);
 
-	my $database_name;
-	my $hostname;
-	my $port;
-	my $username;
-	my $password;
+	#get the credentials to get access to statistics tables
+	my $config_filename = $cred_args{'config'};
+	my $config = XML::Simple::XMLin($config_filename);
+	my $database_name = $config->{'flowstat_credentials'}->{'database_name'};
+	my $hostname = $config->{'flowstat_credentials'}->{'hostname'};
+	my $database_port = $config->{'flowstat_credentials'}->{'port'};
+	my $username = $config->{'flowstat_credentials'}->{'username'};
+	my $password = $config->{'flowstat_credentials'}->{'password'};
 
 
-
-	 $database_name = "flowscale_db" ;
-	 $hostname  = "[db-url]";
-	 $port  ="[db-port]";
-	 $username = "[db-usernmame]";
-	 $password ="[db-password]";
 	
 	my $dbh ;
  $dbh           = DBI->connect(
-		"DBI:mysql:database=$database_name;host=$hostname;port=$port",
+		"DBI:mysql:database=$database_name;host=$hostname;port=$database_port",
 		$username, $password, { AutoCommit => 0 } );
 
 	#database query 

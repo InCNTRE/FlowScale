@@ -1,3 +1,4 @@
 <config>
   <credentials username="flowscale_user" password="choose a pw here" database_name="flowscale_db" hostname="localhost" port="3306" />
+	<flowstat_credentials username="flowstat_user" password="choose a pw here" database_name="flowscale_db" hostname="localhost" port="3306" />
 </config>

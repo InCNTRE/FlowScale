@@ -25,7 +25,7 @@ sub main {
   
     my $start      = $cgi->param("start") || $date; 
     my $end        = $cgi->param("end"); 
-    my $filename = $cgi->param("file") || "156.56.5.43_25.rrd:156.56.5.43_26.rrd:156.56.5.43_27.rrd";
+    my $filename = $cgi->param("file") || "abcdef123456_1.rrd";
     
 
 
@@ -64,7 +64,7 @@ sub get_rrd_file_data{
     my $file_num = 0;
     foreach my $rrd (@rrds) {
 
-    my $rrdfile = "/home/akhalfan/rrds/" . $rrd;
+    my $rrdfile = "/home/akhalfan/rrd/" . $rrd;
     if ($rrd =~ /140.221.223.201/) {$rrdfile = "/home/akhalfan/rrdssc/" . $rrd;}
     #print " Filename $rrd\n";
 

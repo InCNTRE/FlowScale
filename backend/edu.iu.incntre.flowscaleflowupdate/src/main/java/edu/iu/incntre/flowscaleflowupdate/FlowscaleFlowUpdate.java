@@ -533,6 +533,7 @@ public class FlowscaleFlowUpdate {
 
 				Short lowPort = this.getMinPort(belowPercentPorts,
 						portPercentages);
+				
 
 				logger.debug("check if port {} with percentage {} can receive",
 						lowPort, portPercentages.get(lowPort));
@@ -555,12 +556,27 @@ public class FlowscaleFlowUpdate {
 				double totalNeededPercentage = (double) flowPercentageValue
 						+ (double) (otherDirectionLoadFlow.getFlowPercent());
 
+				//output used for debugging  issue # 36
 				logger.info("porstPercantages is {}", portPercentages);
 				
-				if (((totalNeededPercentage < (optimalPercentage - portPercentages
-						.get(lowPort))) || ((portPercentages.get(highPort) - portPercentages
-						.get(lowPort)) >= (double) (optimalPercentage / 2)))
-						&& totalNeededPercentage < ((double) optimalPercentage / 2)) {
+				logger.info("total needed percentage is {}",totalNeededPercentage);
+				logger.info("low percentage is {}", portPercentages.get(lowPort));
+				logger.info("high percentage is {}", portPercentages.get(highPort));
+				logger.info("optimal percentage is {}", optimalPercentage);
+				logger.info("below percentage ports {}", belowPercentPorts);
+				logger.info("low port is {}", lowPort);
+				
+				
+				
+				if ( 
+						((totalNeededPercentage < (optimalPercentage - portPercentages.get(lowPort) )) 
+						|| (
+								(portPercentages.get(highPort) - portPercentages
+						.get(lowPort)) >= (double) (optimalPercentage / 2))
+						)
+						&& totalNeededPercentage < ((double) optimalPercentage / 2) 
+						
+				) {
 
 					// add to newFlows
 					logger.debug(
@@ -592,9 +608,7 @@ public class FlowscaleFlowUpdate {
 													switchFlows)
 											.getFlowPercent()));
 
-					// add flow percentage to
-					// low load
-					// port
+					// add flow percentage to low load port
 					double lowPortPercentage = portPercentages.get(lowPort);
 					portPercentages
 							.put(lowPort,
