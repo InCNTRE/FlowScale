@@ -20,8 +20,6 @@
 	<property name="dbDriverString" value="database-driver" />
 	<property name="defaultRulePriority" value="5" />
 	<property name="mirrorPriority" value="0" />
-	<!--property name="mirroringRules" value="18-25,41;19-27,41;20-31,43;21-33,43;22-35,45;23-37,45;24-39,47" /-->
-	<property name="flowMirrorPorts" value="00640817f4338f00:31,38;32,39;33,40;34,41;35,42;36,43;37,44-1:11,14;12,15;13,16" />
 	<property name="maximumFlowsToPush" value="0" />
 
 </bean>
