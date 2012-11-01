@@ -18,6 +18,8 @@
   <property name="databaseDriver" value="database driver" />
   <property name="loadedPorts" value="loadedports" />
  	<property name="intervalTime" value="10" />
+ 	<property name="dbUsername" value="db username value" />
+ 	<property name="dbPassword" value="db password value" />
    
   </bean>
 
