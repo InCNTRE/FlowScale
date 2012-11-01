@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.62, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.24, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: flowscale_db
 -- ------------------------------------------------------
--- Server version	5.1.62-0ubuntu0.10.04.1
+-- Server version	5.5.24-0ubuntu0.12.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -51,6 +51,7 @@ CREATE TABLE `flow_stats` (
   `match_string` varchar(100) NOT NULL DEFAULT '',
   `action` varchar(30) DEFAULT NULL,
   `packet_count` int(11) DEFAULT NULL,
+  `priority` int(5) DEFAULT NULL,
   PRIMARY KEY (`datapath_id`,`timestamp`,`match_string`),
   KEY `timestamp` (`timestamp`) USING HASH
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -212,4 +213,4 @@ CREATE TABLE `x_connect` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-27 10:50:38
+-- Dump completed on 2012-11-01 18:21:18
