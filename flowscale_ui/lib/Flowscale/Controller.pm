@@ -103,7 +103,7 @@ sub delete_group {
 	return $client->responseContent();
 
 }
-
+#test function 
 sub get_gibberish {
 	my $self   = shift;
 	my $client = $self->{'client'};
@@ -197,7 +197,7 @@ sub add_switch{
 	return $client->responseContent();
 	
 }
-
+#This function has been
 sub offload_port{
 	my $self = shift ;
 	my %args = @_;
@@ -217,7 +217,7 @@ sub offload_port{
 }
 
 
-
+#this function has been disabled 
 sub get_capstats{
     my $self = shift;
         my %args = @_;
