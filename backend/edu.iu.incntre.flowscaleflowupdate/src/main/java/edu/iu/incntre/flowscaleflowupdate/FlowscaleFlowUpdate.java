@@ -213,7 +213,10 @@ public class FlowscaleFlowUpdate {
 										datapathId, loadedPorts);
 
 								// obtain optimal percentage for each loaded
-								// ports
+								// ports 
+								if(loadedPorts.size() == 0 ){
+									continue;
+								}
 								optimalPercentage = (double) (100 / loadedPorts
 										.size());
 
@@ -354,6 +357,9 @@ public class FlowscaleFlowUpdate {
 
 	private Short getMinPort(ArrayList<Short> lowPorts,
 			HashMap<Short, Double> portPercentages) {
+		
+		logger.debug("Port percentages in getMinPort is {}", portPercentages);
+		logger.debug("lows ports are {}",lowPorts);
 
 		if (lowPorts == null) {
 			return null;
@@ -374,6 +380,8 @@ public class FlowscaleFlowUpdate {
 
 		}
 
+		
+		logger.debug("returned min ports are {}",minPort);
 		return minPort;
 
 	}
@@ -503,6 +511,7 @@ public class FlowscaleFlowUpdate {
 
 		for (Short highPort : abovePercentPorts) {
 
+		
 			for (LoadFlow loadFlow : switchFlows) {
 
 				// first a few validations on whether the flow can be swapped
@@ -533,6 +542,14 @@ public class FlowscaleFlowUpdate {
 
 				Short lowPort = this.getMinPort(belowPercentPorts,
 						portPercentages);
+				
+				//if there are no ports to add break the loop
+				//TO DO: see if 
+				if (lowPort == null){
+					logger.debug("there are no more low ports to use exiting..");
+					break;
+				}
+				
 				
 
 				logger.debug("check if port {} with percentage {} can receive",
@@ -629,6 +646,7 @@ public class FlowscaleFlowUpdate {
 
 					if (portPercentages.get(lowPort) >= optimalPercentage) {
 						belowPercentPorts.remove(lowPort);
+						
 					}
 
 				}
@@ -636,6 +654,13 @@ public class FlowscaleFlowUpdate {
 						loadFlow.getFlowString(), lowPort);
 
 			}
+			Short lowPort = this.getMinPort(belowPercentPorts,
+					portPercentages);
+			if(lowPort == null){
+				logger.warn("there are no more low ports to check for exiting...");
+				break;
+			}
+			
 		}
 		logger.debug("port percentages after hot swap {}", portPercentages);
 		return newFlows;
