@@ -1,0 +1,860 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0065)https://docs.projectfloodlight.org/display/FlowScale/Add+Switches -->
+<html debug="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <link rel="stylesheet" href="./add_switches_files/main-action.css" type="text/css">
+                      
+    
+     
+     
+        
+ <link type="text/css" rel="stylesheet" href="./add_switches_files/batch.css" media="all">
+<!--[if IE]>
+<link type="text/css" rel="stylesheet" href="/s/1925/33/2/_/download/superbatch/css/batch.css?ieonly=true" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./add_switches_files/batch(1).css" media="print">
+<link type="text/css" rel="stylesheet" href="./add_switches_files/confluence.web.resources-view-comment.css" media="all">
+<!--[if IE]>
+<link type="text/css" rel="stylesheet" href="/s/1925/33/1.0/_/download/batch/confluence.web.resources:view-comment/confluence.web.resources:view-comment.css?ieonly=true" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./add_switches_files/confluence.macros.advanced-fancy-box.css" media="all">
+<link type="text/css" rel="stylesheet" href="./add_switches_files/com.atlassian.confluence.plugins.drag-and-drop-support.css" media="all">
+<link type="text/css" rel="stylesheet" href="./add_switches_files/de.communardo.confluence.plugins.subspace-subspace-resource.css" media="all">
+
+     <link rel="stylesheet" href="./add_switches_files/combined.css" type="text/css">
+      <!-- include system javascript resources -->
+                        
+    
+    <script type="text/javascript" async="" src="./add_switches_files/ga.js"></script><script type="text/javascript" src="./add_switches_files/batch.js"></script>
+<script type="text/javascript" src="./add_switches_files/confluence.macros.advanced-fancy-box.js"></script>
+<script type="text/javascript" src="./add_switches_files/confluence.macros.advanced-thumbnail-images.js"></script>
+<script type="text/javascript" src="./add_switches_files/com.atlassian.confluence.plugins.fixedwidth-theme-fixedwidth-resources.js"></script>
+<script type="text/javascript" src="./add_switches_files/com.atlassian.confluence.plugins.drag-and-drop-support.js"></script>
+<script type="text/javascript" src="./add_switches_files/com.atlassian.confluence.plugins.drag-and-drop-drag-and-drop-for-view-content.js"></script>
+<script type="text/javascript" src="./add_switches_files/com.atlassian.confluence.plugins.doctheme-splitter.js"></script>
+<script type="text/javascript" src="./add_switches_files/legacy.confluence.web.resources-prototype.js"></script>
+<script type="text/javascript" src="./add_switches_files/de.communardo.confluence.plugins.subspace-subspace-resource.js"></script>
+<script type="text/javascript" src="./add_switches_files/de.communardo.confluence.plugins.subspace-subspace-breadcrumbs-resource.js"></script>
+
+    <!-- end system javascript resources -->
+    <link rel="stylesheet" type="text/css" href="./add_switches_files/skin-longhorn.css">
+   <link rel="stylesheet" type="text/css" href="./add_switches_files/layout-resources.action">
+   <link rel="stylesheet" type="text/css" href="./add_switches_files/layout-resources(1).action">
+    <link rel="search" type="application/opensearchdescription+xml" title="Search FlowScale on OpenFlowHub - OpenFlow news and projects" href="http://www.openflowhub.org/plugins/builder/layout-resources.action?layoutId=PROJECTSPACE&key=FlowScale&resource=opensearch&hash=$settingsHash">
+     <!--[if gte IE 5.5000]>
+     <link rel="stylesheet" type="text/css" href="/plugins/builder/layout-resources.action?layoutId=PROJECTSPACE&amp;key=FlowScale&amp;resource=iecss&amp;hash=$settingsHashs1925333_">
+     <![endif]-->
+    <title>Add Switches - FlowScale -&nbsp;OpenFlowHub - OpenFlow news and projects</title>
+    <meta name="Generator" content="Adaptavist Theme Builder 4.2.0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+    <meta name="ROBOTS" content="NOYDIR,NOODP">
+    <meta name="DESCRIPTION" content="http://www.openflowhub.org/download/attachments/3244813/FlowScalelogo.png?version=1&amp;modificationDate=1323899481000 border=1!  Registering Switches in the Webui In order to get OpenFlow switches to connect to FlowScale we need to add it to the FlowScale database.&amp;nbsp; To add it in the webUI: Got to &lt;URL ... ">
+<!-- Deprecated since 3.4. To be removed in a future version of Confluence; use AJS.Confluence.getContextPath() -->
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta name="ajs-context-path" content="">
+<meta name="ajs-build-number" content="1925">
+<meta id="atlassian-token" name="atlassian-token" content="81JPNnwTSy">
+<meta id="confluence-space-key" name="confluence-space-key" content="FlowScale">
+<meta name="ajs-remote-user" content="">
+<meta name="ajs-static-resource-url-prefix" content="/s/1925/33/_">
+    
+    <link rel="canonical" href="http://www.openflowhub.org/display/FlowScale/Add+Switches">
+    <link rel="shortlink" href="http://www.openflowhub.org/x/h4Y3">
+    <meta name="wikilink" content="[FlowScale:Add Switches]">
+
+    <link rel="shortcut icon" href="https://docs.projectfloodlight.org/images/icons/favicon.ico">
+    <link rel="icon" type="image/png" href="https://docs.projectfloodlight.org/images/icons/favicon.png">
+    <style type="text/css">
+        .atb-sidebar.expanded {display:run-in;}
+        .atb-sidebar.collapsed {display:none;visibility:collapse;}
+    </style>
+<script type="text/javascript">
+    // Deprecated global variables. To be removed in a future version of Confluence.
+    var contextPath = '';
+    var i18n = [];
+    var _dynarch_menu_url = "/s/1925/33/1/_/download/resources/com.adaptavist.confluence.themes.sitebuilder:sitebuilder/hmenu/src/";
+    document.write("<style>.menulist {display:none;}<\/style>");
+    var log = (typeof(console)!="undefined") ? function(){console.log.apply(arguments);} : function(){};
+ function editInWord() {
+    if (window.ActiveXObject) {
+        var ed;
+        try {
+            ed = new ActiveXObject('SharePoint.OpenDocuments');
+        } catch(err) {
+            window.alert('Unable to create an ActiveX object to open the document. This is most likely because of the security settings for your browser.');
+            return false;
+        }
+        if (ed) {
+            ed.EditDocument('http://www.openflowhub.org/plugins/servlet/editinword/FlowScale/Add Switches.doc', 'Word.Document');
+            return false;
+        } else {
+            window.alert('Cannot instantiate the required ActiveX control to open the document. This is most likely because you do not have Office installed or you have an older version of Office.');
+            return false;
+        }
+    } else if (window.URLLauncher) {
+        var wdFile = new URLLauncher();
+        wdFile.open('/plugins/servlet/editinword/FlowScale/Add Switches.doc');
+    } else if (window.InstallTrigger) {
+        if (window.confirm('A plugin is required to use this feature. Would you like to download it?')) {
+            InstallTrigger.install({'WebDAV Launcher': '/download/resources/com.atlassian.confluence.extra.officeconnector:viewfile/webdavloader.xpi'});
+        }
+    } else {
+        window.alert('Internet Explorer or Firefox are required to use this feature');
+    }
+    return false;
+}
+</script><style>.menulist {display:none;}</style>
+<script type="text/javascript" language="JavaScript" src="./add_switches_files/layout-resources(2).action"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19432895-1']);
+  _gaq.push(['_setDomainName', '.openflowhub.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+<meta name="google-site-verification" content="9bFWYZtXfow_67MV1_ouqS_5G7Ejb8mnyhkjFJaMREE">
+
+<meta name="google-site-verification" content="tPHY_lexHbMt2YuR6H1qaHV62amwUmUl42Eaeqliu3k">
+
+
+
+</head>
+<body onload="BuilderEvents.onPageLoad();" onunload="BuilderEvents.onPageUnload();" class="atb-body layout-PROJECTSPACE  spacekey-FlowScale mode-view context-page decorator-page action-viewpage" id="atb-document">
+<!--[if lt IE 7.0000]>
+    <script type="text/javascript" language="JavaScript" src="/s/1925/33/1/_/download/resources/com.adaptavist.confluence.themes.sitebuilder:sitebuilder/js/PieNG.js"></script>
+<![endif]-->
+<fieldset class="hidden parameters">
+    <input type="hidden" id="statusDialogHeading" value="What are you working on?">
+    <input type="hidden" id="statusDialogAccessibilityLabel" value="Enter your status (140 character limit)">
+    <input type="hidden" id="statusDialogLatestLabel" value="Last update:">
+    <input type="hidden" id="statusDialogUpdateButtonLabel" value="Update">
+    <input type="hidden" id="statusDialogCancelButtonLabel" value="Cancel">
+</fieldset>
+
+<fieldset class="hidden parameters">
+    <input type="hidden" id="globalSettingsAttachmentMaxSize" value="503316480">
+    <input type="hidden" id="userLocale" value="en_GB">
+    <input type="hidden" id="staticResourceUrlPrefix" value="/s/1925/33/_">
+    <input type="hidden" id="contextPath" value="">
+</fieldset>
+    <dl id="atb-accessKeys">
+  <dt>Access Keys:</dt>
+  <dd><a href="https://docs.projectfloodlight.org/display/FlowScale/Add+Switches#atb-content" accesskey="0">Skip to content (Access Key - 0)</a></dd>
+</dl>
+
+
+
+
+
+
+
+
+
+<!--themebody.vm-->
+<script type="text/javascript" language="JavaScript">
+</script>
+<table align="left" width="100%" cellspacing="0" cellpadding="0" class="atb-shell" id="com-atlassian-confluence">
+    <tbody><tr>
+        <td style="vertical-align:top;"><div class="atb-p1"><div class="atb-p2"><div class="atb-p3">
+            <table class="layout atb-page" width="100%" height="100%" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td class="layout atb-upper"><div class="atb-u1"><div class="atb-u2">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tbody><tr><td id="atb-header" class="layout atb-header"><div id="atb-headerdiv" class="layout atb-headerdiv">  <!--Start beta period password protection -->
+
+<script type="text/javascript" src="./add_switches_files/jquery-ui-1.8.5.custom.min.js"></script> 
+<link href="./add_switches_files/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css">
+
+<!--hide the default jquery title bar -->
+<style>
+.ui-dialog-titlebar {display:none;}
+</style>
+
+<script type="text/javascript">
+
+function setBetaPasswordCookie() {
+  var exdate=new Date();
+  exdate.setDate(exdate.getDate()+7);
+  document.cookie= "ofhBetaPasswordOK=" +escape("true") + 
+     ";expires="+exdate.toUTCString() + 
+     ";path=/";
+};
+
+function checkBetaPasswordCookie() {
+  if (document.cookie.length>0 && document.cookie.indexOf("ofhBetaPasswordOK=") != -1)
+      return true; 
+  else
+      return true;  // Disable password check
+};
+
+
+jQuery(function() {	
+                if(!checkBetaPasswordCookie()) {
+  		  jQuery( "#betaPasswordDialogBox" ).dialog({
+			modal: true,
+			draggable: false,
+			resizeable: false,
+			title: "this should not be visible",
+			height: 210,
+			width: 550,
+			dialogClass: "betaPassword",
+			buttons: {
+				Ok: function() {
+                                        setBetaPasswordCookie();
+					jQuery( this ).dialog( "close" );
+				}
+			},
+		  });
+                }
+                jQuery("#betaPasswordInput").keypress(function(e) {
+                        var attemptStr = this.value + String.fromCharCode(e.which);
+
+//Hi.  Welcome to the site.  Good to have ya!  
+//The password is below
+//You may want to consider emailing jobs@bigswitch.com.
+
+                        var passwords = /^ofhdev|tengi|devedition|gec9/;
+                        if(passwords.test(attemptStr)) {
+                          jQuery(".betaPassword .ui-button").button('enable');
+                        }
+                        else { //make sure to disable the button if the user previously had the pw correct.
+                          jQuery(".betaPassword .ui-button").button('disable');
+                        }
+                });
+                jQuery(".betaPassword .ui-button").button('disable');
+});
+</script>
+
+
+<div id="betaPasswordDialogBox" style="display:none;">
+<div id="betaPasswordDialogBoxWrapper">
+
+<img src="./add_switches_files/logo.png" width="120px" style="float:left">
+<div id="passwordDialogText" style="float:left; margin-left:20px; text-align:left">
+<h3 style="font-size:18px; font-style:normal; font-color: #036; margin:0px; padding:0px;">
+Please enter your invite password here:
+</h3>
+<input id="betaPasswordInput" value="password" style="font-size:20px;font-style:italic;margin-top:5px">
+
+<p style="font-size:0.9em;margin-top:20px">
+If you'd like an invite, please email InviteMeToTheHub (at) bigswitch.com
+</p>
+
+</div>
+
+<div style="clear:both;margin:0px;padding:0px"></div>
+
+</div><!-- end "betaPasswordDialogBoxWrapper" -->
+</div><!-- end "betaPasswordDialogBox" -->
+
+
+<!-- end beta password protection -->
+<!--start header wrapper-->
+  <div class="projheader-wrapper">
+    <div class="projheader" style="padding-top:0px;">
+      <a href="https://docs.projectfloodlight.org/"><img src="./add_switches_files/logo_top_s.jpg"></a>
+    </div>
+  </div>
+<!--end header wrapper-->
+<script type="text/javascript" src="./add_switches_files/jqueryslidemenu-e.js"></script>
+<!--start menu-->
+<div class="menu-back">
+	<div class="menu-wrapper">
+		<div class="menu-wrapper-left">
+			<div id="myslidemenu" class="jqueryslidemenu">
+				<ul>
+					<li><a href="http://www.openflowhub.org/display/Home/" class="menubarfirst">Home</a></li>
+					<li><a href="http://www.openflowhub.org/display/Home/OpenFlowHub" style="padding-right: 23px;">Projects<img src="./add_switches_files/down.gif" class="downarrowclass" style="border:0;"></a>
+						<ul style="top: 29px; display: none; visibility: visible;">
+                                                        <li class="menuoptfirst">&nbsp;</li>
+						        <li><a href="http://www.openflowhub.org/display/Floodlight/">Floodlight</a></li>
+	                                                <li><a href="http://www.openflowhub.org/display/Indigo/">Indigo</a></li>
+                                                        <li><a href="http://www.openflowhub.org/display/FlowScale/">FlowScale</a></li>
+                                                        <li><a href="http://oftest.openflowhub.org/">OFTest</a></li>
+							<!--<li class="menuseparator">&nbsp;</li>
+							<li><a href="/display/projects">All Projects...</a></li>-->
+						</ul>
+					</li>
+					<li><a href="http://forums.openflowhub.org/forum.php">Forums</a></li>
+					<li><a href="http://bugs.openflowhub.org/">Issues</a></li>
+                                  <!-- <li><a href="http://www.openflowhub.org/display/Resources/">Resources</a><?li>-->
+					<li><a href="https://docs.projectfloodlight.org/wp/">Blog</a></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="menu-wrapper-right">
+			<a href="https://docs.projectfloodlight.org/login.action">Login</a> &nbsp;|&nbsp; <a href="https://docs.projectfloodlight.org/signup.action">Register</a>
+		</div>
+
+		<div class="clearboth"> </div>
+	</div>
+</div>
+
+<!--end menu--> </div></td></tr>
+                             </tbody></table></div></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="layout atb-lower"><div class="atb-l1"><div class="atb-l2">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tbody><tr class="layout">
+                                    <td class="layout atb-titlecontent">
+                                        <div id="atb-title" class="atb-title"><div id="atb-titlediv" class="atb-titlediv">  <a href="https://docs.projectfloodlight.org/display/FlowScale">FlowScale</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="http://bugs.openflowhub.org/browse/FlowScale" class="external-link" rel="nofollow">Issues</a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://forums.openflowhub.org/forum.php" class="external-link" rel="nofollow">Forum</a> &nbsp;&nbsp;|&nbsp;&nbsp;  <a href="https://docs.projectfloodlight.org/pages/viewpreviousversions.action?pageId=3638919">Page History</a> 
+<br class="atl-forced-newline">
+<br class="atl-forced-newline">
+<h1><a name="AddSwitches-"></a>Add Switches</h1> </div></div>
+                                        <div id="atb-content" class="layout atb-content"><div id="atb-contentdiv" class="layout atb-contentdiv">
+                                            <!--page.vmd-->
+    
+    
+        
+    
+    
+                    
+    
+<div id="content" class="page view">
+
+
+
+
+<fieldset id="link-to-page-fields" class="hidden parameters">
+    <input type="hidden" id="linkToThisPageHeading" value="Link to this Page">
+    <input type="hidden" id="linkToThisPageLink" value="Link">
+    <input type="hidden" id="linkToThisPageTinyLink" value="Tiny Link">
+    <input type="hidden" id="linkToThisPageWikiMarkup" value="Wiki Markup">
+    <input type="hidden" id="linkToThisPageClose" value="Close">
+</fieldset>
+<fieldset class="hidden parameters">
+    <input type="hidden" title="movePageDialogViewPageTitle" value="Move Page – ‘Add Switches’">
+    <input type="hidden" title="movePageDialogEditPageTitle" value="Set Page Location">
+    <input type="hidden" title="movePageDialogMoveButton" value="Move">
+    <input type="hidden" title="movePageDialogOkButton" value="OK">
+    <input type="hidden" title="movePageDialogCancelButton" value="Cancel">
+    <input type="hidden" title="movePageDialogBrowsePanelTip" value="Click to select the new parent page for this page and its children.">
+    <input type="hidden" title="movePageDialogSearchPanel" value="Search">
+    <input type="hidden" title="movePageDialogHistoryPanel" value="Recently Viewed">
+    <input type="hidden" title="movePageDialogHistoryNoResults" value="There were no recently viewed pages found.">
+    <input type="hidden" title="movePageDialogLocationPanel" value="Known Location">
+    <input type="hidden" title="movePageDialogLocationNotFound" value="The specified page was not found.">
+    <input type="hidden" title="movePageDialogBrowsePanel" value="Browse">
+    <input type="hidden" title="movePageDialogPanelLoadErrorMsg" value="Error reading the panel content from the server.">
+    <input type="hidden" title="movePageDialogPanelLoadErrorTip" value="You could try reloading the page and launching the dialog again.">
+    <input type="hidden" title="movePageDialogPanelLoadErrorStatus" value="HTTP Status">
+    <input type="hidden" title="movePageDialogNoSelectionErrorMsg" value="You must make a selection in the tree before you can move the page.">
+    <input type="hidden" title="movePageDialogSearchError" value="Failed to retrieve search results from the server.">
+    <input type="hidden" title="movePageDialogSearchNoResults" value="There were no pages found containing &lt;b&gt;{0}&lt;/b&gt;.">
+    <input type="hidden" title="movePageDialogSearchResultCount" value="Showing &lt;b&gt;{0}&lt;/b&gt;-&lt;b&gt;{1}&lt;/b&gt; of &lt;b&gt;{2}&lt;/b&gt; pages containing &lt;b&gt;{3}&lt;/b&gt;.">
+    <input type="hidden" title="movePageDialogMoveFailed" value="Move failed. There was a problem contacting the server.">
+    <input type="hidden" title="movePageDialogCannotChangeSpace" value="You cannot move this page to another space because you do not have permission to remove it from this space.">
+    <input type="hidden" title="pageTitle" value="Add Switches">
+    <input type="hidden" title="parentPageTitle" value="FlowScale Home">
+    <input type="hidden" title="fromPageTitle" value="">
+    <input type="hidden" title="spaceKey" value="FlowScale">
+    <input type="hidden" title="spaceName" value="FlowScale">
+    <input type="hidden" title="movePageDialogInvalidLocation" value="You cannot move a page to be underneath itself or its children.">
+    <input type="hidden" title="movePageDialogOrderingTitle" value="Page Ordering">
+    <input type="hidden" title="movePageDialogBackButton" value="Back">
+    <input type="hidden" title="movePageDialogMoveAndOrderButton" value="Reorder">
+    <input type="hidden" title="movePageDialogNextButton" value="Move">    
+</fieldset>
+
+<script type="text/x-template" title="movePageDialog">
+    <div class="row information">
+        Specify the new parent page for this page and its children by space and title.
+    </div>
+    <div class="form">
+        <fieldset>
+            
+
+    <legend class="assistive"><span>Change the Parent Page to a Known Page</span></legend>
+            <div class="row">
+                <label for="new-space">New space:</label>
+                <div class="value new-space-value">
+                    <input id="new-space-key" name="new-space-key" type="hidden" value="FlowScale">
+                                            <span class="space-input">
+                            <input id="new-space" name="new-space" value="FlowScale" disabled="disabled">
+                        </span>
+                        <span class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</span>
+                                        <div class="new-space-dropdown aui-dd-parent"></div>
+                </div>
+            </div>
+            <div class="row">
+                <label for="new-parent-page">New parent page:</label>
+                <div class="value new-parent-page-value">
+                    <span class="page-input">
+                        <input id="new-parent-page" name="new-parent-page" value="FlowScale Home">
+                    </span>
+                    <span class="description">Start typing a page title to see a list of suggestions.</span>
+                    <div class="new-parent-page-dropdown aui-dd-parent autocomplete"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="location-info">
+        <div class="row">
+            <label>Current location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="current-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label>New location:</label>
+            <div class="value breadcrumbs-container">
+                <div class="breadcrumbs-line">
+                    <ul id="new-parent-breadcrumbs" class="breadcrumbs">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/x-template" title="movePageErrors">
+    <div id="move-errors" class="hidden warning"></div>
+</script>
+<script type="text/x-template" title="movePageBreadcrumb">
+    <li><a class="{2}" title="{3}" tabindex="-1"><span>{0}</span></a></li>
+</script>
+<script type="text/x-template" title="movePageBreadcrumbLoading">
+    <li class="loading"><span>Loading breadcrumbs&hellip;</span></li>
+</script>
+<script type="text/x-template" title="movePageBreadcrumbError">
+    <li class="warning last"><span>Error retrieving breadcrumbs.</span></li>
+</script>
+<script type="text/x-template" title="movePageNoMatchingPages">
+    <ol><li><span class="warning">No matching pages found.</span></li></ol>
+</script>
+<script type="text/x-template" title="movePageNoMatchingSpaces">
+    <ol><li><span class="warning">No matching spaces found.</span></li></ol>
+</script>
+
+<script type="text/x-template" title="movePageSearchPanel">
+<div class="row information">
+    Search for and select the new parent page for this page and its children.
+</div>
+<div id="move-page-search-container" class="row">
+    <div class="search-form">
+        <fieldset>
+            
+
+    <legend class="assistive"><span>Search for a New Parent Page</span></legend>
+            
+
+    <label  for="move-page-search-query" class="assistive">Search keywords</label>
+            <input class="search-query" id="move-page-search-query">
+            
+
+    <label  for="move-page-search-space" class="assistive">Search in space</label>
+                            <select id="move-page-search-space" class="search-space" disabled="disabled">
+                    <option value="FlowScale" selected="selected">FlowScale</option>
+                </select>
+                        <input type="button" value="Search">
+                            <div class="description warning">You cannot move this page to another space because you do not have permission to remove it from this space.</div>
+                    </fieldset>
+    </div>
+    <div class="search-results">
+    </div>
+</div>
+</script>
+<script type="text/x-template" title="movePageSearchResultsLoading">
+    <div class="searching">Searching…</div>
+</script>
+
+<script type="text/x-template" title="movePageHistoryPanel">
+<div class="row information">
+    Select the new parent page for this page and its children from your history.
+</div>
+<div id="move-page-search-container" class="row">
+    <div class="search-results">
+    </div>
+</div>
+</script>
+<script type="text/x-template" title="movePageHistoryLoading">
+    <div class="searching">Loading…</div>
+</script>
+<script type="text/x-template" title="movePageBrowsePanel">
+    <div class="row information">
+        Click to select the new parent page for this page and its children.
+    </div>
+    <div class="tree"></div>
+</script>
+<script type="text/x-template" title="movePagePanelLoading">
+    <span>Loading…</span>
+</script>
+<script type="text/x-template" title="movePageBrowsePanelSpace">
+    <ul><li id='tree-root-node-item' class='root-node-list-item'><a class='root-node' href='#'>{0}</a></li></ul>
+</script>
+<script type="text/x-template" title="orderingPagePanel">
+<div id="orderingPlaceHolder"></div>
+</script>
+<script type="text/x-template" title="reorderCheckbox">
+<span id="reorderRequirement"><input id="reorderCheck" type="checkbox" name="reorderFlag" title="Choose the position of this page within the list of child pages."/><label for="reorderCheck" title="Choose the position of this page within the list of child pages.">Reorder</label></span>
+</script>
+<script type="text/x-template" title="move-help-link">
+    <div class="dialog-help-link">
+            <a href="http://docs.atlassian.com/confluence/docs-33/Moving+a+Page" target="_blank">Help</a>
+    </div>
+</script>
+<script type="text/x-template" title="searchResultsGrid">
+    <table>
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">Page Title</th>
+                <th class="search-result-space">Space</th>
+                <th class="search-result-date">Updated</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <th class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></th>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script>
+<!-- Start restrictions section -->
+<fieldset class="hidden parameters i18n">
+        <input type="hidden" id="i18n.page.perms.error.invalid.entity.names" value="Unknown user or group:">
+        <input type="hidden" id="i18n.page.perms.dialog.heading" value="Page Restrictions">
+        <input type="hidden" id="i18n.page.perms.editing.restricted.to" value="Editing restricted to:">
+        <input type="hidden" id="i18n.cancel.name" value="Cancel">
+        <input type="hidden" id="i18n.close.name" value="Close">
+        <input type="hidden" id="i18n.update.name" value="Save">
+</fieldset>
+
+<script type="text/x-template" title="page-permissions-div">
+<div id="page-permissions-div">
+    <div id="page-permissions-editor-form">
+
+                <div id="page-permissions-error-div" class="hidden">
+            <a href="#" id="permissions-error-div-close">Ok</a>
+            <div></div>
+        </div>
+
+                <div id="page-permissions-type-radios" class="page-permissions-label-rows">
+            <div>
+                <input id="restrictViewRadio" type="radio" checked="checked" name="pagePermissionTypeRadio" value="view"/>
+                <label for="restrictViewRadio">Restrict viewing of this page</label>
+                <input id="restrictEditRadio" type="radio" name="pagePermissionTypeRadio" value="edit"/>
+                <label for="restrictEditRadio">Restrict editing of this page</label>
+            </div>
+        </div>
+        <div id="page-permissions-input" class="page-permissions-label-rows">
+            <div class="page-permissions-label">To:</div>
+            <div id="page-permissions-chooser-box">
+                                <span id="page-permissions-choose-user" class="ajs-button">
+                    
+
+
+
+    
+
+
+
+<a href="#" id='userpicker-popup-link-image' onClick="var picker = window.open('/spaces/openuserpicker.action?key=FlowScale&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;"><img src="/s/1925/33/_/images/icons/user_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose users" /></a>
+<a href="#" id='userpicker-popup-link-text' onClick="var picker = window.open('/spaces/openuserpicker.action?key=FlowScale&amp;startIndex=0&amp;onPopupSubmit=AJS.PagePermissions.addUserPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=700,height=680,scrollbars=yes'); picker.focus(); return false;">Person...</a>
+
+
+                </span>
+                <span id="page-permissions-choose-group" class="ajs-button">
+                    
+
+
+
+    
+
+ 
+
+<a href="#" id='grouppicker-popup-link-image' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=FlowScale&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;"><img src="/s/1925/33/_/images/icons/group_16.gif" height=16 width=16 border=0 align="absmiddle"  title="Choose groups" /></a>
+<a href="#" id='grouppicker-popup-link-text' onClick="var picker = window.open('/spaces/opengrouppicker.action?key=FlowScale&amp;startIndex=0&amp;actionName=dosearchgroups.action&amp;onPopupSubmit=AJS.PagePermissions.addGroupPermissions', 'EntitiesPicker', 'status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes'); picker.focus(); return false;">Group...</a>
+
+
+                </span>
+            </div>
+            <div id="page-permissions-input-box">
+                                <span>
+                    <input type="text" id="page-permissions-names-input" class="input-placeholder" value="Enter user or group name" name="permissionNames" size="30" autocomplete="off"/>
+                </span>
+                <input
+    type="hidden"
+                            id="page-permissions-names-hidden"           />                <img height="16px" width="1px" src="/s/1925/33/_/images/border/spacer.gif"/>
+                <input type="button" id="add-typed-names" value="Restrict">
+            </div>
+        </div>
+    </div>
+    <div id="page-permissions-tables">
+        <div id="page-permissions-table-div">
+                        <table id="page-permissions-table" class="page-permissions-table">
+                <tr id="page-permissions-no-views" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No view restrictions are defined for this page</span></td>
+                </tr>
+                <tr id="page-permissions-no-edits" class="marker-row">
+                    <td colspan="3" class="page-permissions-marker-cell"><span>No edit restrictions are defined for this page</span></td>
+                </tr>
+            </table>
+        </div>
+        <div id="page-inherited-permissions-table-div" class="hidden">
+            <span id="page-inherited-permissions-table-desc">
+                <a class="icon twisty-closed">Show/Hide</a>
+                <a id="toggle-inherited-permissions" title="Click to see inherited restrictions">This page has restricted parent pages. It can only be seen by users who can see those parent pages.</a>
+            </span>
+            <div id="page-inherited-permissions-tables" class="hidden page-inheritance-togglable"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/x-template" title="permissions-row-template">
+    <tr class="permission-row">
+                                
+                <td class="page-permissions-marker-cell" width="20%">
+            <span>Viewing restricted to:</span>
+        </td>
+                <td class="permission-entity" nowrap="true" width="40%">
+            <span class="entity-container">
+                <img class="permission-entity-picture"/>
+                <span class="permission-entity-display-name"></span>
+                <span class="permission-entity-name-wrap">&nbsp;(<span class="permission-entity-name"></span>)</span>
+            </span>
+        </td>
+        <td class="permission-detail-column">
+            <div class="permission-remove-div">
+                <a href="#" class="remove-permission-link">Remove restriction</a>
+            </div>
+        </td>
+    </tr>
+</script>
+<script type="text/x-template" title="permissions-username-no-suggestion-template">
+    <ol>
+        <li><a href="#" class="message"><span>No matches</span></a></li>
+    </ol>
+</script>
+<script type="text/x-template" title="page-inherited-permissions-table-div-template">
+        <div class="page-inherited-permissions-owner-div">
+        <div class="page-inherited-permissions-table-desc">Viewing restrictions apply to “<a></a>”. In order to see “<span></span>”, a user must be in the following list of users and groups:</div>
+        <table class="page-permissions-table"></table>
+    </div>
+</script>
+<script type="text/x-template" title="page-restrictions-help-link">
+    <div class="dialog-help-link">
+            <a href="http://docs.atlassian.com/confluence/docs-33/Page+Restrictions" target="_blank">Help</a>
+    </div>
+</script>
+<!-- End restrictions section -->
+
+<fieldset class="hidden parameters">
+    <input type="hidden" title="spaceKeyEncoded" value="FlowScale">
+    <input type="hidden" title="spaceKeyDecoded" value="FlowScale">
+</fieldset>
+
+                      
+    
+     
+     <fieldset class="hidden parameters">
+                <input type="hidden" title="browsePageTreeMode" value="view">
+    </fieldset>
+    <div class="wiki-content">
+        <!-- wiki content -->
+            <p><span class="image-wrap" style=""><img src="./add_switches_files/FlowScale_logo.png" style="border: 1px solid black"></span></p>
+
+<h1><a name="AddSwitches-RegisteringSwitchesintheWebui"></a>Registering Switches in the Webui</h1>
+
+<p>In order to get OpenFlow switches to connect to FlowScale we need to add it to the FlowScale database.&nbsp; To add it in the webUI:</p>
+<ul>
+	<li>Got to &lt;URL&gt;/flowscale_ui/index.cgi?action=switch</li>
+	<li>Click on the Add Switch Button</li>
+	<li>Enter the Switch Details
+	<ul>
+		<li>Switch Name</li>
+		<li>Switch MAC Address</li>
+		<li>Switch IP Address</li>
+		<li>Switch Datapath ID</li>
+	</ul>
+	</li>
+</ul>
+
+
+<p>See below: <span class="image-wrap" style=""><img src="./add_switches_files/Add_Switch.png" style="border: 1px solid black"></span></p>
+<ul>
+	<li>Click on Add and refresh page</li>
+	<li>The switch should appear in the panel.&nbsp; If the Switch is already connected to the controller Clicking on the switch bar should list the ports and their status <span class="image-wrap" style=""><img src="./add_switches_files/display_flows.png" style="border: 1px solid black"></span></li>
+</ul>
+    </div>
+ <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="http://www.openflowhub.org/display/FlowScale/Add+Switches"
+    dc:identifier="http://www.openflowhub.org/display/FlowScale/Add+Switches"
+    dc:title="Add Switches"
+    trackback:ping="http://www.openflowhub.org/rpc/trackback/3638919"/>
+</rdf:RDF>
+-->
+</div>
+    
+
+
+
+
+        
+        
+
+    
+    
+    
+
+
+<fieldset class="hidden parameters">
+        <input type="hidden" id="i18n.manage.watchers.dialog.title" value="Manage Watchers">
+        <input type="hidden" id="i18n.manage.watchers.unable.to.remove.error" value="Failed to remove watcher. Refresh page to see latest status.">
+        <input type="hidden" id="i18n.manage.watchers.status.adding.watcher" value="Adding watcher&amp;hellip;">
+</fieldset>
+<script type="text/x-template" title="manage-watchers-dialog">
+<div class="dialog-content">
+    <div class="column page-watchers">
+        <h3>Watching this page</h3>
+        <p class="description">These people are notified when the page is changed. You can add or remove people from this list.</p>
+        <form action="/json/addwatch.action" method="POST">
+                <input type="hidden" name="atl_token" value="81JPNnwTSy">
+            <input type="hidden" name="pageId" value="3638919"/>
+            <input type="hidden" id="add-watcher-username" name="username" value=""/>
+            <label for="add-watcher-user">User</label>
+            <input id="add-watcher-user" name="userFullName" type="search" class="has-placeholder autocomplete-user"
+               value="" placeholder="Full name or username" autocomplete="off"
+               data-max="10" data-target="#add-watcher-username" data-dropdown-target="#add-watcher-dropdown"
+               data-template="{title}" data-none-message="No matching users found.">
+            <input id="add-watcher-submit" type="submit" name="add" value="Add">
+            <div id="add-watcher-dropdown" class="aui-dd-parent autocomplete"></div>
+            <div class="status hidden"></div>
+        </form>
+        <ul class="user-list">
+            <li class="loading">Loading&hellip;</li>
+            <li class="no-users hidden">No page watchers</li>
+        </ul>
+    </div>
+    <div class="column space-watchers">
+        <h3>Watching this space</h3>
+        <p class="description">These people are notified when any content in the space is changed. You cannot modify this list.</p>
+        <ul class="user-list">
+            <li class="loading">Loading&hellip;</li>
+            <li class="no-users hidden">No space watchers</li>
+        </ul>
+    </div>
+</div>
+</script>
+<script type="text/x-template" title="manage-watchers-user">
+    <li class="watch-user">
+        <img class="profile-picture confluence-userlink" src="{iconUrl}" data-username="{username}">
+        <a class="confluence-userlink" href="{url}" data-username="{username}">{fullName} <span class="username">({username})</span></a>
+        <span class="remove-watch" title="Remove"
+            data-username="{username}">Remove</span>
+    </li>
+</script>
+<script type="text/x-template" title="manage-watchers-help-link">
+    <div class="dialog-help-link">
+            <a href="http://docs.atlassian.com/confluence/docs-33/Managing+Watchers" target="_blank">Help</a>
+    </div>
+</script>
+
+<!--END page.vmd-->
+                                        </div></div>
+                                    </td>
+                                </tr>
+                                <tr><td id="atb-footnote" class="layout atb-footnote"><div id="atb-footnotediv" class="layout atb-footnotediv"> <a href="https://docs.projectfloodlight.org/display/FlowScale/Add+Switches#page-metadata-end" class="assistive">Skip to end of metadata</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+                            <li class="page-metadata-item noprint">
+    
+            
+    
+    <a id="content-metadata-page-restrictions" href="https://docs.projectfloodlight.org/display/FlowScale/Add+Switches#" class="page-metadata-icon page-restrictions hidden" title="Page restrictions apply. Click the lock icon to view or edit the restriction.">
+                   <span>Page restrictions apply</span></a>        </li>
+                            <li class="page-metadata-item noprint">
+    
+        
+    
+    <a id="content-metadata-attachments" href="https://docs.projectfloodlight.org/pages/viewpageattachments.action?pageId=3638919&metadataLink=true" class="page-metadata-icon action-view-attachments" accesskey="a" title="Attachments: 2">
+                   <span><span class="page-metadata-attachments-text">Attachments:</span><span class="page-metadata-attachments-count">2</span></span></a>        </li>
+                        <li class="page-metadata-modification-info">
+                                    Added by <a href="https://docs.projectfloodlight.org/display/~akhalfan1" class="url fn confluence-userlink userlink-0" data-username="akhalfan1" title="" data-processed="true">Ali Khalfan</a>, last edited by <a href="https://docs.projectfloodlight.org/display/~akhalfan1" class="url fn confluence-userlink userlink-0" data-username="akhalfan1" title="" data-processed="true">Ali Khalfan</a> on Nov 02, 2012
+                                                                <span class="noprint">&nbsp;(<a id="view-change-link" href="https://docs.projectfloodlight.org/pages/diffpages.action?pageId=3638919&originalId=3638931">view change</a>)</span>
+                                                </li>
+                    </ul>
+          <div id="version-comment" class="noteMacro" style="display: none;">
+      <strong>Comment:</strong>
+      <br>
+  </div>
+    </div>
+
+
+<a href="https://docs.projectfloodlight.org/display/FlowScale/Add+Switches#page-metadata-start" class="assistive">Go to start of metadata</a>
+<div id="page-metadata-end" class="assistive"></div>
+  </div></td></tr>
+                            </tbody></table>
+                        </div></div></td>
+                    </tr>
+                    <tr><td id="atb-footer" class="layout atb-footer"><div id="atb-footerdiv" class="layout atb-footerdiv"> <!--start footer wrapper-->
+<div class="footer-wrapper"> 
+    <div class="footer"> 
+        <div class="footer-l">OpenFlowHub.org  all rights reserved - 2010 - <a href="https://docs.projectfloodlight.org/display/Home/Terms+Of+Use">Terms of Use</a></div> 
+        </div> 
+    </div> 
+</div>
+<!--end footer wrapper-->  </td></tr>
+                </tbody>
+            </table></div></div></div>
+        </td>
+    </tr>
+    <tr>
+        <td id="attribution" class="attribution" align="center"><div>
+            <a href="https://www.adaptavist.com/">Adaptavist Theme Builder</a>  Powered by <a href="https://www.atlassian.com/software/confluence/default.jsp?clicked=footer">Atlassian Confluence</a>        </div></td>
+    </tr>
+</tbody></table>
+<!--END themebody.vm-->
+<!--footer.vmd-->
+<script type="text/javascript" language="JavaScript">
+var domainName = "http://www.openflowhub.org";
+var entityId = "3638919";
+var spaceKey = "FlowScale";
+</script>
+    <!-- include system javascript resources -->
+                        
+    
+    
+    <!-- end system javascript resources -->
+<!--[if gte IE 5.5000]>
+<script type="text/javascript" language="JavaScript">
+    if (window.DynarchMenu) {
+        DynarchMenu.preloadImages(new RegExp("^/hmenu/"));
+    }
+</script>
+<![endif]-->
+
+
+
+
+
+
+
+
+<!--END footer.vmd-->
+<div id="content-hover-0" class="ajs-content-hover"><div class="contents" style="width: 300px;"></div></div><div class="aui-popup aui-dialog" id="link-page-popup" style="margin-top: -105px; margin-left: -300px; width: 600px; height: 210px; background-color: rgb(255, 255, 255); z-index: 3002; display: none; background-position: initial initial; background-repeat: initial initial;" disabled=""><div class="dialog-components"><h2 class="dialog-title">Link to this Page</h2><ul class="dialog-page-menu" style="height: 114px; display: none;"><li class="page-menu-item selected"><button class="item-button">Link to this Page</button></li></ul><div class="dialog-page-body"><div class="dialog-panel-body" style="height: 104px;"><form id="link-page-popup-form" class="aui"><fieldset><div class="field-group"><label for="link-popup-field-link">Link:</label><input id="link-popup-field-link" readonly="readonly" value="" '="" class="text" type="text"></div><div class="field-group"><label for="link-popup-field-tiny-link">Tiny Link:</label><input id="link-popup-field-tiny-link" readonly="readonly" value="" '="" class="text" type="text"></div><div class="field-group"><label for="link-popup-field-wiki-markup">Wiki Markup:</label><input id="link-popup-field-wiki-markup" readonly="readonly" value="" '="" class="text" type="text"></div></fieldset></form></div></div><div class="dialog-button-panel"><button class="button-panel-button link-page-close-button">Close</button></div></div></div><div id="content-hover-shadow" style="display: none;"><div class="tl"></div><div class="tr"></div><div class="l"></div><div class="r"></div><div class="bl"></div><div class="br"></div><div class="b"></div></div><div id="fancy_overlay"></div><div id="fancy_wrap"><div class="fancy_loading" id="fancy_loading"><div></div></div><div id="fancy_outer"><div id="fancy_inner"><div id="fancy_close"></div><div id="fancy_bg"><div class="fancy_bg fancy_bg_n"></div><div class="fancy_bg fancy_bg_ne"></div><div class="fancy_bg fancy_bg_e"></div><div class="fancy_bg fancy_bg_se"></div><div class="fancy_bg fancy_bg_s"></div><div class="fancy_bg fancy_bg_sw"></div><div class="fancy_bg fancy_bg_w"></div><div class="fancy_bg fancy_bg_nw"></div></div><a href="javascript:;" id="fancy_left"><span class="fancy_ico" id="fancy_left_ico"></span></a><a href="javascript:;" id="fancy_right"><span class="fancy_ico" id="fancy_right_ico"></span></a><div id="fancy_content"></div><div id="fancy_title"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td class="fancy_title" id="fancy_title_left"></td><td class="fancy_title" id="fancy_title_main"><div></div></td><td class="fancy_title" id="fancy_title_right"></td></tr></tbody></table></div></div></div></div><script style="display: none;" id="hiddenlpsubmitdiv"></script><script>try{for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++){ var lastpass_f = document.forms[lastpass_iter]; if(typeof(lastpass_f.lpsubmitorig2)=="undefined"){ lastpass_f.lpsubmitorig2 = lastpass_f.submit; lastpass_f.submit = function(){ var form=this; var customEvent = document.createEvent("Event"); customEvent.initEvent("lpCustomEvent", true, true); var d = document.getElementById("hiddenlpsubmitdiv"); for(var i = 0; i < document.forms.length; i++){ if(document.forms[i]==form){ d.innerText=i; } } d.dispatchEvent(customEvent); form.lpsubmitorig2(); } } }}catch(e){}</script></body></html>
