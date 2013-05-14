@@ -32,7 +32,9 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 
-<h3>Please Report any problems or feedback to flowscale-dev@googlegroups.com</h3>
+
+<h3>FlowScale Quick Start</h3>
+<strong>Please Report any problems or feedback to flowscale-dev@googlegroups.com</strong>
 
 <h4>Run From Source</h4>
 
@@ -40,83 +42,134 @@
 <ul>
 <li>Eclipse 3.6.2</li>
 <li>Mysql 5.0 (For this tutorial we're using mysql, but in reality you could use any database)</li>
-<li>CPAN (optional)</li>
+<li><a href="http://www.cpan.org/">CPAN</a> (optional)</li>
 </ul>
-Import Beacon and OpenflowJ
-Flowscale's engine is the Beacon controller.   We need to download the source code for both the Beacon controller and OpenflowJ.
-The latest Beacon release (1.0.2) can be found here
-The latest OpenflowJ release (1.0.2) can be found here
-Extract those folders to any location on your computer.  (For documentation purposes we'll call the locations <beacon-path> and <openflowj-path>)
-Fire up Eclipse and create a new workstation
-Import the Beacon Project to Eclipse (File -> Import -> General -> Existing Projects into workspace
-Browse to <beacon-path> select the folder 
-Click Deselect all and select the following projects
-Beacon Libraries
-Beacon Main Target 
-net.beaconcontroller.core
-net.beaconcontroller.logging.bridge
-net.beaconcontroller.logging.config
-net.beacontroller.packet
-Import OpenflowJ to Eclipse the same way. This time keep the select all
-Import FlowScale
-Get FlowSclae from github
-git clone git://github.com/InCNTRE/FlowScale.git
-Import FlowScale into Eclipse * Import -> General -> Existing Projects into workspace
-Browse to <path-to-FlowScale>/backend
-Select All projects and click 'OK'
-Resolving Target Definitions
+
+<h4>Import Beacon and OpenflowJ</h4>
+Flowscale's engine is the <a href="http://www.beaconcontroller.net/">Beacon</a> controller.   We need to download the source code for both the Beacon controller and OpenflowJ.
+The latest Beacon release (1.0.2) can be found <a href="https://openflow.stanford.edu/static/beacon/releases/1.0.2/beacon-1.0.2-source.tar.gz">here</a>
+
+The latest OpenflowJ release (1.0.2) can be found <a href="https://openflow.stanford.edu/static/openflowj/releases/1.0.2/openflowj-1.0.2-source.tar.gz">here</a>
+<ul>
+<li>Extract those folders to any location on your computer.  (For documentation purposes we'll call the locations &lt;beacon-path&gt; and &lt;openflowj-path>&gt;</li>
+<li>Fire up Eclipse and create a new workstation</li>
+<li>Import the Beacon Project to Eclipse (File -> Import -> General -> Existing Projects into workspace</li>
+<li>Browse to &lt;beacon-path&gt;select the folder</li> 
+<li>Click Deselect all and select the following projects</li>
+  <ul>
+    <li>Beacon Libraries</li>
+    <li>Beacon Main Target</li>
+    <li>net.beaconcontroller.core</li>
+    <li>net.beaconcontroller.logging.bridge</li>
+    <li>net.beaconcontroller.logging.config</li>
+    <li>net.beacontroller.packet</li>
+<li>Import OpenflowJ to Eclipse the same way. This time keep the select all</li>
+
+<h4>Import FlowScale</h4>
+
+Get FlowScale from github
+
+<code>git clone git://github.com/InCNTRE/FlowScale.git</code>
+<ul>
+<li>Import FlowScale into Eclipse * Import -> General -> Existing Projects into workspace</li>
+<li>Browse to &lt;path-to-FlowScale&gt;/backend</li>
+<li>Select All projects and click 'OK'</li>
+</ul>
+
+<h5>Resolving Target Definitions</h5>
+
 One you move to the Eclipse workbench, you'll find that most of the bundles containt errors.  We need to resolve those errors by downloading the dependencies.
-On the left pane Double-Click the FlowScale Target Platform
-Right click on main.target.example select "refactor" and rename it to main.target
-Double click on the file. It will appear on the right, in the bottom it will say "Resolving Target Definitions" wait until it finishes.  It is downloading all the necessary libraries.  So, it will take a while the first time.
-One it is done in the top right, click on "Set as Target Platform"
-All errors should be cleared now
-Deploy the Database
+<ul>
+<li>On the left pane Double-Click the FlowScale Target Platform</li>
+<li>Right click on main.target.example select "refactor" and rename it to main.target</li>
+<li>Double click on the file. It will appear on the right, in the bottom it will say "Resolving Target Definitions" wait until it finishes.  It is downloading all the necessary libraries.  So, it will take a while the first time.</li>
+<li>One it is done in the top right, click on "Set as Target Platform"</li>
+
+<p>All errors should be cleared now</p>
+
+<h4>Deploy the Database</h4>
+
 The database carries all the information that needs to be persistent.
-Set up the flowscale_db database
-Access mysql root
-create a new database
-create database flowscale_db;
-Use the script file <path-to-FlowScale>/database/flowscale_db.sql to create the tables.  For example:
-mysql -u root -D flowscale_db -p < flowscale_db.sql
-Update Backend Configuration
+<ul>
+<li>Set up the flowscale_db database
+<li>Access mysql root</li>
+<li>create a new database
+   <code>create database flowscale_db;</code></li>
+<li>Use the script file &lt;path-to-FlowScale&gt;/database/flowscale_db.sql to create the tables.  For example:
+	<code>mysql -u root -D flowscale_db -p < flowscale_db.sql</code>
+<h4>Update Backend Configuration</h4>
+<p>
 We need to update all of the configuration values in the bundles to allow FlowScale to run, most of these values should be customized according to your own environment
 For all FlowScale bundles rename the META-INF/spring/context.xml.example file to context.xml:
-edu.iu.incntre.flowscale
-edu.iu.incntre.flowscaleflowupdate
-edu.iu.incntre.flowscalestatcollector
-edu.iu.incntre.flowscalehttplistener
-org.eclipse.equinox.console.telnet
- You need to edit some of the context.xml files to reflect your own enviromnent as detailed below. 
-Database configuration 
-For documentation purposes I'll assume the database is under localhost with the listening port being 3306.  The username and password of the database if "flowscale".  The JDBC driver being used is com.mysql.jdbc.Driver.
-Edit the context.xml of edu.iu.incntre.flowscale
-set the username property to "flowscale"
-set the password property to "flowscale"
-set the connectionString property to "dbc:mysql://127.0.0.1:3306/flowscale_db"
-set the dbDriverString property to "com.mysql.jdbc.Driver"
-Edit the context.xml of edu.iu.incntre.flowscalestatcollector
-set the databaseClass property to com.mysq.jdbc.Driver
-set the dbUsername property to flowscale
-set the dbPassword property to flowscale
-set the databaseDriver property to "dbc:mysql://localhost:3306/flowscale_db"
-Edit the context.xml of edu.iu.incntre.flowscaleflowupdate
-set the databaseClass property to com.mysq.jdbc.Driver
-set the dbUsername property to flowscale
-set the dbPassword property to flowscale
-set the databaseDriver property to "dbc:mysql://localhost:3306/flowscale_db"
-Switch Configuration
-Some of bundles also need information about the switch or switches being used.  FlowScale will need the datapath ID of the switch.  Otherwise, it will ignore it (even if the switch connects to the controllers). For documentation purposes assume we have 2 switches..  The first with datapathId abcdefabcdef and another with datapathId 123456123456.  
-Assume we would like to have the traffic output distribution from the switch on ports 5,6,7,8 for the first switch and the second switch with output distribution 15,16,17,18.
-edit edu.iu.incntre.flowscaleflowupdate
-set the loadedPorts property to "abcdefabcdef:5,6,7,8-123456123456:15,16,17,18"
-edit edu.iu.incntre.flowscalestatcollector
-set the datapathIdString property to "abcdefabcdef,123456123456"
-Other Optional Configuration
+</p>
+<ul>
+<li>edu.iu.incntre.flowscale</li>
+<li>edu.iu.incntre.flowscaleflowupdate</li>
+<li>edu.iu.incntre.flowscalestatcollector</li>
+<li>edu.iu.incntre.flowscalehttplistener</li>
+<li>org.eclipse.equinox.console.telnet</li>
+</ul>
+<p>You need to edit some of the context.xml files to reflect your own enviromnent as detailed below.</p>
+
+<h5>Database configuration</h5> 
+<ul>
+<li>
+For documentation purposes I'll assume the database is under localhost with the 
+listening port being 3306.  The username and password of the database if "flowscale". 
+The JDBC driver being used is com.mysql.jdbc.Driver.
+</li>
+ <li>Edit the context.xml of edu.iu.incntre.flowscale
+ <ul>	
+ 	<li>set the username property to "flowscale"</li>
+ 	<li>set the password property to "flowscale"</li>
+ 	<li>set the connectionString property to "dbc:mysql://127.0.0.1:3306/flowscale_db"</li>
+ 	<li>set the dbDriverString property to "com.mysql.jdbc.Driver"</li>
+ </ul>		
+<li>Edit the context.xml of edu.iu.incntre.flowscalestatcollector</li>
+	<ul>
+		<li>set the databaseClass property to com.mysq.jdbc.Driver</li>
+		<li>set the dbUsername property to flowscale</li>
+		<li>set the dbPassword property to flowscale</li>
+		<li>set the databaseDriver property to "dbc:mysql://localhost:3306/flowscale_db"</li>
+	</ul>	
+<li>Edit the context.xml of edu.iu.incntre.flowscaleflowupdate</li>
+	<ul>
+		<li>set the databaseClass property to com.mysq.jdbc.Driver</li>
+		<li>set the dbUsername property to flowscale</li>
+		<li>set the dbPassword property to flowscale</li>
+		<li>set the databaseDriver property to "dbc:mysql://localhost:3306/flowscale_db"</li>
+	</ul>
+</ul>
+
+<h5>Switch Configuration</h5>
+<p>
+Some of bundles also need information about the switch or switches being used.  FlowScale 
+will need the datapath ID of the switch.  Otherwise, it will ignore it (even if the switch 
+connects to the controllers). For documentation purposes assume we have 2 switches. 
+ The first with datapathId abcdefabcdef and another with datapathId 123456123456.  
+</p>
+<p>
+Assume we would like to have the traffic output distribution from the switch on ports 5,6,7,8 
+for the first switch and the second switch with output distribution 15,16,17,18.
+<ul>
+	<li>edit edu.iu.incntre.flowscaleflowupdate</li>
+	<li>set the loadedPorts property to "abcdefabcdef:5,6,7,8-123456123456:15,16,17,18"</li>
+	<li>edit edu.iu.incntre.flowscalestatcollector</li>
+	<li>set the datapathIdString property to "abcdefabcdef,123456123456"</li>
+</ul>
+
+<h5>Other Optional Configuration</h5>
+
 [coming soon]
+
+<p>
 It is time to run the FlowScale main engine
-Running FlowScale
-under edu.iu.incntre.flowscaleproduct
+</p>
+
+<h4>Running FlowScale</h4>
+<ul>
+  <li>under edu.iu.incntre.flowscaleproduct</li>
+  
 Under the configuration tab, on the top right click on the validate tab it should say "no problems detected"
 To run the application in debug mode click on the debug icon and choose "Launch in Eclipse application mode"
 That should startup FlowScale you should see the following ports on your machine listening:
