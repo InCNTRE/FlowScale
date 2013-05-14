@@ -1,0 +1,608 @@
+.dynarch-popup-menu .pageunfavourite .icon{background:transparent url("%CONTEXTPATH%/images/icons/fav_on_16.png") no-repeat scroll center;}.dynarch-popup-menu .pagefavourite .icon{background:transparent url("%CONTEXTPATH%/images/icons/fav_off_16.png") no-repeat scroll center;}.dynarch-popup-menu .action-page-favourite .icon{background:transparent url("%CONTEXTPATH%/images/icons/fav_off_16.png") no-repeat scroll center;}.dynarch-popup-menu .ie-page-favourite-selected .icon{background:transparent url("%CONTEXTPATH%/images/icons/fav_on_16.png") no-repeat scroll center;}.dynarch-popup-menu .pagestopwatching .icon{background:transparent url("%CONTEXTPATH%/images/icons/watch_on_16.png") no-repeat scroll center;}.dynarch-popup-menu .pagestartwatching .icon{background:transparent url("%CONTEXTPATH%/images/icons/watch_off_16.png") no-repeat scroll center;}.dynarch-popup-menu .action-page-watching .icon{background:transparent url("%CONTEXTPATH%/images/icons/watch_on_16.png") no-repeat scroll center;}.dynarch-popup-menu .action-page-watching.inactive .icon{background:transparent url("%CONTEXTPATH%/images/icons/watch_off_16.png") no-repeat scroll center;}.dynarch-popup-menu .action-page-watching-space .icon{background:transparent url("%CONTEXTPATH%images/icons/watching_space_16.png") no-repeat scroll center;}.dashtable ul{list-style-type:none;padding-left:0;}.dashtable ul li{float:left;margin-right:20px;}.tabnav .tabs a{display:inline;float:left;margin:0 3px 0 0;padding:0 3px;text-decoration:none;border-color:#69C;}#foldertab li a,.tabnav li a{border-color:-moz-use-text-color;border-style:solid solid none;border-width:1px medium;margin-left:3px;padding:3px .5em;text-decoration:none;}.tabnav .tabs a:hover{background-color:#036;border-bottom-color:#036;color:#FFF;}.tabnav .tabs a{background-color:#69C;border:1px solid #69C;color:#FFF;}.tabnav li a{-moz-border-radius-topleft:3px;-moz-border-radius-topright:3px;display:inline;padding:.4em .6em;text-decoration:none;}ul.tabnav li.spaceActionLinks{-moz-border-radius-topleft:3px;-moz-border-radius-topright:3px;padding:0;text-decoration:none;border:1px solid #036;padding:0;border-bottom-style:none;}ul.tabnav .spaceActionLinks{display:inline;padding:0;}ul.tabnav .spaceActionLinks a{padding:3px 3px 0 3px;margin:0;border-style:none;}ul.tabnav{margin:0 10px 10px 0;width:98%;}ul.tabnav{bottom:3px;float:none;margin:0;padding:0;position:relative;text-decoration:none;display:inline-block;}.tabnav{border-bottom:1px solid #69c;display:block;float:none;list-style-position:inside;margin:0;padding:0;}ul.tabnav li a.current:hover,ul.tabnav li a.current{background:white none repeat scroll 0 0;border-bottom:1px solid white;color:black;}#peoplelist .profile-macro{float:left;width:30%;margin-bottom:30px;}body.atb-body{overflow:visible!important;}#wysiwyg{clear:left;}.inputSection{width:100%;}.quick-search fieldset{position:relative;}.quick-search{text-align:left;}.quick-nav-drop-down{right:10px;}.atb-titlecontent{height:10px;}div.unlicensed{text-align:center;background-color:#FFF3F3;border:9px solid #D33;margin:50px;padding:20px 50px 50px 50px;}div.unlicensed h1,div.unlicensed h1 a{font-size:xx-large;font-weight:bold;color:#B00;}div.unlicensed p,div.unlicensed a{color:#900;font-size:medium;font-weight:normal;}.search-query-text-input{height:20px;width:70%;float:left;margin-right:3px!important;}.search-filters-panel{margin-top:3px;}.mailLabel{color:#666;font-weight:bold;}.unparented{list-style:none;margin:0;padding:0;}.parented{list-style-image:url("%CONTEXTPATH%/images/icons/link_out_bot.gif");}.mailthread ul{list-style-image:url("%CONTEXTPATH%/images/icons/link_out_bot.gif");}.selectedMail{background-color:#ffc;padding:2px;border:1px solid #ddd;}.excerpt{margin-top:0;margin-bottom:0;}.bloglist.default .permalink{float:right;font-size:x-small;}.bloglist.default .title{font-size:x-large;}.bloglist.default .date{font-size:x-large;}.bloglist.default .postedby,.bloglist.default .postedbydate{font-size:x-small;}.tabnav .tabs a{padding:0 3px 0 3px;margin:0 3px 0 0;border-bottom:none;text-decoration:none;display:block;float:left;}
+.tabnav,.comment .tabnav{padding:0;margin:0;border-bottom-width:1px;border-bottom-style:solid;float:left;display:inline;list-style-position:outside;width:100%;font-weight:normal;font-size:9pt;}.comment,.comment-body,.comment-header{height:auto;}.recentlyUpdatedItem{border-bottom:#f0f0f0 1px solid;border-top:#f0f0f0 1px solid;margin:10px 0 0 0;padding:0;border-spacing:0;width:100%;text-decoration:none;border-collapse:collapse;}.recentlyUpdatedItem td{padding:10px;border-bottom:#f0f0f0 1px solid;vertical-align:top;}.recentlyUpdatedItem .authorAndDate{background-color:#f0f0f0;width:25%;}.recentlyUpdatedItem .date{margin-top:4px;font-size:90%;color:#666;}.recentlyUpdatedItem .profilePic{float:right;background-color:#f0f0f0;margin:0 2px;}.recentlyUpdatedItem .twixie{padding:10px 0 0 4px;}.recentlyUpdatedItem .icon{padding:8px 0 0 1px;}.recentlyUpdatedItem .details{padding-left:7px;}.recentlyUpdatedItem .summary,.recentlyUpdatedItem .thumbnail{margin-top:3px;color:#666;}.moreRecentlyUpdatedItems{text-align:right;margin-top:10px;font-size:10pt;}.atb-titlecontent{vertical-align:top;}.hidden{display:none;}.menubar{position:static;}.pagetree2 .lines,.pagetree2 .plusminus-and-icon,.pagetree2 .cell3{white-space:nowrap;}#atb-accessKeys{margin:0;padding:0;}#atb-accessKeys dt{margin:0;padding:0;position:absolute;top:-9999px;left:0;}#atb-accessKeys dd{margin:0;padding:0;}#atb-accessKeys dd a{position:absolute;top:-9999px;left:0;}#atb-accessKeys dd a:focus,#accessKeys dd a:active{background-color:#3556a2!important;color:#fff!important;top:0;font-size:1.2em;padding:.5em;}.atb-page h1,.atb-page h2,.atb-page h3,.atb-page h4,.atb-page h5,.atb-page h6{background-color:transparent;border-style:none;padding:0;}.atb-title h1{font-size:18px;line-height:1.0em;margin-top:0;}.breadcrumbs{background-color:transparent;border:1px none transparent;}ol.breadcrumbs{padding:0;margin:0;display:inline;}ol.breadcrumbs li.breadcrumb{float:left;list-style-type:none;padding-right:3px;}ol.ellipsis li.breadcrumbsExpansion,ol.expanded li.breadcrumbsEllipsis{display:none;}ol.expanded li.breadcrumbsExpansion,ol.ellipsis li.breadcrumbsEllipsis{display:block;}div.dynarch-horiz-menu .label,div.dynarch-popup-menu .label{font-weight:normal;}.atb-menu div.dynarch-horiz-menu{background-color:transparent;background-image:none;border-style:none;}.marginlessForm{margin:0;}.confluence-searchbox{width:auto;white-space:nowrap;}.PageContent,.pagecontent{padding:0;}.tableview th,.tabletitle,.pageSectionHeader{border-bottom-width:1px;}.tableview th,div.tabletitle{font-weight:bold;}.mode-view-attachments .tableview td{border-top:1px solid #fff;vertical-align:middle;}.tableview td{border-bottom:1px dotted #ccc;}.tableview tr:hover td{border-bottom:1px solid #000;}.rowAlternate{background-color:#f7f7f7;}.context-space-activity .pagebody{padding:0;}a img{border-style:none;}.accessibility{display:none;}.atb-leftslider{cursor:w-resize!important;}.atb-rightslider{cursor:e-resize!important;}.layout{direction:ltr;}.noselect{-moz-user-select:none;cursor:default;}body,p,li,ul{line-height:1.6em;}cite:before{content:"\"";}cite:after{content:"\"";}cite,cite:before,cite:after{font-family:Georgia,"Times New Roman",serif;font-style:italic;}ins{background-color:#DBFFDB;}del{background-color:#FFE5E5;}i,em{letter-spacing:1px;}.confluenceTable{border:1px solid #B2B2B2;border-collapse:collapse;}.confluenceTable th.confluenceTh{background-color:#F5F5F5;border:1px dotted #B2B2B2;font-weight:bold;font-size:small;padding:3px 4px 3px 4px;}.confluenceTable .confluenceTd{border:1px dotted #B2B2B2;padding:3px 4px 3px 4px;}.x-unselectable{cursor:default;}@media screen,print,handheld,projection,tv{.non-visual{display:none;visibility:hidden;}}.atb-slider .atb-slider-img{width:9px;height:20px;}.atb-leftslider .atb-leftslider-img{background-position:top right;}.atb-rightslider .atb-rightslider-img{background-position:top left;}.quicklinks{overflow:auto;}.quicklinks div{clear:none;float:left;margin-bottom:4px;width:49%;}div.dynarch-horiz-menu table tr td{white-space:nowrap;}
+div.dynarch-horiz-menu table tr td.spacer{width:100%;}div.dynarch-horiz-menu table tr td.spacer div{display:none;}.poweredBy,.poweredBy a{color:#909090;font-size:small;}#comments-section .comment{height:auto;}ol.comment-threads{padding-left:10px;padding-right:0;}.comment-body{overflow-x:auto;clear:right;}.comment-thread,.comment-even,.comment-odd{zoom:1;}.code{background-color:#FFF;border-style:dashed;border-width:1px;overflow:auto;}.code .codeContent{text-align:left;color:#000;font-size:.95em;margin:0;padding:0 12px;-moz-background-clip:border;-moz-background-inline-policy:continuous;-moz-background-origin:padding;background:#FFF none repeat scroll 0 0;}.code pre{margin:10px 0;overflow:auto;padding:0;font-family:"Courier New",Courier,monospace;line-height:1.3;}.code pre span{font-family:"Courier New",Courier,monospace;line-height:1.3;}.code .code-keyword{background-color:inherit;color:#000091;}.code .code-comment{background-color:inherit;color:#808080;}.code .code-quote{background-color:inherit;color:#009100;}.code .code-object{background-color:inherit;color:#910091;}ul.navmenu{padding-right:0;}
+.atb-body {padding:0px;margin:0px;background-color:white;}
+.atb-body, .atb-body p, .atb-body td, .atb-body th, .atb-body div, .atb-body span, .atb-body div.dynarch-horiz-menu, .atb-body div.dynarch-horiz-menu table, .atb-body div.dynarch-horiz-menu table, .atb-body input, .atb-body ul li, .atb-body ol li, .atb-body select {font-family:sans-serif;font-size:12px;line-height:1.6em;}
+.atb-page {background-color:#FFFFFF;}
+.atb-header {background-image:none;}
+.atb-rightslider {border-style:outset;border-width:1px;border-color:#F3F4EC;vertical-align:top;width:9px !important;background-color:#EAEDE0;}
+.atb-title {padding:5px;overflow:visible;vertical-align:top;}
+.atb-content {padding:5px;overflow:visible;vertical-align:top;}
+.atb-content, .atb-content p, .atb-content td, .atb-content th, .atb-content div, .atb-content span, .atb-content div.dynarch-horiz-menu, .atb-content div.dynarch-horiz-menu table, .atb-content div.dynarch-horiz-menu table, .atb-content input, .atb-content ul li, .atb-content ol li, .atb-content select {font-family:sans-serif;font-weight:normal;}
+.atb-footnote {padding:5px;overflow:visible;vertical-align:top;height:10px !important;}
+.atb-footer {border-style:;border-width:;border-color:;padding:;text-align:;background-color:;}
+.atb-leftslider.collapsed-slider  img.atb-slider-img {background-image: url(/s/1925/33/1/_/download/resources/com.adaptavist.confluence.themes.sitebuilder:sitebuilder/icons/arrow-black-1.gif);}
+.atb-leftslider.expanded-slider   img.atb-slider-img {background-image: url(/s/1925/33/1/_/download/resources/com.adaptavist.confluence.themes.sitebuilder:sitebuilder/icons/arrow-black-0.gif);}
+.atb-rightslider.collapsed-slider img.atb-slider-img {background-image: url(/s/1925/33/1/_/download/resources/com.adaptavist.confluence.themes.sitebuilder:sitebuilder/icons/arrow-black-0.gif);}
+.atb-rightslider.expanded-slider  img.atb-slider-img {background-image: url(/s/1925/33/1/_/download/resources/com.adaptavist.confluence.themes.sitebuilder:sitebuilder/icons/arrow-black-1.gif);}
+
+/* empty */
+/* Aggregating all of the styles from design. 
+   Note that it was easier to do this here rather than importing styles as the image URLs 
+   need to be changed to match up to confluence URLs */
+
+
+/************* style.css*************************/
+/*global*/
+html, body {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;    
+    line-height:18px;    
+    padding:0px;
+    margin:0px;    
+}
+*     { margin: 0; padding: 0; }
+
+/*Default Header*/
+.header-wrapper {
+    height:108px; 
+    background-image:url(/plugins/servlet/builder/resource/HEADER/header-back.jpg); 
+    background-repeat:repeat-x;
+}
+.header             {    width:1000px; margin:auto; padding-top:30px; }
+
+/*Project Spaces Header*/
+.projheader-wrapper {
+    height:54px; 
+    background-image:url(/plugins/servlet/builder/resource/HEADER/header_back_s.jpg); 
+    background-repeat:repeat-x;
+}
+.projheader             {    width:1000px; margin:auto; padding-top:0px; }
+/*end header*/
+
+/*default*/
+h1                {    font-size:24px; color:#000; margin-bottom:10px; font-weight:100; }
+h2                         {    font-size:19px; margin-bottom:0px; padding-bottom:0px; font-weight:100; }
+.green                     {    color:#336c24; }
+h3                         {    font-size:16px; }
+.floatright                 {    float:right; }
+.floatleft                 {    float:left; }
+.clearboth                 {    height:0px; clear:both; }
+.clearleft                 {    clear:left; }
+.clearright                 {    clear:right; }
+.displayblocl             {    display:block;    }
+/*end default*/
+    
+.separator                 {    border-top:1px solid #ccc; height:1px; background-color:#FFF; border-bottom:1px solid #fff; margin-top:10px; margin-bottom:10px; }
+    
+/*classes*/
+.viewall, 
+.viewall a, 
+.viewall a:active, 
+.viewall a:visited         {    color:#1a4e73; text-decoration:none; }
+.viewall a:hover         {    text-decoration:underline; }
+
+/*header*/
+    
+/*menu*/
+.menu-back {    
+    height:43px; 
+    background-image:url(/plugins/servlet/builder/resource/HEADER/menu-back.jpg); 
+    background-repeat:repeat-x;
+} /* odd - confluence does whitespace trimming, which screws up this one image unless I add as resource */
+.menu-wrapper            {    width:1000px; margin:auto; }
+.menu-hor             {    margin:0px; padding:0px; }
+.menu-hor li             {    float:left; list-style-type:none; padding:5px 25px; }
+.menu-wrapper-left        {    float:left; }
+.menu-wrapper-right {    
+    float:right; 
+    width:158px; 
+    height:37px; 
+    background-image:url(/plugins/servlet/builder/resource/HEADER/login-register.png); 
+    position:relative; 
+    bottom:12px; 
+    text-align:center; 
+    padding-top:19px;
+}
+.menu-wrapper-right, 
+.menu-wrapper-right a, 
+.menu-wrapper-right a:active, 
+.menu-wrapper-right a:visited     {    color:#FFF; text-decoration:none; }
+.menu-wrapper-right a:hover     {    text-decoration:underline; }
+
+/*content*/
+.content-wrapper {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/back-content.jpg); 
+    background-repeat:repeat-x; 
+    overflow:hidden; 
+    width:100%;
+}
+.content                 {    width:1000px; margin:auto; }
+.blue                {    color:#1a4e73; }
+.displayblock            {    color:#919191; }
+    
+/* buttons and other related */
+.buttom{
+    background-image:url(/plugins/servlet/builder/resource/HEADER/btn.jpg);
+    width:129px; 
+    height:30px; 
+    background-repeat:no-repeat; 
+    text-align:center; 
+    color:#ffffff; 
+    display:block; 
+    font-weight:bold; 
+    font-size:12px; 
+    line-height:29px; 
+    text-decoration:none; 
+    margin-top:35px;
+}
+.buttom a, .buttom a:visited, .buttom a:active {
+    color:white;
+}
+
+.Bbuttom {
+   border-top: 1px solid #96d1f8;
+   background: #1388d6;
+   background: -webkit-gradient(linear, left top, left bottom, from(#1a4e73), to(#1388d6));
+   background: -webkit-linear-gradient(top, #1a4e73, #1388d6);
+   background: -moz-linear-gradient(top, #1a4e73, #1388d6);
+   background: -ms-linear-gradient(top, #1a4e73, #1388d6);
+   background: -o-linear-gradient(top, #1a4e73, #1388d6);
+   padding: 6.5px 13px 1px 1px;
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+
+.Bbuttom:hover {
+   border-top-color: #28597a;
+   background: #28597a;
+   color: #ccc;
+   }
+.Bbuttom:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+   }
+
+/*footer*/
+.footer-wrapper {    
+    height:66px;     
+    background-image:url(/plugins/servlet/builder/resource/HEADER/footer.jpg);     
+    background-repeat:repeat-x;  
+    margin-top:25px;
+}
+.footer             {    color:#FFFFFF; padding-top:25px; width:1000px; margin:auto; }
+.footer-l            {    float:left; }
+.footer-l a             {    color:#FFF; text-decoration:none; }
+.footer-r             {    float:right; }
+.footer-r a             {    color:#ffffff; text-decoration:none; }
+
+/*content*/
+.latest-blog-post         {    float:left; width:636px; padding-right:18px; border-right:1px solid #ccc; }
+.author             {    float:left; color:#565656; }
+.date                         {    float:right; color:#565656; }
+
+.recent-activities         {    float:right; width:330px; text-align:left; }
+.activity-item                {    padding-bottom:21.5px; border-bottom:1px solid #ccc; padding-top:20px; }
+
+/************* jqueryslidemenu.css*************************/
+.jqueryslidemenu{
+    font: normal 12px Verdana;
+    height:43px; 
+    background-image:url(/plugins/servlet/builder/resource/HEADER/menu-back.jpg); 
+    background-repeat:repeat-x;)
+    width: 100%;
+}
+
+.jqueryslidemenu ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+/*Top level list items*/
+.jqueryslidemenu ul li{
+    position: relative;
+    display: inline;
+    float: left;
+}
+
+/*Top level menu link items style*/
+.jqueryslidemenu ul li a{
+    display: block;
+    background: transparent; /*background of tabs (default state)*/
+    color: white;
+    padding: 8px 10px;
+    border-right: 1px solid #7c9eb6;
+    border-left:1px solid #000;
+    color: #2d2b2b;
+    text-decoration: none;
+}
+
+.jqueryslidemenu ul li a.menubarfirst    {    border-left:0px; }
+.jqueryslidemenu ul li a.menubarlast    {    border-right:0px; }
+
+* html .jqueryslidemenu ul li a    { /*IE6 hack to get sub menu links to behave correctly*/
+    display: inline-block;
+}
+
+.jqueryslidemenu ul li a:link, .jqueryslidemenu ul li a:visited {
+    color: white;
+}
+
+.jqueryslidemenu ul li a:hover{
+    background: url(/plugins/servlet/builder/resource/HEADER/menu-hover.jpg); /*tab link background during hover state*/
+    color: white;
+}
+    
+/*1st sub level menu*/
+.jqueryslidemenu ul li ul{
+    position: absolute;
+    left: 0;
+    display: block;
+    visibility: hidden;
+    z-index:10;
+}
+
+/*Sub level menu list items (undo style from Top level List Items)*/
+.jqueryslidemenu ul li ul li{
+    display: list-item;
+    float: none;
+    background-image:url(/plugins/servlet/builder/resource/HEADER/submenu-back.jpg)
+}
+
+/*Sub level menu list items (first itme, and item separator) */
+.jqueryslidemenu ul li ul li.menuoptfirst {
+    height:9px;
+    background-image:url(/plugins/servlet/builder/resource/HEADER/submenu-top.jpg); 
+    margin-top:-1px;  
+}
+.jqueryslidemenu ul li ul li.menuseparator {
+    height:9px;
+    background-image:url(/plugins/servlet/builder/resource/HEADER/submenu-sep.jpg); 
+}
+
+/*All subsequent sub menu levels vertical offset after 1st level sub menu */
+.jqueryslidemenu ul li ul li ul{
+    top:100px;
+}
+
+/* Sub level menu links style */
+.jqueryslidemenu ul li ul li a {
+    width: 160px; /*width of sub menus*/
+    padding: 8px;
+    margin: 0;
+}
+
+.jqueryslidemenuz ul li ul li a:hover{ /*sub menus hover style*/
+    background-color:#ffffff;
+    color: black;
+}
+
+.jqueryslidemenu ul li ul li a:hover{
+    background-color:#FF0;
+    color: white;
+}
+
+/*  CSS classes applied to down and right arrow images  */
+.downarrowclass{
+    position: absolute;
+    top: 12px;
+    right: 7px;
+}
+.rightarrowclass{
+    position: absolute;
+    top: 6px;
+    right: 5px;
+}
+
+
+    /*********************** various fixes *********************/
+
+/*prevent "powered by adaptavist from showing at the top of the screen*/
+table {float:none;} 
+    
+/*fixes for the integration of our custom header and the default stuff from confluence */
+/*.content {border:1px solid #D1D1D1; background-color:#FFFFFF }*/
+.content { background-color:#FFFFFF }
+
+
+
+/*fixes for the integration of our custom header and the default stuff adaptavist theme builder */
+/*
+.atb-navigation {background-color:#F5F5F5; border: 1px solid #D1D1D1}
+.atb-menudiv { background-color:#F5F5F5; padding-top:2px; padding-right:5px;}
+.atb-menudiv { border:1px solid #D1D1D1;}
+.atb-menu {border:0px;}
+.atb-footnote {border-left:1px solid #D1D1D1; border-right: 1px solid  #D1D1D1; border-bottom: 1px solid  #D1D1D1; -moz-border-radius-bottomleft:5px; -moz-border-radius-bottomright:5px;}
+*/
+
+/* set the menu and nav to 1000px wide */
+.atb-navigationdiv {background-color:transparent; padding-right: 5px; border: 1px solid #D1D1D1;}
+.atb-menudiv { background-color:transparent; padding-top:2px; padding-right:5px;border: 1px solid #D1D1D1;}
+.atb-menudiv { width:1000px; margin: auto;}
+.atb-navigationdiv { width:1000px; margin: auto;}
+.atb-titlediv { width:1000px; margin: auto;}
+.atb-footnotediv { width:1000px; margin: auto;}
+
+
+/* Scrunch up the header relative to our splash page header where this was originally define */
+/*.header-wrapper {height: 48px; background-position: 0px -60px;} */
+
+/* Styles for the actual wiki content */
+.wiki-content h1        {    font-size:24px; color:#1c5781; margin-bottom:10px;  font-weight:100;margin-top:10px;}
+.wiki-content h2        {    font-size:20px; color:#1c5781; margin-bottom:7px;  font-weight:100; margin-top:10px;}
+.wiki-content h3        {    font-size:16px; color:#1c5781; margin-bottom:6px;  font-weight:100; margin-top:10px;}
+.wiki-content h4        {    font-size:14px; color:#1c5781; margin-bottom:4px; font-weight:100; margin-top:10px;}
+.wiki-content h5        {    font-size:12px; color:#1c5781; margin-bottom:2px;  font-weight:100; margin-top:10px;}
+.wiki-content p        {    font-size:12px; color:#000; margin-bottom:2px; margin-top:2px; }
+
+.twtr-hd h3 { clear:none;}
+.twtr-hd h4 { clear:none;}
+
+ul, ol {
+    margin: 8px 0;
+    padding: 0 3em;
+}
+
+.tocdiv {
+    border-width: 1px;
+    border-color: #1c5781;
+}
+
+/* Someone overrides these, thus we need to override more... */
+#com-atlassian-confluence .atb-title h1        {    font-size:24px; color:#000; margin-bottom:0px; font-weight:100;}
+
+#content {  width:1000px; margin:auto; }
+
+/*#atb-contentdiv { background-image:url(/download/attachments/819202/back-content.jpg); background-repeat:repeat-x; overflow:hidden; width:100%;    }*/
+.green { color:#336c24; }
+
+/*    Re-worked slidemenu css so that the html created by the confluence {viewmenu} and {editmenu} macros will style properly.  
+    This area is a mess -- good candidate for clean-up when there is someone who can do cleaner CSS than I.  The gist is that 
+    {viewmenu} and {editmenu} create slightly different html than the jqueryslidemenu that generates the other menu components.  
+    The goal of this css is to hide the fact that these two are slightly different and make it all look the same to the end user. */
+
+/*Top level list items*/
+/* undo menuitem styling (confluence macro) and make it line up with .jqueryslidemenu */
+.jqueryslidemenu ul li, .jqueryslidemenu ul .menuitem{
+    position: relative;
+    display: inline;
+    float: left;
+}
+
+
+/*Top level menu link items style -- style the menuitem class (confluence macro) same as slidemenu*/
+.jqueryslidemenu ul li a, .jqueryslidemenu ul .menuitem {
+    display: block;
+    background: transparent; /*background of tabs (default state)*/
+    color: white;
+    padding: 8px 10px;
+    border-right: 1px solid #7c9eb6;
+    border-left:1px solid #000;
+    line-height:1.1em;
+    /*color: #2d2b2b;*/
+    text-decoration: none;
+}
+
+* html .jqueryslidemenu ul li a, * html .jqueryslidemenu ul .menuitem a { /*IE6 hack to get sub menu links to behave correctly*/
+    display: inline-block;
+}
+
+.jqueryslidemenu ul li a:hover, .jqueryslidemenu ul .menuitem a:hover{
+    background: url(/plugins/servlet/builder/resource/HEADER/menu-hover.jpg); 
+    /*tab link background during hover state*/
+    color: white;
+}
+    
+/*1st sub level menu*/
+.jqueryslidemenu ul li ul, .jqueryslidemenu ul .menuitem ul{
+    position: absolute;
+    left: 0;
+    display: block;
+    visibility: hidden;
+}
+
+/*Sub level menu list items (undo style from Top level List Items)*/
+.jqueryslidemenu ul li ul li, .jqueryslidemenu ul li.menuitem ul li.menuitem{
+    display: list-item;
+    float: none;
+    background-image: url(/plugins/servlet/builder/resource/HEADER/submenu-back.jpg);
+}
+
+/*All subsequent sub menu levels vertical offset after 1st level sub menu */
+.jqueryslidemenu ul li ul li ul, .jqueryslidemenu ul .menuitem ul .menuitem ul {
+    top: 0;
+    border: 0;
+}
+
+/* Sub level menu links style */
+.jqueryslidemenu ul li ul li a, .jqueryslidemenu ul li ul.submenu li.menuitem {
+    width: 160px; /*width of sub menus*/
+    padding: 8px;
+    margin: 0;
+    border: 0;
+}
+
+.jqueryslidemenu ul li ul li a:hover, .jqueryslidemenu ul li.menuitem ul.submenu li.menuitem:hover { /*sub menus hover style*/
+    /*background-color:#FF0;*/
+    color: yellow;
+    background-image: url(/plugins/servlet/builder/resource/HEADER/menu-hover.jpg);
+}
+
+.menuitem img {
+    float:left;
+    padding-top:8px;
+    margin-right:3px;
+}
+
+.jqueryslidemenu .submenu .menuitem {
+    border: 0;
+}
+
+/* hide the themebuilder attribution line */
+.attribution div {visibility:hidden;}
+
+/* Subspaces */
+div.subspaces-list ul.level_0 {
+    background-color:transparent;
+}
+
+/* Dashboard Menus */
+div.ofh-dashboard-menu {
+    position:relative;
+    top:15px;
+    right:20px;
+}
+div.ofh-dashboard-menu a.trigger.ajs-menu-title {
+    font-size:12pt; 
+    padding:0px 10px 0px 10px; 
+    border-top-left-radius:4px; 
+    border-top-right-radius:4px;
+}
+div.ofh-dashboard-menu a:hover {
+    color:white;
+}
+div.ofh-dashboard-menu li.menuseparator {
+    height:1px;
+    padding:0px;
+    margin-bottom:2px;
+    border-bottom:1px solid lightgray;
+}
+
+/* Hinch Panels */
+/* Designed and Written by Gerald Yong, Hinch Software Pte Ltd, 15-Nov-2010. */
+div.hinch_panel {
+    margin:5px;
+}
+div.hinch_panel_body {
+    padding:10px 14px 20px 14px;
+    background-repeat:repeat-x;
+    border:1px solid;
+}
+    
+div.hinch_panel_title {
+    font-family:arial, sans-serif;
+    font-size:16px;
+    font-weight:bold;
+    line-height:21px;
+    height:22px;
+    color:black;
+    padding-top:4px;
+    padding-bottom:7px;
+    margin-bottom:6px;
+    border-bottom:1px solid #BBB;
+}
+
+div.hinch_panel_title.blue {
+    border-color:navy;
+    color:navy;
+}
+div.hinch_panel_body.blue {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_blue_body.png);
+    border-color:navy;
+}
+div.hinch_panel_title.green {
+    border-color:darkgreen;
+    color:darkgreen;
+}
+div.hinch_panel_body.green {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_green_body.png);
+    border-color:darkgreen;
+}
+div.hinch_panel_title.red {
+    border-color:darkred;
+    color:darkred;
+}
+div.hinch_panel_body.red {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_red_body.png);
+    border-color:darkred;
+}
+div.hinch_panel_title.orange {
+    border-color:chocolate;
+    color:saddlebrown;
+}
+div.hinch_panel_body.orange {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_orange_body.png);
+    border-color:chocolate;
+}
+div.hinch_panel_title.yellow {
+    border-color:goldenrod;
+    color:goldenrod;
+}
+div.hinch_panel_body.yellow {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_yellow_body.png);
+    border-color:goldenrod;
+}
+div.hinch_panel_title.white {
+    border-color:#CCC;
+    color:black;
+}
+div.hinch_panel_body.white {
+    background-image:none;
+    border-color:#CCC;
+}
+div.hinch_panel_title.gray {
+    border-color:darkgray;
+    color:dimgray;
+}
+div.hinch_panel_body.gray {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_gray_body.png);
+    border-color:darkgray;
+}
+div.hinch_panel_title.purple {
+    border-color:purple;
+    color:purple;
+}
+div.hinch_panel_body.purple {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_purple_body.png);
+    border-color:purple;
+}
+
+/* modify the header css so that we've got a minimized header - create room for the project banner*/
+/*
+.header-wrapper {position:relative; top:-80px;}
+.menu-back {margin-top:-80px;}
+.header img {visibility:hidden;}
+*/
+
+/* Hinch RSS Styles */
+/* Designed and Written by Gerald Yong, Hinch Software Pte Ltd, 31-Jan-2011. */
+/* (C) Hinch Software Pte Ltd. All Rights Reserved. */
+
+div.hinch_rss {
+    margin:5px;
+    position:relative;
+}
+
+/* Styles for Hinch RSS */
+div.hinch_rss_body {
+    padding:8px 14px 8px 14px;
+    background-repeat:repeat-x;
+    border:1px solid;
+}
+div.hinch_rss_title {
+    font-family:arial, sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    line-height:16px;
+    height:18px;
+    color:black;
+    padding-top:4px;
+    padding-bottom:7px;
+    margin-bottom:6px;
+    border-bottom:1px solid #BBB;
+}
+
+div.hinch_rss_body.gray  {
+    background-image:url(/plugins/servlet/builder/resource/HEADER/hinch_panel_gray_body.png);
+    border-color:darkgray;
+}
+div.hinch_rss_title.gray      {    border-color:darkgray; color:dimgray; }
+
+.rssMacro table tbody tr td {
+    border-width:0px;
+    margin:0px;
+}
+
+
+

@@ -1,0 +1,126 @@
+/* basics */
+div.subspaces-menu  {
+	font-size: 12px;
+	font-weight: bold;
+	color:#666; 
+}
+
+div.subspaces-menu ul,
+div.subspaces-list ul.level_0 {
+	list-style-type:none;
+	display:block;
+	margin:0;
+	padding:0;
+	background-color:white;
+}
+
+div.subspaces-menu ul.level_0 {
+
+	background: url(images/bg_menu.png) repeat-x;
+	height:27px;
+	vertical-align:middle;
+}
+
+div.subspaces-menu ul.level_0 > li {
+
+	border-right: 1px solid #CCC;
+	border-left: 1px solid white;
+	background: url(images/bg_menu.png) repeat-x;
+}
+
+div.subspaces-menu ul li {
+	line-height:27px;
+	float:left;
+	position:relative;
+}
+
+div.subspaces-menu ul ul {
+
+	display:none;
+	position:absolute;
+	left:-1px;
+	border-left:1px solid #CCC;
+	border-bottom:1px solid #CCC;
+	border-right:1px solid #CCC;
+}
+
+div.subspaces-menu ul ul ul {
+
+	border:1px solid #CCC;
+	left:100%;
+	top:-1px;
+}
+
+* + html div.subspaces-menu ul.level_1 {
+	
+	top:27px;
+}
+
+div.subspaces-menu ul li a,
+div.subspaces-menu ul li span {
+
+	display:block;
+	padding:0 20px;
+	height:27px;
+	color:#666;
+	
+	text-decoration:none;
+	white-space:nowrap;
+}
+
+div.subspaces-menu ul ul li {
+
+	float:none;
+}
+
+div.subspaces-menu li:hover > ul {
+
+	display:block;
+}
+
+div.subspaces-menu ul ul li + li {
+	
+	border-top:1px dotted #CCC;
+}
+
+/* markers */
+div.subspaces-menu a:hover,
+div.subspaces-menu li.isExternalLink a:hover {
+
+	background-color:#DDD;
+}
+
+div.subspaces-menu ul ul li.hasChildren{
+	
+	/* there are children */
+	background: #fff url(images/arrow_grey_r.gif) no-repeat right;
+}
+
+div.subspaces-menu ul ul li.hasChildren > a:hover {
+	background: #DDD url(images/arrow_grey_r.gif) no-repeat right;
+}
+
+div.subspaces-menu li.hasChildInContext > a,
+div.subspaces-menu li.hasChildInContext > span {
+
+	/* one of my children is the currently active space*/
+	font-style:italic;	
+}
+
+div.subspaces-menu li.active > a {
+
+	/* i am the currently active space */
+	color:#f78e31;
+}
+
+div.subspaces-menu li.isExternalLink a {
+	
+	background:url(images/link.png) no-repeat 10px center;
+	padding-left:30px;
+}
+
+
+
+.success {
+	background-color: green;
+}

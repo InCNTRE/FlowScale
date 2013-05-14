@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if IE 6]>
+<html id="ie6" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html lang="en-US" prefix="og: http://ogp.me/ns#">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Home - Project Floodlight - OpenFlow news and projectsProject Floodlight | Open Source Software for Building Software-Defined Networks</title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="stylesheet" type="text/css" media="all" href="http://www.projectfloodlight.org/wp-content/themes/projectfloodlight_v.1.8/style.css" />
+<link rel="shortcut icon" type="image/x-icon" href="http://www.projectfloodlight.org/wp-content/themes/projectfloodlight_v.1.8/images/favicon.ico" />
+<link rel="pingback" href="http://www.projectfloodlight.org/xmlrpc.php" />
+<!--[if lt IE 9]>
+<script src="http://www.projectfloodlight.org/wp-content/themes/projectfloodlight_v.1.8/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="http://www.projectfloodlight.org/wp-content/themes/projectfloodlight_v.1.8/js/page.js" type="text/javascript"></script>
+
+<!-- This site is optimized with the Yoast WordPress SEO plugin v1.4.4 - http://yoast.com/wordpress/seo/ -->
+<meta name="description" content="OpenFlow News"/>
+<link rel="canonical" href="http://www.projectfloodlight.org/" />
+<meta property='og:locale' content='en_US'/>
+<meta property='og:title' content='Home - Project Floodlight - OpenFlow news and projects'/>
+<meta property='og:description' content='OpenFlow News'/>
+<meta property='og:url' content='http://www.projectfloodlight.org/'/>
+<meta property='og:site_name' content='Project Floodlight'/>
+<meta property='og:type' content='article'/>
+<!-- / Yoast WordPress SEO plugin. -->
+
+<link rel="alternate" type="application/rss+xml" title="Project Floodlight &raquo; Feed" href="http://www.projectfloodlight.org/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Project Floodlight &raquo; Comments Feed" href="http://www.projectfloodlight.org/comments/feed/" />
+
+            <script type="text/javascript">//<![CDATA[
+            // Google Analytics for WordPress by Yoast v4.3.2 | http://yoast.com/wordpress/google-analytics/
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-37398945-1']);
+				            _gaq.push(['_trackPageview']);
+            (function () {
+                var ga = document.createElement('script');
+                ga.type = 'text/javascript';
+                ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ga, s);
+            })();
+            //]]></script>
+			<link rel="alternate" type="application/rss+xml" title="Project Floodlight &raquo; Home Comments Feed" href="http://www.projectfloodlight.org/home/feed/" />
+<script type='text/javascript' src='http://www.projectfloodlight.org/wp-includes/js/comment-reply.min.js?ver=3.5.1'></script>
+<script type='text/javascript' src='http://www.projectfloodlight.org/wp-includes/js/jquery/jquery.js?ver=1.8.3'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.projectfloodlight.org/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.projectfloodlight.org/wp-includes/wlwmanifest.xml" /> 
+<script charset="utf-8" type="text/javascript">var switchTo5x=false;</script><script charset="utf-8" type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'wp.4f39e270-759c-406c-88a5-d861a7111b66'});var st_type='wordpress3.4.2';</script>  <script type="text/javascript">
+    var homePilarCountJSON = "http://floodlight-download.projectfloodlight.org/pf.json";  
+  </script>
+</head>
+
+<body class="home page page-id-20 page-template page-template-page-home-php">
+  <div id="page" class="hfeed">
+    <header id="branding" role="banner">
+      <div class="canvas-full">
+        <div class="canvas-margin">
+          <div class="canvas-container">
+
+            <div class="block-header">
+              <div class="block-social">
+                <div class="widget-area" role="complementary">
+<aside id="nav_menu-3" class="widget widget_nav_menu"><div class="menu-social-icons-container"><ul id="menu-social-icons" class="menu"><li id="menu-item-48" class="rss menu-item menu-item-type-custom menu-item-object-custom menu-item-48"><a title="Get updates" target="_blank" href="http://www.projectfloodlight.org/feed/" >RSS</a></li>
+<li id="menu-item-49" class="googleplus menu-item menu-item-type-custom menu-item-object-custom menu-item-49"><a title="Join our circle" target="_blank" href="https://plus.google.com/110492970950491907584/posts" onclick="javascript:_gaq.push(['_trackEvent','outbound-menu','http://plus.google.com']);">Google Plus</a></li>
+<li id="menu-item-50" class="facebook menu-item menu-item-type-custom menu-item-object-custom menu-item-50"><a title="Become our fan" target="_blank" href="https://www.facebook.com/pages/Openflow-News/503459966380276" onclick="javascript:_gaq.push(['_trackEvent','outbound-menu','http://www.facebook.com']);">Facebook</a></li>
+<li id="menu-item-51" class="twitter menu-item menu-item-type-custom menu-item-object-custom menu-item-51"><a title="Follow us" target="_blank" href="https://twitter.com/openflownews" onclick="javascript:_gaq.push(['_trackEvent','outbound-menu','http://twitter.com']);">Twitter</a></li>
+</ul></div></aside><div class="BigSwitchSponsored">
+  <span class="icon"></span>
+  <span class="text">A Big Switch Networks-<br>sponsored community project</span>
+  <div class="break"></div>
+</div>
+                </div>
+                <div class="break"></div>
+              </div>
+              <div class="block-logo">
+                <h1 id="site-title"><a href="http://www.projectfloodlight.org/" title="Project Floodlight" rel="home"><img class="logo" src="http://www.projectfloodlight.org/wp-content/themes/projectfloodlight_v.1.8/images/projectfloodlight-logo-header.png" alt="Project Floodlight"/></a></h1>
+                <h2 id="site-description"><a href="http://www.projectfloodlight.org/" title="Project Floodlight" rel="home">Open Source Software for Building Software-Defined Networks</a></h2>
+                <div class="break"></div>
+              </div>
+              <div class="break"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+			<nav id="access" role="navigation">
+				<h3 class="assistive-text">Main menu</h3>
+								<div class="skip-link"><a class="assistive-text" href="#content" title="Skip to primary content">Skip to primary content</a></div>
+				<div class="skip-link"><a class="assistive-text" href="#secondary" title="Skip to secondary content">Skip to secondary content</a></div>
+				        <div class="canvas-full nav-header">
+          <div class="canvas-margin">
+            <div class="canvas-container">
+      				<div class="menu-header-menu-container"><ul id="menu-header-menu" class="menu"><li id="menu-item-64" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-64"><a href="http://www.projectfloodlight.org/projects/" >Projects</a>
+<ul class="sub-menu">
+	<li id="menu-item-72" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-72"><a href="http://www.projectfloodlight.org/applications/" >Floodlight Applications</a>
+	<ul class="sub-menu">
+		<li id="menu-item-82" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82"><a href="http://www.projectfloodlight.org/openstack/" >OpenStack Quantum</a></li>
+		<li id="menu-item-69" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-69"><a href="http://www.projectfloodlight.org/virtual-switch/" >Virtual Switch</a></li>
+		<li id="menu-item-81" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81"><a href="http://www.projectfloodlight.org/firewall/" >ACL (stateless FW)</a></li>
+		<li id="menu-item-80" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-80"><a href="http://www.projectfloodlight.org/circuit-pusher/" >Circuit Pusher</a></li>
+	</ul>
+</li>
+	<li id="menu-item-85" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-85"><a href="http://www.projectfloodlight.org/floodlight/" >Floodlight</a>
+	<ul class="sub-menu">
+		<li id="menu-item-87" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-87"><a href="http://www.projectfloodlight.org/getting-started/" >Getting Started</a></li>
+		<li id="menu-item-625" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-625"><a href="http://www.projectfloodlight.org/download/" >Download</a></li>
+	</ul>
+</li>
+	<li id="menu-item-624" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-624"><a href="http://www.projectfloodlight.org/indigo/" >Indigo</a>
+	<ul class="sub-menu">
+		<li id="menu-item-77" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-77"><a href="http://www.projectfloodlight.org/indigo1/" >First Generation</a></li>
+	</ul>
+</li>
+	<li id="menu-item-79" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-79"><a href="http://www.projectfloodlight.org/oftest/" >OFTest</a></li>
+</ul>
+</li>
+<li id="menu-item-640" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-640"><a href="http://www.projectfloodlight.org/download/" >Download</a></li>
+<li id="menu-item-65" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-65"><a href="http://www.projectfloodlight.org/community/" >Community</a>
+<ul class="sub-menu">
+	<li id="menu-item-76" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-76"><a href="http://www.projectfloodlight.org/organizations/" >Organizations</a></li>
+</ul>
+</li>
+<li id="menu-item-66" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-66"><a href="http://www.projectfloodlight.org/documentation/" >Documentation</a></li>
+<li id="menu-item-68" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-68"><a href="http://www.projectfloodlight.org/blog/" >Blog</a></li>
+</ul></div>              <div class="break"></div>
+            </div>
+          </div>
+        </div>
+			</nav><!-- #access -->
+      <div class="break"></div>
+    </header>
+    <div id="main">
+<!-- home.php -->
+        <div class="canvas-full">
+          <div class="canvas-margin">
+            <div class="canvas-container">
+
+              <div class="home-content" id="content">
+
+	<div class="home-block-pilars"><div class="home-block-pilar home-block-pilar-gray">  <div class="home-block-pilar-text">    <h1>What is Project Floodlight?</h1>    <div>Project Floodlight is the world&#8217;s leading open source software-defined networking (SDN) community. We are committed to open source, open standards, and open APIs.     </div>  </div></div><div class="home-block-pilar home-block-pilar-blue">  <div class="home-block-pilar-image">    <a href="/community/"><img src="/wp-content/uploads/2013/01/home_block_community.png" alt=""></a>  </div>  <div class="home-block-pilar-text">    <h1><a href="/community/">Community</a></h1>    <div>Join our global network of contributors to Open-Source Software for building Software Defined Networks.                                                            <div class="home-counter-pilars" id="cumulative_members">  <div class="count"></div>  <div class="label">downloads  </div></div>    </div>  </div></div><div class="home-block-pilar home-block-pilar-green">  <div class="home-block-pilar-image">    <a href="/projects/"><img src="/wp-content/uploads/2013/01/home_block_download.png" alt=""></a>  </div>  <div class="home-block-pilar-text">    <h1><a href="/projects/">Projects</a></h1>    <div>Our projects enable you to build 100% open source SDN solutions. Projects are supported by developers all around the world, and Big Switch Networks.<div class="home-counter-pilars" id="cumulative_downloads">  <div class="count"></div>  <div class="label">lines of code, and counting  </div></div>    </div>  </div></div>  <div class="break"></div></div>
+                <div class="break"></div>
+
+              
+                <div class="canvas-columns canvas-columns-4">
+                  <div class="canvas-column canvas-column-2">
+                    <div class="block-home-posts">
+                      <div class="block-home-posts-title"><h1>Blogposts</h1></div>
+
+						          <article>
+                        <header class="entry-header">
+                          <h4 class="entry-title"><a href="http://www.projectfloodlight.org/blog/2013/03/25/introducing-project-floodlight/" title="Permalink to Introducing Project Floodlight" rel="bookmark">Introducing Project Floodlight</a><span class="entry-meta"> - Mar 25, 2013</span></h4>
+                        </header>
+                        <div class="entry-content">
+                          <p><h3><em>Contributed by Paul Lappas, Head of Open Source @ Big Switch Networks.</em></h3>
+<p>I&#8217;m incredibly happy to announce some really exciting things that are happening in open source at Big Switch Networks. Today we announced the launch of a commercial version of Indigo Agent, which is a fully deployable thin switching software platform called Switch Light, and a revamped open source site: ProjectFloodlight.org. In this posting I wanted to explain how we got here and why we are making these changes.</p>
+<p><a href="http://www.projectfloodlight.org/blog/2013/03/25/introducing-project-floodlight/" ><img class="wp-image-646 alignleft" alt="Floodlight" src="http://www.projectfloodlight.org/wp-content/uploads/2013/03/project_floodlight.png" width="222" height="160" /></a></p>
+<h2> <a href="http://www.projectfloodlight.org/blog/2013/03/25/introducing-project-floodlight/#more-681"  class="more-link">Continue reading &raquo;</a></h2>
+</p>
+                        </div>
+						          </article>
+					
+						          <article>
+                        <header class="entry-header">
+                          <h4 class="entry-title"><a href="http://www.projectfloodlight.org/blog/2013/03/21/demo-openflow-enabled-network-card/" title="Permalink to Demo: OpenFlow enabled network card" rel="bookmark">Demo: OpenFlow enabled network card</a><span class="entry-meta"> - Mar 21, 2013</span></h4>
+                        </header>
+                        <div class="entry-content">
+                          <p><p><em>Contributed by Eli Karpilovski, Senior Manager, Cloud @ Mellanox (elik@mellanox.com).</em></p>
+<p>I’m excited to showcase the results of a demo we put together leveraging the Floodlight controller and our new OpenFlow-enabled NIC. This particular demo enables extraction of network information to detect and protect against security threats in real-time for a more resilient and cost-effective mobile network.</p>
+<p>The demo uses the following technologies:</p>
+<div id="attachment_655" class="wp-caption alignright" style="width: 298px"><a href="http://www.projectfloodlight.org/wp-content/uploads/2013/03/mellanox-radware-FL-graphic.png" ><img class="wp-image-655  " alt="" src="http://www.projectfloodlight.org/wp-content/uploads/2013/03/mellanox-radware-FL-graphic.png" width="288" height="216" /></a><p class="wp-caption-text">Click to Enlarge</p></div>
+<ul>
+<li>Radware Application Delivery and Attack Mitigation Security</li>
+<li>Mellanox 10G and 40G embedded virtual switch (eSwitch) NIC</li>
+<li>Floodlight SDN controller</li>
+</ul>
+<p>Combining these technologies illustrates an innovative ability to extract network and application information that can be translated and leveraged to a scalable solution for detection of various security threats, in real-time.</p>
+<p> <a href="http://www.projectfloodlight.org/blog/2013/03/21/demo-openflow-enabled-network-card/#more-670"  class="more-link">Continue reading &raquo;</a></p>
+</p>
+                        </div>
+						          </article>
+					
+						          <article>
+                        <header class="entry-header">
+                          <h4 class="entry-title"><a href="http://www.projectfloodlight.org/blog/2013/01/31/nah-mate-thats-aint-a-controller-this-is-a-controller/" title="Permalink to Nah Mate, That Ain&#8217;t A Controller&#8230; THIS is a Controller" rel="bookmark">Nah Mate, That Ain&#8217;t A Controller&#8230; THIS is a Controller</a><span class="entry-meta"> - Jan 31, 2013</span></h4>
+                        </header>
+                        <div class="entry-content">
+                          <p><p><em>Contributed by Rob Sherwood &#8211; CTO of Controller Technologies at Big Switch Networks.</em></p>
+<p>I&#8217;m hearing more and more about SDN &#8220;controllers&#8221; these days.</p>
+<p><a href="http://www.projectfloodlight.org/wp-content/uploads/2013/03/post-crocodile-dundee.jpg" ><img class="alignright size-medium wp-image-623" alt="" src="http://www.projectfloodlight.org/wp-content/uploads/2013/03/post-crocodile-dundee.jpg" width="300" height="173" /></a>Tech Execs at big networking companies are talking about delivering controllers in coming years. And I still see interesting projects emerging from academic institutions. Even Lua students can <a href="http://www.lua.org/wshop12/Amorim.pdf" onclick="javascript:_gaq.push(['_trackEvent','download','http://www.lua.org/wshop12/Amorim.pdf']);" target="_blank">now experiment with</a> OpenFlow controllers. In general, this is a good thing and I&#8217;m happy to see it.</p>
+<p> <a href="http://www.projectfloodlight.org/blog/2013/01/31/nah-mate-thats-aint-a-controller-this-is-a-controller/#more-622"  class="more-link">Continue reading &raquo;</a></p>
+</p>
+                        </div>
+						          </article>
+					                      <div class="break"></div>
+                    </div>
+                  </div>
+                  <div class="canvas-column canvas-column-2">
+                    
+
+
+                    <div class="block-home-posts">
+                      <div class="block-home-posts-title"><h1>Latest News</h1></div>
+
+						          <article>
+                        <header class="entry-header">
+                          <h4 class="entry-title">Introducing our Revamped Site (formerly OpenFlowHub)<span class="entry-meta"> - Dec 12, 2012</span></h4>
+                        </header>
+                        <div class="entry-content">
+                          <p><p>There&#8217;s some really exciting stuff happening in the Project Floodlight community, so we just gave the website a new look and feel to match. We hope you like it. Read more <a href="http://www.bigswitch.com/news-events" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://www.bigswitch.com']);" target="_blank">here.</a></p>
+</p>
+                        </div>
+						          </article>
+                      <div class="break"></div>
+                    </div>
+                  </div>
+                  <div class="break"></div>
+                </div>
+              
+              </div>
+                
+            </div>
+          </div>
+        </div>        
+
+
+	  </div><!-- #main -->
+
+    <footer class="page-footer" role="contentinfo">
+      <nav id="nav-footer">
+        <div class="canvas-full">
+          <div class="canvas-margin">
+            <div class="canvas-container"> 
+              <div class="block-footer">
+                <div class="left">
+                  <p>&copy;2013 Project Floodlight. All rights reserved.</p>
+                  <div class="break"></div>
+                </div>
+                <div class="right">
+                  <div class="menu-footer">
+            				                  <div class="break"></div>
+                </div>
+                <div class="break"></div>
+              </div>                     
+            </div>
+          </div>
+        </div>
+      </nav>
+    </footer>
+  </div><!-- #page -->
+
+
+</body>
+</html>
