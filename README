@@ -10,4 +10,4 @@ FlowScale components are:
 * OpenFlow controller sending rules based on policy configured
 * OpenFlow capable ToR switch
 
-Version: 0.5
+Version: 0.6
